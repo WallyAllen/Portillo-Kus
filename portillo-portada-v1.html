@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Portillo Kus & Asociados — Estudio jurídico en CABA · Ciudadanía y migraciones</title>
+<meta name="description" content="Patrocinio en ciudadanía argentina, residencias y visas en Microcentro, CABA. 5,0★ con 417 reseñas en Google.">
+<meta name="theme-color" content="#0F1B26">
+<meta name="robots" content="noindex, nofollow">
+<meta property="og:title" content="Portillo Kus & Asociados — Estudio Jurídico">
+<meta property="og:description" content="Ciudadanía argentina, residencias y visas. 5,0★ con 417 reseñas en Google.">
+<meta property="og:image" content="https://landing-page-mockup-mv9ysuvdi-landing-page-7035.vercel.app/nichos/abogados/landings/portillo-kus/portillo-images/og.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Playfair+Display:wght@600;700&family=Karla:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* ==========================================================================
+   0. NOTAS
+   Boceto de portada para Portillo Kus & Asociados. Un solo archivo, sin frameworks.
+   Los [PENDIENTE] / [CONFIRMAR] están listados al final, en un comentario HTML.
+   ========================================================================== */
+
+:root{
+  --font-display: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+  --font-body: 'Karla', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+
+  --text-xs:   clamp(0.8rem, 0.78rem + 0.1vw, 0.86rem);
+  --text-sm:   clamp(0.92rem, 0.89rem + 0.14vw, 1rem);
+  --text-base: clamp(1rem, 0.97rem + 0.15vw, 1.0625rem);
+  --text-md:   clamp(1.15rem, 1.08rem + 0.3vw, 1.3rem);
+  --text-lg:   clamp(1.3rem, 1.18rem + 0.5vw, 1.6rem);
+  --text-xl:   clamp(1.6rem, 1.35rem + 1vw, 2.1rem);
+  --text-2xl:  clamp(2rem, 1.5rem + 2vw, 2.9rem);
+  --text-3xl:  clamp(2.4rem, 1.65rem + 3vw, 3.9rem);
+
+  --sp-1: 4px;  --sp-2: 8px;  --sp-3: 12px; --sp-4: 16px;
+  --sp-5: 24px; --sp-6: 32px; --sp-7: 48px; --sp-8: 64px; --sp-9: 96px; --sp-10: 128px;
+
+  --radius-sm: 6px; --radius-md: 12px; --radius-lg: 20px; --radius-full: 999px;
+
+  --shadow-md: 0 12px 32px hsl(203 45% 5% / 0.28), 0 2px 8px hsl(203 45% 5% / 0.14);
+  --shadow-lg: 0 28px 70px hsl(203 45% 5% / 0.36), 0 8px 24px hsl(203 45% 5% / 0.16);
+
+  --ease-out: cubic-bezier(.16,.84,.44,1);
+  --dur-fast: 160ms; --dur-base: 320ms; --dur-slow: 480ms;
+
+  --container-max: 1180px;
+  --header-h: 64px;
+  --header-h-desktop: 84px;
+
+  /* Paleta cliente */
+  --bg-dark:      #0F1B26;
+  --surface-dark: #16242F;
+  --surface-dark-2:#1C2C38;
+  --ink-light:    #F5F5F3;
+  --ink-light-muted: #B9BCBF;
+  --line-dark:    #2A3844;
+  --bronze:       #B08A5B;
+  --bronze-strong:#C9A874;
+  --bronze-on-light:#7A5A33;
+  --bg-light:     #F5F5F3;
+  --ink-dark:     #14202A;
+  --ink-dark-muted:#4B5A66;
+  --line-light:   #DDD9D0;
+  --on-bronze:    #14202A;
+
+  /* Marca — bordó del logo */
+  --brand:          #9B1C31; /* botón primario sobre fondo claro · texto blanco 8,06:1 */
+  --brand-cta:      #BE3149; /* botón primario sobre fondo oscuro · texto blanco 5,64:1 */
+  --brand-on-dark:  #E7A1AC; /* etiquetas y acentos en cursiva sobre oscuro · 8,37:1 */
+
+  color-scheme: dark;
+}
+
+@media (prefers-reduced-motion: reduce){
+  *, *::before, *::after{
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ==========================================================================
+   1. BASE
+   ========================================================================== */
+*, *::before, *::after{ box-sizing: border-box; }
+html{ scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+html, body{ overflow-x: hidden; overflow-x: clip; }
+body{
+  margin: 0;
+  font-family: var(--font-body);
+  background: var(--bg-dark);
+  color: var(--ink-light);
+  font-size: var(--text-base);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  padding-bottom: 0;
+}
+body.has-mobile-bar{ padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px)); }
+h1,h2,h3{ font-family: var(--font-display); font-weight: 600; line-height: 1.08; letter-spacing: -0.01em; margin: 0; overflow-wrap: break-word; }
+@media (max-width: 640px){
+  h1,h2,h3{ font-family: 'Playfair Display', Georgia, serif; font-weight: 700; }
+}
+p{ margin: 0; overflow-wrap: break-word; }
+img{ max-width: 100%; display: block; }
+a{ color: inherit; text-decoration: none; }
+button{ font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+ul{ list-style: none; margin: 0; padding: 0; }
+svg{ display: block; flex-shrink: 0; }
+
+:focus-visible{ outline: 2px solid var(--brand-on-dark); outline-offset: 3px; border-radius: 4px; }
+
+.container{ max-width: var(--container-max); margin: 0 auto; padding: 0 var(--sp-5); }
+@media (min-width: 900px){ .container{ padding: 0 var(--sp-7); } }
+
+.section-label{
+  display: inline-block;
+  font-style: italic;
+  font-family: var(--font-display);
+  font-size: var(--text-md);
+  letter-spacing: 0.02em;
+  color: var(--brand-on-dark);
+  margin-bottom: var(--sp-3);
+}
+.section--light .section-label{ color: var(--bronze-on-light); }
+
+.visually-hidden{
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+}
+
+/* Botones — mínimo 44px de alto táctil */
+.btn{
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--sp-2);
+  flex-wrap: wrap; row-gap: 6px;
+  min-height: 48px; padding: var(--sp-2) var(--sp-6);
+  border-radius: var(--radius-full);
+  font-family: var(--font-body); font-weight: 700; font-size: var(--text-sm);
+  letter-spacing: 0.01em;
+  transition: transform var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out), background var(--dur-fast) var(--ease-out);
+}
+.btn:active{ transform: scale(0.97); }
+.btn-primary{ background: var(--brand-cta); color: #fff; box-shadow: var(--shadow-md); }
+.btn-primary:hover{ filter: brightness(1.14); box-shadow: var(--shadow-lg); }
+.section--light .btn-primary{ background: var(--brand); color: #fff; }
+.btn-secondary{ background: transparent; color: var(--ink-light); border: 1.5px solid rgba(245,245,243,0.55); }
+.btn-secondary:hover{ border-color: var(--ink-light); background: rgba(245,245,243,0.08); }
+.section--light .btn-secondary{ color: var(--ink-dark); border-color: rgba(20,32,42,0.35); }
+.section--light .btn-secondary:hover{ border-color: var(--ink-dark); background: rgba(20,32,42,0.06); }
+.btn-pill-sm{ min-height: 44px; padding: 0 var(--sp-5); font-size: var(--text-xs); }
+.btn-block{ width: 100%; }
+
+.chip{
+  display: inline-flex; align-items: center; min-height: 40px; padding: 0 var(--sp-4);
+  border-radius: var(--radius-full); border: 1px solid var(--line-dark);
+  font-size: var(--text-sm); color: var(--ink-light-muted);
+  background: var(--surface-dark);
+}
+.section--light .chip{ border-color: var(--line-light); color: var(--ink-dark-muted); background: #fff; }
+
+.tag-pending{
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: var(--text-xs); font-weight: 700; letter-spacing: 0.03em;
+  color: var(--bg-dark); background: var(--bronze-strong);
+  padding: 3px 10px; border-radius: var(--radius-full);
+}
+
+/* Placeholders de imagen */
+.ph{
+  position: relative; overflow: hidden; border-radius: var(--radius-md);
+  background:
+    repeating-linear-gradient(135deg, rgba(176,138,91,0.14) 0 14px, rgba(176,138,91,0.05) 14px 28px),
+    linear-gradient(160deg, #22323F, #0F1B26);
+  display: flex; align-items: center; justify-content: center; flex-direction: column; gap: var(--sp-2);
+  color: var(--ink-light-muted);
+  min-height: 100%;
+}
+.ph svg{ width: 34px; height: 34px; opacity: 0.55; }
+.ph span{ font-size: var(--text-xs); text-align: center; padding: 0 var(--sp-4); font-style: italic; }
+.property-card .ph{ min-height: 0; aspect-ratio: 4/3; }
+
+/* Fotos reales (stock ilustrativo o material propio del cliente) */
+.media{ position: relative; overflow: hidden; border-radius: var(--radius-md); background: var(--surface-dark-2); }
+.media img{ width: 100%; height: 100%; object-fit: cover; display: block; }
+.media .tag-photo{ position: absolute; left: var(--sp-3); bottom: var(--sp-3); z-index: 1; }
+.need-card .tag-photo{ position: absolute; top: var(--sp-3); left: var(--sp-3); bottom: auto; z-index: 2; }
+.tag-photo{
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: var(--text-xs); font-weight: 700; letter-spacing: 0.02em;
+  color: var(--ink-light); background: rgba(15,27,38,0.72);
+  padding: 4px 10px; border-radius: var(--radius-full);
+  -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
+}
+
+/* Reveal on scroll */
+.reveal{ opacity: 0; transform: translateY(16px); transition: opacity var(--dur-slow) var(--ease-out), transform var(--dur-slow) var(--ease-out); }
+.reveal.is-visible{ opacity: 1; transform: translateY(0); }
+.reveal-scale{ opacity: 0; transform: scale(0.97); transition: opacity var(--dur-slow) var(--ease-out), transform var(--dur-slow) var(--ease-out); }
+.reveal-scale.is-visible{ opacity: 1; transform: scale(1); }
+
+/* ==========================================================================
+   2. HEADER
+   ========================================================================== */
+.site-header{
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  height: var(--header-h);
+  display: flex; align-items: center;
+  background: linear-gradient(to bottom, rgba(15,27,38,0.75), rgba(15,27,38,0));
+  transition: background var(--dur-base) var(--ease-out), height var(--dur-base) var(--ease-out), box-shadow var(--dur-base) var(--ease-out);
+}
+@media (min-width: 900px){ .site-header{ height: var(--header-h-desktop); } }
+.site-header.is-scrolled{
+  background: rgba(15,27,38,0.92);
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  box-shadow: 0 1px 0 var(--line-dark);
+  height: 60px;
+}
+.header-inner{ width: 100%; display: flex; align-items: center; justify-content: space-between; gap: var(--sp-4); }
+.logo{
+  display: inline-flex; align-items: center;
+  font-family: var(--font-display); font-weight: 700; font-size: var(--text-lg);
+  line-height: 1; white-space: nowrap;
+  color: var(--ink-light); letter-spacing: 0.01em;
+}
+.logo strong{ color: var(--brand-on-dark); font-weight: 700; }
+.logo-sub{ display: none; margin-left: 0.4em; font-size: var(--text-xs); font-weight: 400; opacity: 0.85; }
+@media (min-width: 640px){ .logo-sub{ display: inline; } }
+.main-nav{ display: none; }
+@media (min-width: 900px){
+  .main-nav{ display: flex; align-items: center; gap: var(--sp-6); }
+  .main-nav a{ font-size: var(--text-sm); font-weight: 600; color: var(--ink-light); opacity: 0.9; transition: opacity var(--dur-fast); }
+  .main-nav a:hover{ opacity: 1; color: var(--brand-on-dark); }
+}
+.header-actions{ display: flex; align-items: center; gap: var(--sp-3); }
+.menu-toggle{
+  display: flex; align-items: center; justify-content: center;
+  width: 44px; height: 44px; border-radius: var(--radius-full);
+  color: var(--ink-light);
+}
+@media (min-width: 900px){ .menu-toggle{ display: none; } }
+
+/* Panel de menú mobile a pantalla completa */
+.mobile-panel{
+  position: fixed; inset: 0; z-index: 200;
+  background: var(--bg-dark);
+  display: flex; flex-direction: column;
+  padding: var(--sp-5);
+  transform: translateY(-8px);
+  opacity: 0; visibility: hidden;
+  transition: opacity var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out), visibility 0s var(--dur-base);
+}
+.mobile-panel.is-open{ opacity: 1; visibility: visible; transform: translateY(0); transition: opacity var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out); }
+.mobile-panel-top{ display: flex; align-items: center; justify-content: space-between; width: 100%; height: var(--header-h); }
+.mobile-panel-close{ width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; color: var(--ink-light); border-radius: var(--radius-full); }
+.mobile-panel nav{ flex: 1; display: flex; flex-direction: column; justify-content: center; gap: var(--sp-5); }
+.mobile-panel nav a{ font-family: var(--font-display); font-weight: 700; font-size: var(--text-2xl); color: var(--ink-light); }
+.mobile-panel-footer{ display: flex; flex-direction: column; gap: var(--sp-4); padding-bottom: var(--sp-6); }
+.mobile-panel-footer .contact-line{ display:flex; align-items:center; gap: var(--sp-3); color: var(--ink-light-muted); font-size: var(--text-sm); }
+@media (min-width: 900px){ .mobile-panel{ display: none; } }
+
+/* ==========================================================================
+   3. HERO
+   ========================================================================== */
+.hero{
+  position: relative;
+  min-height: 100svh;
+  display: flex; flex-direction: column; justify-content: flex-end;
+  padding: calc(var(--header-h) + var(--sp-5)) 0 var(--sp-7);
+  isolation: isolate;
+}
+@media (min-width: 900px){
+  .hero{ padding: calc(var(--header-h-desktop) + var(--sp-6)) 0 var(--sp-9); min-height: 92svh; }
+}
+.hero-bg{ position: absolute; inset: 0; z-index: -2; }
+.hero-bg .media{ height: 100%; border-radius: 0; }
+.hero-bg .media img{ object-position: 36% 30%; }
+.hero::after{
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  background: linear-gradient(to top, rgba(9,16,22,0.92) 0%, rgba(9,16,22,0.62) 38%, rgba(9,16,22,0.28) 62%, rgba(9,16,22,0.55) 100%);
+}
+.hero > .container{ width: 100%; }
+.hero-content{ max-width: 640px; }
+.hero-content .section-label{ color: var(--brand-on-dark); }
+.hero-photo-tag{ display: inline-flex; margin-bottom: var(--sp-4); }
+.hero-title{ font-size: var(--text-3xl); color: var(--ink-light); }
+.hero-sub{ margin-top: var(--sp-4); font-size: var(--text-md); color: var(--ink-light); max-width: 46ch; }
+.hero-actions{ margin-top: var(--sp-6); display: flex; flex-wrap: wrap; gap: var(--sp-3); }
+.hero-trust{
+  margin-top: var(--sp-5); display: flex; align-items: center; flex-wrap: wrap; gap: var(--sp-2) var(--sp-3);
+  font-size: var(--text-xs); color: var(--ink-light-muted);
+}
+.hero-trust .stars{ color: var(--bronze-strong); font-weight: 700; letter-spacing: 0.05em; }
+.hero-trust .sep{ opacity: 0.5; }
+
+/* ==========================================================================
+   4. STATS
+   ========================================================================== */
+.stats{ background: var(--surface-dark); padding: var(--sp-8) 0; border-bottom: 1px solid var(--line-dark); }
+.stats-grid{ display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-6) var(--sp-4); }
+@media (min-width: 760px){ .stats-grid{ grid-template-columns: repeat(4, 1fr); gap: var(--sp-6); } }
+.stat{ text-align: left; }
+.stat-value{ font-family: var(--font-display); font-weight: 700; font-size: var(--text-2xl); color: var(--ink-light); display: flex; align-items: baseline; gap: 6px; }
+.stat-unit{ font-family: var(--font-display); font-weight: 600; font-size: var(--text-lg); color: var(--bronze-strong); }
+.stat-label{ margin-top: var(--sp-1); font-size: var(--text-xs); color: var(--ink-light-muted); text-transform: uppercase; letter-spacing: 0.06em; }
+
+/* ==========================================================================
+   5. SECCIONES GENERALES
+   ========================================================================== */
+section{ position: relative; }
+.section--dark{ background: var(--bg-dark); color: var(--ink-light); }
+.section--surface{ background: var(--surface-dark); color: var(--ink-light); }
+.section--light{ background: var(--bg-light); color: var(--ink-dark); }
+.section-pad{ padding: var(--sp-9) 0; }
+@media (max-width: 640px){ .section-pad{ padding: var(--sp-8) 0; } }
+.section-head{ max-width: 640px; margin-bottom: var(--sp-7); }
+.section-head h2{ font-size: var(--text-2xl); }
+.section--light .section-head h2{ color: var(--ink-dark); }
+.section-text{ margin-top: var(--sp-4); font-size: var(--text-md); color: var(--ink-light-muted); max-width: 56ch; }
+.section--light .section-text{ color: var(--ink-dark-muted); }
+
+/* ¿Qué necesitas? */
+.need-grid{ display: grid; grid-template-columns: 1fr; gap: var(--sp-4); }
+@media (min-width: 760px){ .need-grid{ grid-template-columns: repeat(3, 1fr); gap: var(--sp-5); } }
+.need-card{
+  position: relative; border-radius: var(--radius-lg); overflow: hidden; min-height: 300px;
+  display: flex; flex-direction: column; justify-content: flex-end; padding: var(--sp-6);
+  box-shadow: var(--shadow-md);
+}
+.need-card .ph{ position: absolute; inset: 0; border-radius: 0; }
+.need-card::before{ content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgba(8,14,19,0.95), rgba(8,14,19,0.15) 65%); }
+.need-card-body{ position: relative; z-index: 1; }
+.need-card h3{ font-size: var(--text-xl); color: var(--ink-light); }
+.need-card p{ margin-top: var(--sp-2); font-size: var(--text-sm); color: var(--ink-light-muted); }
+.need-card .btn{ margin-top: var(--sp-4); }
+
+/* Carrusel de áreas de práctica */
+.carousel-wrap{ position: relative; }
+.carousel-controls{ display: none; }
+@media (min-width: 900px){
+  .carousel-controls{ display: flex; gap: var(--sp-3); justify-content: flex-end; margin-bottom: var(--sp-5); margin-top: calc(-1 * var(--sp-10) + 8px); }
+  .carousel-btn{ width: 48px; height: 48px; border-radius: 50%; border: 1px solid var(--line-dark); display: flex; align-items: center; justify-content: center; color: var(--ink-light); transition: background var(--dur-fast); }
+  .carousel-btn:hover{ background: var(--surface-dark-2); }
+}
+.carousel{
+  display: flex; gap: var(--sp-4); overflow-x: auto; scroll-snap-type: x mandatory;
+  padding: var(--sp-2) var(--sp-5) var(--sp-4);
+  scroll-padding-inline: var(--sp-5);
+  scrollbar-width: none;
+}
+.carousel::-webkit-scrollbar{ display: none; }
+@media (min-width: 900px){
+  .carousel{
+    padding-block: var(--sp-2) var(--sp-4);
+    padding-inline: max(48px, calc((100vw - 1180px)/2 + 48px));
+    scroll-padding-inline: max(48px, calc((100vw - 1180px)/2 + 48px));
+  }
+}
+.property-card{
+  scroll-snap-align: start; flex: 0 0 78%; max-width: 340px;
+  background: var(--surface-dark); border: 1px solid var(--line-dark); border-radius: var(--radius-lg); overflow: hidden;
+}
+@media (min-width: 640px){ .property-card{ flex-basis: 46%; } }
+@media (min-width: 900px){ .property-card{ flex-basis: 320px; } }
+.property-card .media{ aspect-ratio: 4/3; border-radius: 0; }
+.property-card-body{ padding: var(--sp-5); }
+.property-badge-row{ display: flex; align-items: center; justify-content: space-between; gap: var(--sp-2); margin-bottom: var(--sp-2); }
+.property-type-badge{ font-size: var(--text-xs); font-weight: 700; letter-spacing: 0.04em; color: var(--bronze-strong); text-transform: uppercase; }
+.property-card h3{ font-size: var(--text-lg); color: var(--ink-light); font-weight: 600; }
+.property-meta{ margin-top: var(--sp-2); display: flex; flex-wrap: wrap; gap: var(--sp-1) var(--sp-3); font-size: var(--text-sm); color: var(--ink-light-muted); }
+.property-price{ margin-top: var(--sp-3); font-family: var(--font-display); font-weight: 700; font-size: var(--text-lg); color: var(--ink-light); }
+.property-card .btn{ margin-top: var(--sp-4); }
+
+/* Ciudadanía — texto + foto desplazada */
+.offset-block{ display: grid; grid-template-columns: 1fr; gap: var(--sp-6); align-items: center; }
+@media (min-width: 900px){ .offset-block{ grid-template-columns: 1fr 1fr; gap: var(--sp-8); } }
+.offset-photo{ position: relative; aspect-ratio: 4/5; }
+.offset-photo .media{ height: 100%; }
+@media (min-width: 900px){
+  .offset-photo{ transform: translateY(-28px); margin-right: -12px; }
+  .offset-block.reverse .offset-photo{ order: 2; margin-right: 0; margin-left: -12px; }
+}
+
+/* Nosotros */
+.nosotros-grid{ display: grid; grid-template-columns: 1fr; gap: var(--sp-7); align-items: center; }
+@media (min-width: 900px){ .nosotros-grid{ grid-template-columns: 1fr 1.1fr; gap: var(--sp-9); } }
+.team-photo{ position: relative; aspect-ratio: 3/2; }
+.team-photo .media{ height: 100%; background: var(--surface-dark-2); }
+.team-photo .media img{ object-fit: cover; object-position: 50% 20%; }
+.team-quote{
+  position: absolute; left: var(--sp-4); bottom: calc(-1 * var(--sp-5)); right: var(--sp-4);
+  background: var(--brand); color: #fff; border-radius: var(--radius-md);
+  padding: var(--sp-4) var(--sp-5); box-shadow: var(--shadow-md);
+}
+@media (min-width: 900px){ .team-quote{ right: auto; width: 78%; } }
+.team-quote p{ font-family: var(--font-display); font-weight: 700; font-style: italic; font-size: var(--text-md); }
+
+/* Zona de influencia */
+.zone-group{ margin-bottom: var(--sp-6); }
+.zone-group:last-child{ margin-bottom: 0; }
+.zone-group h3{ font-size: var(--text-sm); text-transform: uppercase; letter-spacing: 0.08em; color: var(--brand-on-dark); margin-bottom: var(--sp-3); font-family: var(--font-body); font-weight: 700; }
+.zone-chips{ display: flex; flex-wrap: wrap; gap: var(--sp-2); }
+
+/* Contacto */
+.contact-grid{ display: grid; grid-template-columns: 1fr; gap: var(--sp-5); }
+@media (min-width: 760px){ .contact-grid{ grid-template-columns: 1fr 1fr; gap: var(--sp-6); } }
+.contact-card{
+  background: var(--surface-dark); border: 1px solid var(--line-dark); border-radius: var(--radius-lg);
+  padding: var(--sp-6); display: flex; flex-direction: column; gap: var(--sp-4);
+}
+.section--light .contact-card{ background: #fff; border-color: var(--line-light); box-shadow: var(--shadow-md); }
+.review-stars{ color: var(--bronze-on-light); font-weight: 700; letter-spacing: 0.06em; }
+.contact-card-head{ display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3); flex-wrap: wrap; }
+.contact-card h3{ font-size: var(--text-xl); color: var(--ink-light); }
+.contact-card .office-tag{ font-size: var(--text-xs); color: var(--ink-light-muted); text-transform: uppercase; letter-spacing: 0.06em; }
+.badge-row{ display: flex; flex-wrap: wrap; gap: var(--sp-2); }
+.badge{ display: inline-flex; align-items: center; gap: 6px; font-size: var(--text-xs); font-weight: 700; color: var(--bronze-strong); border: 1px solid var(--line-dark); border-radius: var(--radius-full); padding: 5px 12px; }
+.contact-detail{ font-size: var(--text-sm); color: var(--ink-light-muted); }
+.contact-actions{ display: flex; flex-wrap: wrap; gap: var(--sp-3); margin-top: auto; }
+.contact-actions .btn{ flex: 1 1 auto; }
+
+.seal-wrap{ margin-top: var(--sp-7); display: flex; flex-direction: column; align-items: center; gap: var(--sp-3); text-align: center; }
+.seal{
+  width: 128px; height: 128px; border-radius: 50%; border: 2px dashed var(--line-dark);
+  display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 4px;
+  color: var(--ink-light-muted); padding: var(--sp-3);
+}
+.seal strong{ font-family: var(--font-display); color: var(--bronze-strong); font-size: var(--text-sm); }
+.seal span{ font-size: 10px; line-height: 1.3; }
+.seal-caption{ font-size: var(--text-xs); font-style: italic; color: var(--ink-light-muted); max-width: 46ch; }
+
+/* Footer */
+.site-footer{ background: var(--surface-dark); border-top: 1px solid var(--line-dark); padding: var(--sp-8) 0 var(--sp-6); }
+.footer-top{ display: flex; flex-direction: column; gap: var(--sp-6); }
+@media (min-width: 760px){ .footer-top{ flex-direction: row; justify-content: space-between; align-items: flex-start; } }
+.footer-logo{ font-family: var(--font-display); font-weight: 700; font-size: var(--text-lg); }
+.footer-logo strong{ color: var(--brand-on-dark); }
+.footer-social{ display: flex; gap: var(--sp-3); margin-top: var(--sp-4); }
+.footer-social a{ width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--line-dark); display: flex; align-items: center; justify-content: center; color: var(--ink-light); }
+.footer-meta{ font-size: var(--text-sm); color: var(--ink-light-muted); line-height: 1.9; }
+.footer-bottom{ margin-top: var(--sp-7); padding-top: var(--sp-5); border-top: 1px solid var(--line-dark); font-size: var(--text-xs); color: var(--ink-light-muted); display: flex; flex-wrap: wrap; gap: var(--sp-2) var(--sp-4); justify-content: space-between; }
+
+/* Barra fija mobile */
+.mobile-bar{
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 90;
+  display: flex; gap: var(--sp-2);
+  padding: var(--sp-2) var(--sp-3) calc(var(--sp-2) + env(safe-area-inset-bottom, 0px));
+  background: var(--surface-dark); border-top: 1px solid var(--line-dark);
+  transform: translateY(100%); transition: transform var(--dur-base) var(--ease-out);
+}
+.mobile-bar.is-visible{ transform: translateY(0); }
+.mobile-bar .btn{ flex: 1; min-height: 48px; }
+@media (min-width: 900px){ .mobile-bar{ display: none; } }
+</style>
+</head>
+<body>
+
+<header class="site-header" id="siteHeader">
+  <div class="container header-inner">
+    <a href="#top" class="logo"><strong>Portillo Kus</strong><span class="logo-sub">&amp; Asociados · Estudio Jurídico</span></a>
+    <nav class="main-nav" aria-label="Navegación principal">
+      <a href="#ciudadania">Ciudadanía</a>
+      <a href="#migraciones">Migraciones</a>
+      <a href="#areas">Áreas</a>
+      <a href="#estudio">El estudio</a>
+      <a href="#contacto">Contacto</a>
+    </nav>
+    <div class="header-actions">
+      <a class="btn btn-primary btn-pill-sm" data-wa data-wa-number="5491127111987" data-wa-msg="Hola, quiero hacer una consulta con el estudio." href="#">Consultar</a>
+      <button class="menu-toggle" id="menuOpenBtn" aria-expanded="false" aria-controls="mobilePanel" aria-label="Abrir menú">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="mobile-panel" id="mobilePanel" role="dialog" aria-modal="true" aria-label="Menú">
+  <div class="mobile-panel-top">
+    <span class="logo"><strong>Portillo Kus</strong><span class="logo-sub">&amp; Asociados · Estudio Jurídico</span></span>
+    <button class="mobile-panel-close" id="menuCloseBtn" aria-label="Cerrar menú">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg>
+    </button>
+  </div>
+  <nav aria-label="Navegación mobile">
+    <a href="#ciudadania" class="mp-link">Ciudadanía</a>
+    <a href="#migraciones" class="mp-link">Migraciones</a>
+    <a href="#areas" class="mp-link">Áreas</a>
+    <a href="#estudio" class="mp-link">El estudio</a>
+    <a href="#contacto" class="mp-link">Contacto</a>
+  </nav>
+  <div class="mobile-panel-footer">
+    <a class="btn btn-primary btn-block" data-wa data-wa-number="5491127111987" data-wa-msg="Hola, quiero hacer una consulta con el estudio." href="#">Escribir por WhatsApp</a>
+    <span class="contact-line">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+      Lunes a viernes de 10:30 a 18 h
+    </span>
+  </div>
+</div>
+
+<main id="top">
+
+  <!-- 2. PORTADA -->
+  <section class="hero">
+    <div class="hero-bg">
+      <div class="media">
+        <img src="portillo-images/hero.jpg" alt="Dr. Denis Portillo en su escritorio, con la estatua de Themis, en el estudio de Microcentro" width="1600" height="1066" loading="eager" fetchpriority="high">
+      </div>
+    </div>
+    <div class="container">
+      <div class="hero-content">
+        <span class="section-label">ESTUDIO JURÍDICO · MICROCENTRO, BUENOS AIRES</span>
+        <h1 class="hero-title">Tu ciudadanía argentina, en las mejores manos</h1>
+        <p class="hero-sub">Patrocinio en ciudadanía, residencias y visas. Más de 1.200 expedientes de ciudadanía resueltos favorablemente desde 2020.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" data-wa data-wa-number="5491127111987" data-wa-msg="Hola, quiero consultar por mi ciudadanía argentina." href="#">Consultar por WhatsApp</a>
+          <a class="btn btn-secondary" href="#areas">Ver áreas de práctica</a>
+        </div>
+        <div class="hero-trust">
+          <a href="https://www.google.com/maps/search/?api=1&query=Portillo+Kus+%26+Asociados+Estudio+Jur%C3%ADdico" target="_blank" rel="noopener"><span class="stars">★ 5,0</span> · 417 reseñas en Google</a>
+          <span class="sep">·</span>
+          <span>Av. Roque Sáenz Peña 616, CABA</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. CIFRAS -->
+  <section class="stats" aria-label="Portillo Kus & Asociados en números">
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat reveal">
+          <div class="stat-value"><span class="js-counter" data-target="1200" data-decimals="0" data-grouping="true" data-prefix="+">+1.200</span></div>
+          <p class="stat-label">Ciudadanías resueltas desde 2020</p>
+        </div>
+        <div class="stat reveal">
+          <div class="stat-value"><span class="js-counter" data-target="5.0" data-decimals="1">5,0</span><span class="stat-unit">★</span></div>
+          <p class="stat-label">417 reseñas en Google</p>
+        </div>
+        <div class="stat reveal">
+          <div class="stat-value"><span class="js-counter" data-target="12" data-decimals="0" data-prefix="+">+12</span></div>
+          <p class="stat-label">Áreas del derecho</p>
+        </div>
+        <div class="stat reveal">
+          <div class="stat-value"><span class="js-counter" data-target="7" data-decimals="0">7</span></div>
+          <p class="stat-label">Medios de pago, también desde el exterior</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. ¿QUÉ NECESITAS? -->
+  <section class="section--dark section-pad">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="section-label">¿QUÉ NECESITAS?</span>
+        <h2>Elige por dónde empezar</h2>
+      </div>
+      <div class="need-grid">
+        <article class="need-card reveal">
+          <div class="media">
+            <img src="portillo-images/need-ciudadania.jpg" alt="Cliente con su trámite de ciudadanía argentina resuelto, junto al Dr. Portillo" loading="lazy">
+            <span class="tag-photo">Foto real del estudio</span>
+          </div>
+          <div class="need-card-body">
+            <h3>Ciudadanía argentina</h3>
+            <p>Carta de ciudadanía, de la consulta a la jura.</p>
+            <a class="btn btn-primary" data-wa data-wa-number="5491127111987" data-wa-msg="Hola, quiero consultar por la ciudadanía argentina." href="#">Consultar por WhatsApp</a>
+          </div>
+        </article>
+        <article class="need-card reveal" id="migraciones">
+          <div class="media">
+            <img src="portillo-images/need-residencia.jpg" alt="Dr. Portillo con un cliente en el estudio, foto real" loading="lazy">
+            <span class="tag-photo">Foto real del estudio</span>
+          </div>
+          <div class="need-card-body">
+            <h3>Residencia y visas</h3>
+            <p>Residencias Mercosur y extra Mercosur, visas y permisos de ingreso.</p>
+            <a class="btn btn-primary" data-wa data-wa-number="5491127111987" data-wa-msg="Hola, quiero consultar por una residencia o visa." href="#">Consultar por WhatsApp</a>
+          </div>
+        </article>
+        <article class="need-card reveal">
+          <div class="media">
+            <img src="portillo-images/need-expulsion.jpg" alt="Pasaporte abierto con sellos de entrada y salida, foto ilustrativa" loading="lazy">
+            <span class="tag-photo">Foto ilustrativa</span>
+          </div>
+          <div class="need-card-body">
+            <h3>Defensa ante expulsión</h3>
+            <p>Patrocinio para revertir una disposición de expulsión.</p>
+            <a class="btn btn-primary" data-wa data-wa-number="5491127111987" data-wa-msg="Hola, necesito asesoramiento por una disposición de expulsión." href="#">Consultar por WhatsApp</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. ÁREAS DE PRÁCTICA -->
+  <section class="section--surface section-pad" id="areas">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="section-label">ÁREAS DE PRÁCTICA</span>
+        <h2>Más de 12 áreas del derecho</h2>
+        <p class="section-text">La ciudadanía y las migraciones son nuestro fuerte. Además, acompañamos a nuestros clientes en estos otros temas.</p>
+      </div>
+      <div class="carousel-controls">
+        <button class="carousel-btn" id="carPrev" aria-label="Área anterior">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <button class="carousel-btn" id="carNext" aria-label="Área siguiente">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="carousel" id="carousel">
+
+      <article class="property-card reveal">
+        <div class="media">
+          <img src="portillo-images/area-laboral.jpg" alt="Documento laboral revisado sobre un escritorio, foto ilustrativa" loading="lazy">
+          <span class="tag-photo">Foto ilustrativa</span>
+        </div>
+        <div class="property-card-body">
+          <div class="property-badge-row"><span class="property-type-badge">Laboral</span></div>
+          <h3>Despidos y ART</h3>
+          <p class="property-meta">Reclamos por despidos sin causa y por accidentes o enfermedades laborales.</p>
+          <a class="btn btn-primary btn-block" data-wa data-wa-number="5491127111987" data-wa-msg="Hola, quiero consultar por un tema laboral." href="#">Consultar sobre este tema</a>
+        </div>
+      </article>
+
+      <article class="property-card reveal">
+        <div class="media">
+          <img src="portillo-images/area-familia.jpg" alt="Mano de un bebé sobre las manos de sus padres, foto ilustrativa" loading="lazy">
+          <span class="tag-photo">Foto ilustrativa</span>
+        </div>
+        <div class="property-card-body">
+          <div class="property-badge-row"><span class="property-type-badge">Familia</span></div>
+          <h3>Familia</h3>
+          <p class="property-meta">Divorcios de mutuo acuerdo y unilaterales, alimentos y régimen de visitas.</p>
+          <a class="btn btn-primary btn-block" data-wa data-wa-number="5491127111987" data-wa-msg="Hola, quiero consultar por un tema de familia." href="#">Consultar sobre este tema</a>
+        </div>
+      </article>
+
+      <article class="property-card reveal">
+        <div class="media">
+          <img src="portillo-images/area-penal.jpg" alt="Columnas clásicas de un edificio de tribunales, foto ilustrativa" loading="lazy">
+          <span class="tag-photo">Foto ilustrativa</span>
+        </div>
+        <div class="property-card-body">
+          <div class="property-badge-row"><span class="property-type-badge">Penal</span></div>
+          <h3>Penal</h3>
+          <p class="property-meta">Defensa y asesoramiento en causas penales.</p>
+          <a class="btn btn-primary btn-block" data-wa data-wa-number="5491127111987" data-wa-msg="Hola, quiero consultar por un tema penal." href="#">Consultar sobre este tema</a>
+        </div>
+      </article>
+
+      <article class="property-card reveal">
+        <div class="media">
+          <img src="portillo-images/area-sucesiones.jpg" alt="Antiguo llavero con llaves ornamentadas sobre madera, foto ilustrativa" loading="lazy">
+          <span class="tag-photo">Foto ilustrativa</span>
+        </div>
+        <div class="property-card-body">
+          <div class="property-badge-row"><span class="property-type-badge">Sucesiones</span></div>
+          <h3>Sucesiones</h3>
+          <p class="property-meta">Trámite sucesorio de principio a fin.</p>
+          <a class="btn btn-primary btn-block" data-wa data-wa-number="5491127111987" data-wa-msg="Hola, quiero consultar por una sucesión." href="#">Consultar sobre este tema</a>
+        </div>
+      </article>
+
+      <article class="property-card reveal">
+        <div class="media">
+          <img src="portillo-images/area-danos.jpg" alt="Tránsito nocturno en una avenida de la ciudad, foto ilustrativa" loading="lazy">
+          <span class="tag-photo">Foto ilustrativa</span>
+        </div>
+        <div class="property-card-body">
+          <div class="property-badge-row"><span class="property-type-badge">Daños</span></div>
+          <h3>Accidentes y daños</h3>
+          <p class="property-meta">Accidentes de tránsito, daños y perjuicios.</p>
+          <a class="btn btn-primary btn-block" data-wa data-wa-number="5491127111987" data-wa-msg="Hola, quiero consultar por un accidente de tránsito." href="#">Consultar sobre este tema</a>
+        </div>
+      </article>
+
+      <article class="property-card reveal">
+        <div class="media">
+          <img src="portillo-images/area-consumidor.jpg" alt="Pago con celular sin contacto, foto ilustrativa" loading="lazy">
+          <span class="tag-photo">Foto ilustrativa</span>
+        </div>
+        <div class="property-card-body">
+          <div class="property-badge-row"><span class="property-type-badge">Consumidor</span></div>
+          <h3>Defensa del consumidor</h3>
+          <p class="property-meta">Reclamos por productos, servicios y relaciones de consumo.</p>
+          <a class="btn btn-primary btn-block" data-wa data-wa-number="5491127111987" data-wa-msg="Hola, quiero consultar por defensa del consumidor." href="#">Consultar sobre este tema</a>
+        </div>
+      </article>
+
+      <article class="property-card reveal">
+        <div class="media">
+          <img src="portillo-images/area-empresas.jpg" alt="Fachada de un edificio de oficinas moderno, foto ilustrativa" loading="lazy">
+          <span class="tag-photo">Foto ilustrativa</span>
+        </div>
+        <div class="property-card-body">
+          <div class="property-badge-row"><span class="property-type-badge">Empresas</span></div>
+          <h3>Empresas y contratos</h3>
+          <p class="property-meta">Registro de sociedades, contratos y alquileres.</p>
+          <a class="btn btn-primary btn-block" data-wa data-wa-number="5491127111987" data-wa-msg="Hola, quiero consultar por un tema de empresas o contratos." href="#">Consultar sobre este tema</a>
+        </div>
+      </article>
+
+      <article class="property-card reveal">
+        <div class="media">
+          <img src="portillo-images/area-ciudadania-europea.jpg" alt="Bandera de la Unión Europea, foto ilustrativa" loading="lazy">
+          <span class="tag-photo">Foto ilustrativa</span>
+        </div>
+        <div class="property-card-body">
+          <div class="property-badge-row"><span class="property-type-badge">Ciudadanía europea</span></div>
+          <h3>Ciudadanías italiana y española</h3>
+          <p class="property-meta">Trámites de ciudadanía por ascendencia italiana o española.</p>
+          <a class="btn btn-primary btn-block" data-wa data-wa-number="5491127111987" data-wa-msg="Hola, quiero consultar por la ciudadanía italiana o española." href="#">Consultar sobre este tema</a>
+        </div>
+      </article>
+
+      <article class="property-card reveal">
+        <div class="media">
+          <img src="portillo-images/area-escribania.jpg" alt="Sellos de lacre dorados sobre sobres, foto ilustrativa" loading="lazy">
+          <span class="tag-photo">Foto ilustrativa</span>
+        </div>
+        <div class="property-card-body">
+          <div class="property-badge-row"><span class="property-type-badge">Escribanía</span></div>
+          <h3>Trámites notariales</h3>
+          <p class="property-meta">Trámites notariales por escribanía.</p>
+          <a class="btn btn-primary btn-block" data-wa data-wa-number="5491127111987" data-wa-msg="Hola, quiero consultar por un trámite notarial." href="#">Consultar sobre este tema</a>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- 6. CIUDADANÍA -->
+  <section class="section--dark section-pad" id="ciudadania">
+    <div class="container">
+      <div class="offset-block">
+        <div class="offset-photo reveal-scale">
+          <div class="media">
+            <img src="portillo-images/ciudadania.jpg" alt="Dr. Portillo con un cliente y su carta de ciudadanía argentina, frente al Palacio de Tribunales" width="850" height="765" loading="lazy">
+            <span class="tag-photo">Foto real del estudio</span>
+          </div>
+        </div>
+        <div class="reveal">
+          <span class="section-label">CIUDADANÍA ARGENTINA</span>
+          <h2 style="font-size:var(--text-2xl);">Te acompañamos en todo el proceso</h2>
+          <p class="section-text">Patrocinamos tu carta de ciudadanía de principio a fin. Desde 2020 resolvimos favorablemente más de 1.200 expedientes, y también gestionamos ciudadanías italianas y españolas.</p>
+          <ul class="section-text" style="margin-top:var(--sp-5);display:flex;flex-direction:column;gap:var(--sp-2);">
+            <li>1. Consulta inicial, por WhatsApp o en el estudio.</li>
+            <li>2. Armado de la documentación.</li>
+            <li>3. Presentación y seguimiento del expediente.</li>
+            <li>4. Acompañamiento hasta la jura.</li>
+          </ul>
+          <a class="btn btn-primary" style="margin-top:var(--sp-6);" data-wa data-wa-number="5491127111987" data-wa-msg="Hola, quiero consultar por mi ciudadanía argentina." href="#">Consultar por mi ciudadanía</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. EL ESTUDIO -->
+  <section class="section--light section-pad" id="estudio">
+    <div class="container">
+      <div class="nosotros-grid">
+        <div class="team-photo reveal-scale">
+          <div class="media">
+            <img src="portillo-images/estudio.jpg" alt="Estatua de Themis sobre el escritorio del estudio, junto a carpetas con el logo de Portillo Kus & Asociados" width="717" height="800" loading="lazy">
+          </div>
+          <div class="team-quote">
+            <p>"Elegirnos es poner tus derechos en las mejores manos."</p>
+          </div>
+        </div>
+        <div class="reveal">
+          <span class="section-label">EL ESTUDIO</span>
+          <h2 style="font-size:var(--text-2xl);">Un estudio integral, nacional e internacional</h2>
+          <p class="section-text">Somos abogados con amplia trayectoria y especialistas en múltiples áreas del Derecho. En pocos años nos convertimos en uno de los estudios de referencia en ciudadanía y migraciones del país.</p>
+          <div style="display:flex;align-items:center;gap:var(--sp-4);margin-top:var(--sp-6);flex-wrap:wrap;">
+            <img src="portillo-images/logo.jpg" alt="Logo de Portillo Kus & Asociados" width="150" height="80" loading="lazy" style="background:#fff;border-radius:var(--radius-md);padding:var(--sp-2);box-shadow:var(--shadow-md);">
+            <div>
+              <p style="font-family:var(--font-display);font-weight:700;font-size:var(--text-md);">Dr. Denis Portillo <span class="tag-pending">MATRÍCULA A COMPLETAR</span></p>
+              <p class="section-text" style="margin-top:4px;font-size:var(--text-xs);font-style:italic;">Socios y matrículas: a completar</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7.5 OPINIONES -->
+  <section class="section--light section-pad">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="section-label">OPINIONES</span>
+        <h2>Lo que dicen nuestros clientes</h2>
+      </div>
+      <div class="contact-grid">
+        <article class="contact-card reveal">
+          <div class="review-stars">★★★★★</div>
+          <p class="section-text" style="font-style:italic;">"Inicié mi trámite de naturalización con el Dr. Portillo y desde el primer momento me inspiró total confianza…"</p>
+          <p style="font-weight:700;color:var(--ink-dark);">Yocselys B.</p>
+        </article>
+        <article class="contact-card reveal">
+          <div class="review-stars">★★★★★</div>
+          <p class="section-text" style="font-style:italic;">"Excelente profesional. Me acompañó en todo el proceso para obtener la ciudadanía argentina…"</p>
+          <p style="font-weight:700;color:var(--ink-dark);">Yania M.</p>
+        </article>
+        <article class="contact-card reveal">
+          <div class="review-stars">★★★★★</div>
+          <p class="section-text" style="font-style:italic;">"Muy recomendable el Dr. Portillo para temas migratorios…"</p>
+          <p style="font-weight:700;color:var(--ink-dark);">Jorge R.</p>
+        </article>
+        <article class="contact-card reveal">
+          <div class="review-stars">★★★★★</div>
+          <p class="section-text" style="font-style:italic;">"Dennis is the BEST! I thought my case was hopeless after visiting other attorneys…"</p>
+          <p style="font-weight:700;color:var(--ink-dark);">Adsterza</p>
+        </article>
+      </div>
+      <div class="reveal" style="margin-top:var(--sp-7);text-align:center;">
+        <a class="btn btn-secondary" href="https://www.google.com/maps/search/?api=1&query=Portillo+Kus+%26+Asociados+Estudio+Jur%C3%ADdico" target="_blank" rel="noopener">Ver las 417 opiniones en Google</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. CÓMO TRABAJAMOS -->
+  <section class="section--surface section-pad">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="section-label">CÓMO TRABAJAMOS</span>
+        <h2>Atención y medios de pago</h2>
+      </div>
+      <div class="reveal">
+        <div class="zone-group">
+          <h3>Atención</h3>
+          <div class="zone-chips">
+            <span class="chip">Presencial en el Microcentro</span>
+            <span class="chip">Consultas por WhatsApp</span>
+            <span class="chip">Clientes en el exterior</span>
+            <span class="chip">Acceso para silla de ruedas</span>
+          </div>
+        </div>
+        <div class="zone-group">
+          <h3>Pagos en Argentina</h3>
+          <div class="zone-chips">
+            <span class="chip">Efectivo</span>
+            <span class="chip">Transferencia</span>
+            <span class="chip">Mercado Pago</span>
+          </div>
+        </div>
+        <div class="zone-group">
+          <h3>Pagos desde el exterior</h3>
+          <div class="zone-chips">
+            <span class="chip">PayPal</span>
+            <span class="chip">Zelle</span>
+            <span class="chip">Western Union</span>
+            <span class="chip">Bank of America</span>
+          </div>
+        </div>
+        <div class="zone-group">
+          <h3>English</h3>
+          <div class="contact-card" style="background:var(--surface-dark-2);">
+            <p class="section-text" style="font-style:italic;">We speak English — consultations for foreigners.</p>
+            <div class="contact-actions">
+              <a class="btn btn-primary" data-wa data-wa-number="5491127111987" data-wa-msg="Hello, I would like to make a consultation with the firm." href="#">WhatsApp in English</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9. CONTACTO -->
+  <section class="section--dark section-pad" id="contacto">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="section-label">CONTACTO</span>
+        <h2>Hablemos</h2>
+        <p class="section-text">Lunes a viernes de 10:30 a 18 h.</p>
+      </div>
+      <div class="contact-grid">
+        <article class="contact-card reveal">
+          <div class="contact-card-head">
+            <div>
+              <span class="office-tag">Estudio · Microcentro</span>
+              <h3>Portillo Kus &amp; Asociados</h3>
+            </div>
+          </div>
+          <div class="badge-row">
+            <span class="badge">Acceso para silla de ruedas</span>
+          </div>
+          <p class="contact-detail">Edificio Miguel Bencich — Av. Pte. Roque Sáenz Peña 616, piso 4, oficina 403, C1035, CABA<br>Lunes a viernes de 10:30 a 18 h</p>
+          <div class="contact-actions">
+            <a class="btn btn-primary" data-wa data-wa-number="5491127111987" data-wa-msg="Hola, quiero hacer una consulta con el estudio." href="#">WhatsApp</a>
+            <a class="btn btn-secondary" href="tel:+5491127111987">Llamar</a>
+            <a class="btn btn-secondary" href="mailto:portillokusyasociados@gmail.com">Email</a>
+            <a class="btn btn-secondary" href="https://www.google.com/maps/search/?api=1&query=Portillo+Kus+%26+Asociados+Estudio+Jur%C3%ADdico" target="_blank" rel="noopener">Cómo llegar</a>
+          </div>
+        </article>
+        <article class="contact-card reveal">
+          <div class="contact-card-head">
+            <div>
+              <span class="office-tag">Segunda línea</span>
+              <h3>+54 9 11 3511-1987</h3>
+            </div>
+          </div>
+          <p class="contact-detail">portillokuslegal@gmail.com <span class="tag-pending" style="vertical-align:middle;">CONFIRMAR USO</span></p>
+          <p class="contact-detail" style="font-style:italic;">Mientras confirmamos para qué se usa esta línea, tu consulta llega por la línea principal del estudio.</p>
+          <div class="contact-actions">
+            <a class="btn btn-primary" data-wa data-wa-number="5491127111987" data-wa-msg="Hola, quiero hacer una consulta con el estudio." href="#">WhatsApp</a>
+            <a class="btn btn-secondary" href="tel:+5491127111987">Llamar</a>
+            <a class="btn btn-secondary" href="mailto:portillokusyasociados@gmail.com">Email</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-top">
+      <div>
+        <div class="footer-logo"><strong>Portillo Kus</strong> &amp; Asociados</div>
+        <div class="footer-social">
+          <a href="https://instagram.com/abogadoenargentina" target="_blank" rel="noopener" aria-label="Instagram de Portillo Kus & Asociados">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.5" fill="currentColor"/></svg>
+          </a>
+          <a href="https://instagram.com/soyabogadoenargentina" target="_blank" rel="noopener" aria-label="Segunda cuenta de Instagram de Portillo Kus & Asociados">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.5" fill="currentColor"/></svg>
+          </a>
+          <a href="https://tiktok.com/@abogadoenargentina" target="_blank" rel="noopener" aria-label="TikTok de Portillo Kus & Asociados">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 4v10.5a3.5 3.5 0 1 1-3-3.46"/><path d="M14 4c.4 2 1.9 3.5 4 3.8"/></svg>
+          </a>
+          <a href="https://youtube.com/@portillokusestudio" target="_blank" rel="noopener" aria-label="YouTube de Portillo Kus & Asociados">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="4"/><path d="M10 9.5l5 2.5-5 2.5z" fill="currentColor" stroke="none"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="footer-meta">
+        Edificio Miguel Bencich — Av. Pte. Roque Sáenz Peña 616, piso 4, of. 403, C1035, CABA<br>
+        +54 9 11 2711-1987 · portillokusyasociados@gmail.com<br>
+        Lunes a viernes de 10:30 a 18 h
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>"El Derecho es nuestra pasión."</span>
+      <span>© 2026 Portillo Kus & Asociados · Estudio Jurídico</span>
+    </div>
+  </div>
+</footer>
+
+<nav class="mobile-bar" id="mobileBar" aria-label="Contacto rápido">
+  <a class="btn btn-primary" data-wa data-wa-number="5491127111987" data-wa-msg="Hola, quiero hacer una consulta con el estudio." href="#">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.1-1.6-.8-1.8-.9-.2-.1-.4-.1-.6.1-.2.3-.7.9-.8 1-.1.2-.3.2-.5.1-1.5-.7-2.5-1.3-3.5-3-.3-.5.3-.4.8-1.4.1-.2 0-.4 0-.5C11 9.6 10.5 8.3 10.3 7.8c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.7.7-1 1.5-1 2.5.1 1.2.9 2.4 1 2.6 1.3 2 2.8 3.7 4.9 4.5 1.8.7 2.4.6 2.8.5.6-.1 1.6-.7 1.9-1.3.2-.6.2-1.1.1-1.2-.1-.2-.3-.3-.6-.4z"/><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2z" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+    WhatsApp
+  </a>
+  <a class="btn btn-secondary" href="tel:+5491127111987">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+    Llamar
+  </a>
+</nav>
+
+<script>
+(function(){
+  "use strict";
+
+  // WhatsApp: arma los href con encodeURIComponent
+  document.querySelectorAll('[data-wa]').forEach(function(el){
+    var number = el.getAttribute('data-wa-number');
+    var msg = el.getAttribute('data-wa-msg') || '';
+    el.setAttribute('href', 'https://wa.me/' + number + '?text=' + encodeURIComponent(msg));
+    el.setAttribute('target', '_blank');
+    el.setAttribute('rel', 'noopener');
+  });
+
+  // Header: compactar al hacer scroll
+  var header = document.getElementById('siteHeader');
+  var onScroll = function(){
+    header.classList.toggle('is-scrolled', window.scrollY > 12);
+  };
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  // Menú mobile a pantalla completa
+  var panel = document.getElementById('mobilePanel');
+  var openBtn = document.getElementById('menuOpenBtn');
+  var closeBtn = document.getElementById('menuCloseBtn');
+  function openMenu(){
+    panel.classList.add('is-open');
+    openBtn.setAttribute('aria-expanded', 'true');
+    document.body.style.overflow = 'hidden';
+    closeBtn.focus();
+  }
+  function closeMenu(){
+    panel.classList.remove('is-open');
+    openBtn.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+    openBtn.focus();
+  }
+  openBtn.addEventListener('click', openMenu);
+  closeBtn.addEventListener('click', closeMenu);
+  panel.querySelectorAll('a').forEach(function(a){ a.addEventListener('click', closeMenu); });
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && panel.classList.contains('is-open')) closeMenu();
+  });
+
+  // Barra fija mobile: aparece después de pasar la portada
+  var mobileBar = document.getElementById('mobileBar');
+  var hero = document.querySelector('.hero');
+  if ('IntersectionObserver' in window && mobileBar && hero){
+    var barObserver = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        var show = !entry.isIntersecting && entry.boundingClientRect.top < 0;
+        mobileBar.classList.toggle('is-visible', show);
+        document.body.classList.toggle('has-mobile-bar', show);
+      });
+    }, { threshold: 0 });
+    barObserver.observe(hero);
+  }
+
+  // Reveal on scroll
+  var reveals = document.querySelectorAll('.reveal, .reveal-scale');
+  if ('IntersectionObserver' in window && reveals.length){
+    var revealObserver = new IntersectionObserver(function(entries, obs){
+      entries.forEach(function(entry){
+        if (entry.isIntersecting){
+          entry.target.classList.add('is-visible');
+          obs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+    reveals.forEach(function(el){ revealObserver.observe(el); });
+  } else {
+    reveals.forEach(function(el){ el.classList.add('is-visible'); });
+  }
+
+  // Contadores animados
+  var counters = document.querySelectorAll('.js-counter');
+  var prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function formatCounter(el, value){
+    var decimals = parseInt(el.getAttribute('data-decimals'), 10) || 0;
+    var grouping = el.getAttribute('data-grouping') === 'true';
+    var prefix = el.getAttribute('data-prefix') || '';
+    return prefix + value.toLocaleString('es-AR', { minimumFractionDigits: decimals, maximumFractionDigits: decimals, useGrouping: grouping });
+  }
+  function animateCounter(el){
+    var target = parseFloat(el.getAttribute('data-target'));
+    if (prefersReducedMotion){
+      el.textContent = formatCounter(el, target);
+      return;
+    }
+    var duration = 1100;
+    var start = null;
+    function easeOutCubic(t){ return 1 - Math.pow(1 - t, 3); }
+    function step(ts){
+      if (!start) start = ts;
+      var progress = Math.min((ts - start) / duration, 1);
+      var value = target * easeOutCubic(progress);
+      el.textContent = formatCounter(el, value);
+      if (progress < 1) requestAnimationFrame(step);
+      else el.textContent = formatCounter(el, target);
+    }
+    requestAnimationFrame(step);
+  }
+  if ('IntersectionObserver' in window && counters.length){
+    var countObserver = new IntersectionObserver(function(entries, obs){
+      entries.forEach(function(entry){
+        if (entry.isIntersecting){
+          animateCounter(entry.target);
+          obs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.6 });
+    counters.forEach(function(el){ countObserver.observe(el); });
+  } else {
+    counters.forEach(function(el){
+      var target = parseFloat(el.getAttribute('data-target'));
+      el.textContent = formatCounter(el, target);
+    });
+  }
+
+  // Carrusel: flechas
+  var carousel = document.getElementById('carousel');
+  var prevBtn = document.getElementById('carPrev');
+  var nextBtn = document.getElementById('carNext');
+  if (carousel && prevBtn && nextBtn){
+    var scrollAmount = function(){ return carousel.querySelector('.property-card').offsetWidth + 16; };
+    prevBtn.addEventListener('click', function(){ carousel.scrollBy({ left: -scrollAmount(), behavior: 'smooth' }); });
+    nextBtn.addEventListener('click', function(){ carousel.scrollBy({ left: scrollAmount(), behavior: 'smooth' }); });
+  }
+})();
+</script>
+
+<!--
+PENDIENTE / CONFIRMAR con el estudio antes de pasar esto a producción:
+
+[PENDIENTE] Nombres y matrículas del CPACF de los demás socios ("Kus" y el resto
+  del equipo). Hoy solo se muestra al Dr. Denis Portillo, con una etiqueta
+  discreta "Socios y matrículas: a completar" para no destacarlo por encima del
+  estudio (el link lo van a leer varios socios).
+[PENDIENTE] Matrícula del Dr. Portillo (CPACF): el nombre "Denis" ya está
+  confirmado por las reseñas y por la placa de escritorio (foto real, sección
+  "El estudio"); falta el número de matrícula.
+[CONFIRMAR] Uso de la segunda línea (+54 9 11 3511-1987): mientras no se confirme,
+  sus botones de contacto redirigen a la línea principal (+54 9 11 2711-1987),
+  con una nota aclaratoria en la tarjeta.
+[CONFIRMAR] Atención en inglés: la franja "We speak English" está agregada a partir
+  de una reseña en inglés, pero no está confirmado que el estudio atienda en ese
+  idioma de forma habitual.
+[CONFIRMAR] Expedientes de ciudadanía resueltos: se usó "+1.200" (dato propio del
+  estudio); un directorio externo menciona "más de 1.000".
+[CONFIRMAR] Los 4 pasos del proceso de ciudadanía (consulta, documentación,
+  presentación y seguimiento, jura) son una reconstrucción razonable a partir del
+  brief, no un texto provisto por el estudio — revisar con ellos antes de publicar.
+[INFO] La foto de "Defensa ante expulsión" (need-expulsion.jpg) es de stock —
+  pasaporte con sellos de viaje, foto de Global Residence Index en Unsplash
+  (licencia Unsplash, uso libre) — marcada "Foto ilustrativa" en la página.
+[INFO] Las 9 fotos de "Áreas de práctica" (area-*.jpg) también son de stock de
+  Unsplash (licencia Unsplash, uso libre), elegidas por tema y por paleta para
+  no desentonar con el resto de la página — todas marcadas "Foto ilustrativa".
+  Ninguna muestra clientes, textos identificables ni escenas gráficas.
+[PENDIENTE] Textos completos de las reseñas de Google: los fragmentos de la
+  sección "Opiniones" (Yocselys B., Yania M., Jorge R., Adsterza) están
+  republicados tal como los tomó un directorio externo — copiar el texto
+  completo directamente desde Google Maps antes de publicar.
+[PENDIENTE] Logo en alta resolución o vector: el archivo disponible (onbizz.com)
+  es de baja resolución (150×80), por eso solo se usa en una placa chica sobre
+  fondo blanco en "El estudio", y el header/pie usan el nombre en texto.
+[PENDIENTE] Fotos del estudio en mejor calidad: la foto de portada y "El estudio"
+  vienen de la galería pública del estudio (buena calidad); la de "El estudio"
+  (Themis sobre el escritorio) es un fotograma recortado de un video y tiene
+  menor resolución.
+[CONFIRMAR] Consultas de urgencia fuera de horario por WhatsApp: mencionadas en un
+  directorio externo, no confirmadas directamente con el estudio.
+[CONFIRMAR] El "og:image" usa la URL de preview de Vercel
+  (landing-page-mockup-mv9ysuvdi-landing-page-7035.vercel.app), que depende del
+  deploy y puede no ser estable — si el estudio avanza y esto pasa a un dominio
+  definitivo, actualizar esa URL.
+[CONFIRMAR] Si la ficha de Google Maps del estudio (417 reseñas, hoy enlazada a
+  Instagram) va a apuntar a esta página cuando se publique.
+-->
+
+</body>
+</html>

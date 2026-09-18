@@ -1,0 +1,170 @@
+{
+  "meta": {
+    "title": "Portillo Kus & Asociados — Estudio jurídico en CABA · Ciudadanía y migraciones",
+    "description": "Patrocinio en ciudadanía argentina, residencias y visas en Microcentro, CABA. 5,0★ con 417 reseñas en Google.",
+    "og_title": "Portillo Kus & Asociados — Estudio Jurídico",
+    "og_description": "Ciudadanía argentina, residencias y visas. 5,0★ con 417 reseñas en Google."
+  },
+  "a11y": {
+    "open_menu": "Abrir menú",
+    "close_menu": "Cerrar menú",
+    "lang_switch": "Cambiar idioma",
+    "carousel_prev": "Área anterior",
+    "carousel_next": "Área siguiente"
+  },
+  "nav": {
+    "ciudadania": "Ciudadanía",
+    "migraciones": "Migraciones",
+    "areas": "Áreas",
+    "estudio": "El estudio",
+    "contacto": "Contacto",
+    "consultar": "Consultar",
+    "consultar_msg": "Hola, quiero hacer una consulta con el estudio."
+  },
+  "mobile": {
+    "wa_cta": "Escribir por WhatsApp",
+    "hours": "Lunes a viernes de 10:30 a 18 h"
+  },
+  "hero": {
+    "img_alt": "Vista de Diagonal Norte (Av. Roque Sáenz Peña), a pasos del estudio, con el Obelisco al fondo",
+    "eyebrow": "ESTUDIO JURÍDICO · MICROCENTRO, BUENOS AIRES",
+    "title": "Tu ciudadanía argentina, en las mejores manos",
+    "sub": "Patrocinio en ciudadanía, residencias y visas. Más de 1.200 expedientes de ciudadanía resueltos favorablemente desde 2020.",
+    "cta_primary": "Consultar por WhatsApp",
+    "cta_primary_msg": "Hola, quiero consultar por mi ciudadanía argentina.",
+    "cta_secondary": "Ver áreas de práctica",
+    "reviews_text": "417 reseñas en Google",
+    "address": "Av. Roque Sáenz Peña 616, CABA"
+  },
+  "stats": {
+    "s1_label": "Ciudadanías resueltas desde 2020",
+    "s2_label": "417 reseñas en Google",
+    "s3_label": "Áreas del derecho",
+    "s4_label": "Medios de pago, también desde el exterior"
+  },
+  "need": {
+    "eyebrow": "¿QUÉ NECESITAS?",
+    "title": "Elige por dónde empezar",
+    "c1_tag": "Foto real del estudio",
+    "c1_alt": "Cliente con su trámite de ciudadanía argentina resuelto, junto al Dr. Portillo",
+    "c1_title": "Ciudadanía argentina",
+    "c1_desc": "Carta de ciudadanía, de la consulta a la jura.",
+    "c1_cta": "Consultar por WhatsApp",
+    "c1_msg": "Hola, quiero consultar por la ciudadanía argentina.",
+    "c2_tag": "Foto real del estudio",
+    "c2_alt": "Dr. Portillo con un cliente en el estudio, foto real",
+    "c2_title": "Residencia y visas",
+    "c2_desc": "Residencias Mercosur y extra Mercosur, visas y permisos de ingreso.",
+    "c2_cta": "Consultar por WhatsApp",
+    "c2_msg": "Hola, quiero consultar por una residencia o visa.",
+    "c3_tag": "Foto ilustrativa",
+    "c3_alt": "Pasaporte abierto con sellos de entrada y salida, foto ilustrativa",
+    "c3_title": "Defensa ante expulsión",
+    "c3_desc": "Patrocinio para revertir una disposición de expulsión.",
+    "c3_cta": "Consultar por WhatsApp",
+    "c3_msg": "Hola, necesito asesoramiento por una disposición de expulsión."
+  },
+  "ciudadania": {
+    "eyebrow": "CIUDADANÍA ARGENTINA",
+    "title": "Te acompañamos en todo el proceso",
+    "text": "Patrocinamos tu carta de ciudadanía de principio a fin. Desde 2020 resolvimos favorablemente más de 1.200 expedientes, y también gestionamos ciudadanías italianas y españolas.",
+    "step1": "1. Consulta inicial, por WhatsApp o en el estudio.",
+    "step2": "2. Armado de la documentación.",
+    "step3": "3. Presentación y seguimiento del expediente.",
+    "step4": "4. Acompañamiento hasta la jura.",
+    "cta": "Consultar por mi ciudadanía",
+    "cta_msg": "Hola, quiero consultar por mi ciudadanía argentina.",
+    "photo_alt": "Dr. Portillo con un cliente y su carta de ciudadanía argentina, frente al Palacio de Tribunales",
+    "photo_tag": "Foto real del estudio"
+  },
+  "buenosaires": {
+    "eyebrow": "BUENOS AIRES",
+    "title": "A pasos de donde pasa todo",
+    "sub": "El estudio está en pleno Microcentro, sobre Diagonal Norte, a un paso de Plaza de Mayo.",
+    "ba1_alt": "Fachada de la Casa Rosada, con la bandera argentina, en Plaza de Mayo",
+    "ba1_caption": "A pasos de Plaza de Mayo",
+    "ba2_alt": "El Obelisco visto desde Diagonal Norte, Buenos Aires",
+    "ba2_caption": "Diagonal Norte, Microcentro",
+    "ba3_alt": "Cúpulas del Edificio Miguel Bencich, donde está el estudio",
+    "ba3_caption": "Edificio Miguel Bencich, piso 4"
+  },
+  "areas": {
+    "eyebrow": "ÁREAS DE PRÁCTICA",
+    "title": "Más de 12 áreas del derecho",
+    "sub": "La ciudadanía y las migraciones son nuestro fuerte. Además, acompañamos a nuestros clientes en estos otros temas.",
+    "cta": "Consultar sobre este tema",
+    "photo_tag": "Foto ilustrativa",
+    "a1_cat": "Laboral", "a1_title": "Despidos y ART", "a1_desc": "Reclamos por despidos sin causa y por accidentes o enfermedades laborales.", "a1_msg": "Hola, quiero consultar por un tema laboral.", "a1_alt": "Documento laboral revisado sobre un escritorio, foto ilustrativa",
+    "a2_cat": "Familia", "a2_title": "Familia", "a2_desc": "Divorcios de mutuo acuerdo y unilaterales, alimentos y régimen de visitas.", "a2_msg": "Hola, quiero consultar por un tema de familia.", "a2_alt": "Mano de un bebé sobre las manos de sus padres, foto ilustrativa",
+    "a3_cat": "Penal", "a3_title": "Penal", "a3_desc": "Defensa y asesoramiento en causas penales.", "a3_msg": "Hola, quiero consultar por un tema penal.", "a3_alt": "Columnas clásicas de un edificio de tribunales, foto ilustrativa",
+    "a4_cat": "Sucesiones", "a4_title": "Sucesiones", "a4_desc": "Trámite sucesorio de principio a fin.", "a4_msg": "Hola, quiero consultar por una sucesión.", "a4_alt": "Antiguo llavero con llaves ornamentadas sobre madera, foto ilustrativa",
+    "a5_cat": "Daños", "a5_title": "Accidentes y daños", "a5_desc": "Accidentes de tránsito, daños y perjuicios.", "a5_msg": "Hola, quiero consultar por un accidente de tránsito.", "a5_alt": "Tránsito nocturno en una avenida de la ciudad, foto ilustrativa",
+    "a6_cat": "Consumidor", "a6_title": "Defensa del consumidor", "a6_desc": "Reclamos por productos, servicios y relaciones de consumo.", "a6_msg": "Hola, quiero consultar por defensa del consumidor.", "a6_alt": "Pago con celular sin contacto, foto ilustrativa",
+    "a7_cat": "Empresas", "a7_title": "Empresas y contratos", "a7_desc": "Registro de sociedades, contratos y alquileres.", "a7_msg": "Hola, quiero consultar por un tema de empresas o contratos.", "a7_alt": "Fachada de un edificio de oficinas moderno, foto ilustrativa",
+    "a8_cat": "Ciudadanía europea", "a8_title": "Ciudadanías italiana y española", "a8_desc": "Trámites de ciudadanía por ascendencia italiana o española.", "a8_msg": "Hola, quiero consultar por la ciudadanía italiana o española.", "a8_alt": "Bandera de la Unión Europea, foto ilustrativa",
+    "a9_cat": "Escribanía", "a9_title": "Trámites notariales", "a9_desc": "Trámites notariales por escribanía.", "a9_msg": "Hola, quiero consultar por un trámite notarial.", "a9_alt": "Sellos de lacre dorados sobre sobres, foto ilustrativa"
+  },
+  "estudio": {
+    "eyebrow": "EL ESTUDIO",
+    "title": "Un estudio integral, nacional e internacional",
+    "text": "Somos abogados con amplia trayectoria y especialistas en múltiples áreas del Derecho. En pocos años nos convertimos en uno de los estudios de referencia en ciudadanía y migraciones del país.",
+    "quote": "\"Elegirnos es poner tus derechos en las mejores manos.\"",
+    "photo_alt": "Estatua de Themis sobre el escritorio del estudio, junto a carpetas con el logo de Portillo Kus & Asociados",
+    "name": "Dr. Denis Portillo",
+    "role": "Presidente Ejecutivo",
+    "tag_matricula": "MATRÍCULA A COMPLETAR",
+    "team_note": "Socios y matrículas: a completar"
+  },
+  "opiniones": {
+    "eyebrow": "OPINIONES",
+    "title": "Lo que dicen nuestros clientes",
+    "r1_text": "\"Inicié mi trámite de naturalización con el Dr. Portillo y desde el primer momento me inspiró total confianza…\"",
+    "r1_name": "Yocselys B.",
+    "r2_text": "\"Excelente profesional. Me acompañó en todo el proceso para obtener la ciudadanía argentina…\"",
+    "r2_name": "Yania M.",
+    "r3_text": "\"Muy recomendable el Dr. Portillo para temas migratorios…\"",
+    "r3_name": "Jorge R.",
+    "r4_text": "\"Dennis is the BEST! I thought my case was hopeless after visiting other attorneys…\"",
+    "r4_name": "Adsterza",
+    "cta": "Ver las 417 opiniones en Google"
+  },
+  "trabajamos": {
+    "eyebrow": "CÓMO TRABAJAMOS",
+    "title": "Atención y medios de pago",
+    "g1_title": "Atención",
+    "g1_c1": "Presencial en el Microcentro", "g1_c2": "Consultas por WhatsApp", "g1_c3": "Clientes en el exterior", "g1_c4": "Acceso para silla de ruedas",
+    "g2_title": "Pagos en Argentina",
+    "g2_c1": "Efectivo", "g2_c2": "Transferencia", "g2_c3": "Mercado Pago",
+    "g3_title": "Pagos desde el exterior",
+    "g3_c1": "PayPal", "g3_c2": "Zelle", "g3_c3": "Western Union", "g3_c4": "Bank of America",
+    "g4_title": "English",
+    "g4_text": "We speak English — consultations for foreigners.",
+    "g4_cta": "WhatsApp in English",
+    "g4_msg": "Hello, I would like to make a consultation with the firm."
+  },
+  "contacto": {
+    "eyebrow": "CONTACTO",
+    "title": "Hablemos",
+    "sub": "Lunes a viernes de 10:30 a 18 h.",
+    "card1_tag": "Estudio · Microcentro",
+    "card1_title": "Portillo Kus & Asociados",
+    "card1_badge": "Acceso para silla de ruedas",
+    "card1_address": "Edificio Miguel Bencich — Av. Pte. Roque Sáenz Peña 616, piso 4, oficina 403, C1035, CABA",
+    "card1_hours": "Lunes a viernes de 10:30 a 18 h",
+    "wa": "WhatsApp",
+    "wa_msg": "Hola, quiero hacer una consulta con el estudio.",
+    "call": "Llamar",
+    "email": "Email",
+    "directions": "Cómo llegar",
+    "card2_tag": "Segunda línea",
+    "card2_pending": "CONFIRMAR USO",
+    "card2_note": "Mientras confirmamos para qué se usa esta línea, tu consulta llega por la línea principal del estudio."
+  },
+  "footer": {
+    "tagline": "\"El Derecho es nuestra pasión.\"",
+    "disclaimer": "Portillo Kus & Asociados es un estudio jurídico privado. No es un organismo oficial ni tiene vínculo con el Estado argentino.",
+    "rights": "© 2026 Portillo Kus & Asociados · Estudio Jurídico",
+    "address": "Edificio Miguel Bencich — Av. Pte. Roque Sáenz Peña 616, piso 4, of. 403, C1035, CABA",
+    "hours": "Lunes a viernes de 10:30 a 18 h"
+  }
+}

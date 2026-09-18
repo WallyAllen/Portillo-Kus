@@ -1,0 +1,170 @@
+{
+  "meta": {
+    "title": "Portillo Kus & Asociados — Escritório de advocacia em Buenos Aires · Cidadania e imigração",
+    "description": "Assessoria em cidadania argentina, residência e visas no Microcentro, Buenos Aires. 5,0★ com 417 avaliações no Google.",
+    "og_title": "Portillo Kus & Asociados — Escritório de Advocacia",
+    "og_description": "Cidadania argentina, residência e visas. 5,0★ com 417 avaliações no Google."
+  },
+  "a11y": {
+    "open_menu": "Abrir menu",
+    "close_menu": "Fechar menu",
+    "lang_switch": "Mudar idioma",
+    "carousel_prev": "Área anterior",
+    "carousel_next": "Próxima área"
+  },
+  "nav": {
+    "ciudadania": "Cidadania",
+    "migraciones": "Imigração",
+    "areas": "Áreas de atuação",
+    "estudio": "O escritório",
+    "contacto": "Contato",
+    "consultar": "Consultar",
+    "consultar_msg": "Olá, gostaria de fazer uma consulta com o escritório."
+  },
+  "mobile": {
+    "wa_cta": "Falar pelo WhatsApp",
+    "hours": "Segunda a sexta, das 10h30 às 18h"
+  },
+  "hero": {
+    "img_alt": "Vista da Diagonal Norte (Av. Roque Sáenz Peña), a poucos passos do escritório, com o Obelisco ao fundo",
+    "eyebrow": "ESCRITÓRIO DE ADVOCACIA · MICROCENTRO, BUENOS AIRES",
+    "title": "Sua cidadania argentina, nas melhores mãos",
+    "sub": "Assessoria em cidadania, residência e visas. Mais de 1.200 processos de cidadania resolvidos com sucesso desde 2020.",
+    "cta_primary": "Consultar pelo WhatsApp",
+    "cta_primary_msg": "Olá, gostaria de consultar sobre minha cidadania argentina.",
+    "cta_secondary": "Ver áreas de atuação",
+    "reviews_text": "417 avaliações no Google",
+    "address": "Av. Roque Sáenz Peña 616, Buenos Aires"
+  },
+  "stats": {
+    "s1_label": "Cidadanias resolvidas desde 2020",
+    "s2_label": "417 avaliações no Google",
+    "s3_label": "Áreas do direito",
+    "s4_label": "Formas de pagamento, também do exterior"
+  },
+  "need": {
+    "eyebrow": "O QUE VOCÊ PRECISA?",
+    "title": "Escolha por onde começar",
+    "c1_tag": "Foto real do escritório",
+    "c1_alt": "Cliente com seu processo de cidadania argentina resolvido, junto ao Dr. Portillo",
+    "c1_title": "Cidadania argentina",
+    "c1_desc": "Carta de cidadania, da consulta até o juramento.",
+    "c1_cta": "Consultar pelo WhatsApp",
+    "c1_msg": "Olá, gostaria de consultar sobre a cidadania argentina.",
+    "c2_tag": "Foto real do escritório",
+    "c2_alt": "Dr. Portillo com um cliente no escritório, foto real",
+    "c2_title": "Residência e visas",
+    "c2_desc": "Residências Mercosul e extra Mercosul, visas e permissões de entrada.",
+    "c2_cta": "Consultar pelo WhatsApp",
+    "c2_msg": "Olá, gostaria de consultar sobre uma residência ou visa.",
+    "c3_tag": "Foto ilustrativa",
+    "c3_alt": "Passaporte aberto com selos de entrada e saída, foto ilustrativa",
+    "c3_title": "Defesa contra expulsão",
+    "c3_desc": "Assessoria jurídica para reverter uma ordem de expulsão.",
+    "c3_cta": "Consultar pelo WhatsApp",
+    "c3_msg": "Olá, preciso de assessoria sobre uma ordem de expulsão."
+  },
+  "ciudadania": {
+    "eyebrow": "CIDADANIA ARGENTINA",
+    "title": "Acompanhamos você em todo o processo",
+    "text": "Assessoramos sua carta de cidadania do início ao fim. Desde 2020 resolvemos com sucesso mais de 1.200 processos, e também tratamos de cidadania italiana e espanhola.",
+    "step1": "1. Consulta inicial, pelo WhatsApp ou no escritório.",
+    "step2": "2. Preparação da documentação.",
+    "step3": "3. Apresentação e acompanhamento do processo.",
+    "step4": "4. Acompanhamento até o juramento.",
+    "cta": "Consultar sobre minha cidadania",
+    "cta_msg": "Olá, gostaria de consultar sobre minha cidadania argentina.",
+    "photo_alt": "Dr. Portillo com um cliente e sua carta de cidadania argentina, em frente ao Palácio de Tribunales",
+    "photo_tag": "Foto real do escritório"
+  },
+  "buenosaires": {
+    "eyebrow": "BUENOS AIRES",
+    "title": "A poucos passos de onde tudo acontece",
+    "sub": "O escritório está no coração do Microcentro, na Diagonal Norte, a poucos passos da Plaza de Mayo.",
+    "ba1_alt": "Fachada da Casa Rosada, com a bandeira argentina, na Plaza de Mayo",
+    "ba1_caption": "A poucos passos da Plaza de Mayo",
+    "ba2_alt": "O Obelisco visto da Diagonal Norte, Buenos Aires",
+    "ba2_caption": "Diagonal Norte, Microcentro",
+    "ba3_alt": "Cúpulas do Edificio Miguel Bencich, onde está o escritório",
+    "ba3_caption": "Edificio Miguel Bencich, 4º andar"
+  },
+  "areas": {
+    "eyebrow": "ÁREAS DE ATUAÇÃO",
+    "title": "Mais de 12 áreas do direito",
+    "sub": "Cidadania e imigração são nosso forte. Além disso, acompanhamos nossos clientes nestes outros temas.",
+    "cta": "Consultar sobre este tema",
+    "photo_tag": "Foto ilustrativa",
+    "a1_cat": "Trabalhista", "a1_title": "Demissões e acidentes de trabalho", "a1_desc": "Reclamações por demissão sem justa causa e acidentes ou doenças do trabalho.", "a1_msg": "Olá, gostaria de consultar sobre um tema trabalhista.", "a1_alt": "Documento trabalhista revisado sobre uma mesa, foto ilustrativa",
+    "a2_cat": "Família", "a2_title": "Família", "a2_desc": "Divórcio consensual e litigioso, pensão alimentícia e regime de visitas.", "a2_msg": "Olá, gostaria de consultar sobre um tema de família.", "a2_alt": "Mão de um bebê sobre as mãos dos pais, foto ilustrativa",
+    "a3_cat": "Penal", "a3_title": "Penal", "a3_desc": "Defesa e assessoria em processos penais.", "a3_msg": "Olá, gostaria de consultar sobre um tema penal.", "a3_alt": "Colunas clássicas de um prédio de tribunais, foto ilustrativa",
+    "a4_cat": "Inventário", "a4_title": "Inventário e sucessões", "a4_desc": "Processo de inventário do início ao fim.", "a4_msg": "Olá, gostaria de consultar sobre um inventário.", "a4_alt": "Molho de chaves antigo e ornamentado sobre madeira, foto ilustrativa",
+    "a5_cat": "Danos", "a5_title": "Acidentes e danos", "a5_desc": "Acidentes de trânsito, danos e prejuízos.", "a5_msg": "Olá, gostaria de consultar sobre um acidente de trânsito.", "a5_alt": "Trânsito noturno em uma avenida da cidade, foto ilustrativa",
+    "a6_cat": "Consumidor", "a6_title": "Defesa do consumidor", "a6_desc": "Reclamações sobre produtos, serviços e relações de consumo.", "a6_msg": "Olá, gostaria de consultar sobre defesa do consumidor.", "a6_alt": "Pagamento por aproximação com celular, foto ilustrativa",
+    "a7_cat": "Empresas", "a7_title": "Empresas e contratos", "a7_desc": "Registro de sociedades, contratos e locações.", "a7_msg": "Olá, gostaria de consultar sobre um tema de empresas ou contratos.", "a7_alt": "Fachada de um edifício de escritórios moderno, foto ilustrativa",
+    "a8_cat": "Cidadania europeia", "a8_title": "Cidadania italiana e espanhola", "a8_desc": "Processos de cidadania por ascendência italiana ou espanhola.", "a8_msg": "Olá, gostaria de consultar sobre cidadania italiana ou espanhola.", "a8_alt": "Bandeira da União Europeia, foto ilustrativa",
+    "a9_cat": "Cartório", "a9_title": "Procedimentos notariais", "a9_desc": "Procedimentos notariais em cartório.", "a9_msg": "Olá, gostaria de consultar sobre um procedimento notarial.", "a9_alt": "Selos de lacre dourados sobre envelopes, foto ilustrativa"
+  },
+  "estudio": {
+    "eyebrow": "O ESCRITÓRIO",
+    "title": "Um escritório completo, nacional e internacional",
+    "text": "Somos advogados com ampla experiência e especialistas em múltiplas áreas do Direito. Em poucos anos nos tornamos um dos escritórios de referência em cidadania e imigração do país.",
+    "quote": "\"Escolher-nos é colocar seus direitos nas melhores mãos.\"",
+    "photo_alt": "Estátua de Têmis sobre a mesa do escritório, junto a pastas com o logotipo da Portillo Kus & Asociados",
+    "name": "Dr. Denis Portillo",
+    "role": "Presidente Executivo",
+    "tag_matricula": "REGISTRO PROFISSIONAL A CONFIRMAR",
+    "team_note": "Sócios e registros profissionais: a completar"
+  },
+  "opiniones": {
+    "eyebrow": "AVALIAÇÕES",
+    "title": "O que dizem nossos clientes",
+    "r1_text": "\"Iniciei meu processo de naturalização com o Dr. Portillo e desde o primeiro momento ele me inspirou total confiança…\"",
+    "r1_name": "Yocselys B.",
+    "r2_text": "\"Excelente profissional. Ele me acompanhou em todo o processo para obter a cidadania argentina…\"",
+    "r2_name": "Yania M.",
+    "r3_text": "\"Recomendo muito o Dr. Portillo para temas de imigração…\"",
+    "r3_name": "Jorge R.",
+    "r4_text": "\"Dennis is the BEST! I thought my case was hopeless after visiting other attorneys…\"",
+    "r4_name": "Adsterza",
+    "cta": "Ver as 417 avaliações no Google"
+  },
+  "trabajamos": {
+    "eyebrow": "COMO TRABALHAMOS",
+    "title": "Atendimento e formas de pagamento",
+    "g1_title": "Atendimento",
+    "g1_c1": "Presencial no Microcentro", "g1_c2": "Consultas pelo WhatsApp", "g1_c3": "Clientes no exterior", "g1_c4": "Acesso para cadeira de rodas",
+    "g2_title": "Pagamentos na Argentina",
+    "g2_c1": "Dinheiro", "g2_c2": "Transferência", "g2_c3": "Mercado Pago",
+    "g3_title": "Pagamentos do exterior",
+    "g3_c1": "PayPal", "g3_c2": "Zelle", "g3_c3": "Western Union", "g3_c4": "Bank of America",
+    "g4_title": "Idiomas",
+    "g4_text": "Também atendemos em espanhol e inglês. [CONFIRMAR: outros idiomas em que o escritório atende]",
+    "g4_cta": "Consultar pelo WhatsApp",
+    "g4_msg": "Olá, gostaria de fazer uma consulta com o escritório."
+  },
+  "contacto": {
+    "eyebrow": "CONTATO",
+    "title": "Vamos conversar",
+    "sub": "Segunda a sexta, das 10h30 às 18h.",
+    "card1_tag": "Escritório · Microcentro",
+    "card1_title": "Portillo Kus & Asociados",
+    "card1_badge": "Acesso para cadeira de rodas",
+    "card1_address": "Edificio Miguel Bencich — Av. Pte. Roque Sáenz Peña 616, 4º andar, sala 403, C1035, Buenos Aires",
+    "card1_hours": "Segunda a sexta, das 10h30 às 18h",
+    "wa": "WhatsApp",
+    "wa_msg": "Olá, gostaria de fazer uma consulta com o escritório.",
+    "call": "Ligar",
+    "email": "E-mail",
+    "directions": "Como chegar",
+    "card2_tag": "Segunda linha",
+    "card2_pending": "USO A CONFIRMAR",
+    "card2_note": "Enquanto confirmamos para que esta linha é usada, sua consulta chega pela linha principal do escritório."
+  },
+  "footer": {
+    "tagline": "\"O Direito é nossa paixão.\"",
+    "disclaimer": "Portillo Kus & Asociados é um escritório de advocacia privado. Não é um órgão oficial nem tem vínculo com o Estado argentino.",
+    "rights": "© 2026 Portillo Kus & Asociados · Escritório de Advocacia",
+    "address": "Edificio Miguel Bencich — Av. Pte. Roque Sáenz Peña 616, 4º andar, sala 403, C1035, Buenos Aires",
+    "hours": "Segunda a sexta, das 10h30 às 18h"
+  }
+}

@@ -1,0 +1,170 @@
+{
+  "meta": {
+    "title": "Portillo Kus & Asociados — Law Firm in Buenos Aires · Citizenship and Immigration",
+    "description": "Argentine citizenship, residency, and visa sponsorship in Microcentro, Buenos Aires. 5.0★ with 417 Google reviews.",
+    "og_title": "Portillo Kus & Asociados — Law Firm",
+    "og_description": "Argentine citizenship, residency, and visas. 5.0★ with 417 Google reviews."
+  },
+  "a11y": {
+    "open_menu": "Open menu",
+    "close_menu": "Close menu",
+    "lang_switch": "Change language",
+    "carousel_prev": "Previous area",
+    "carousel_next": "Next area"
+  },
+  "nav": {
+    "ciudadania": "Citizenship",
+    "migraciones": "Immigration",
+    "areas": "Practice areas",
+    "estudio": "The firm",
+    "contacto": "Contact",
+    "consultar": "Consult",
+    "consultar_msg": "Hello, I would like to make a consultation with the firm."
+  },
+  "mobile": {
+    "wa_cta": "Message us on WhatsApp",
+    "hours": "Monday to Friday, 10:30 am to 6 pm"
+  },
+  "hero": {
+    "img_alt": "View of Diagonal Norte (Av. Roque Sáenz Peña), steps from the firm, with the Obelisk in the background",
+    "eyebrow": "LAW FIRM · MICROCENTRO, BUENOS AIRES",
+    "title": "Your Argentine citizenship, in the best hands",
+    "sub": "Sponsorship for citizenship, residency, and visas. Over 1,200 citizenship cases resolved favorably since 2020.",
+    "cta_primary": "Consult on WhatsApp",
+    "cta_primary_msg": "Hello, I would like to consult about my Argentine citizenship.",
+    "cta_secondary": "See practice areas",
+    "reviews_text": "417 Google reviews",
+    "address": "Av. Roque Sáenz Peña 616, Buenos Aires"
+  },
+  "stats": {
+    "s1_label": "Citizenship cases resolved since 2020",
+    "s2_label": "417 Google reviews",
+    "s3_label": "Areas of law",
+    "s4_label": "Payment methods, including from abroad"
+  },
+  "need": {
+    "eyebrow": "WHAT DO YOU NEED?",
+    "title": "Choose where to start",
+    "c1_tag": "Real photo from the firm",
+    "c1_alt": "Client with their completed Argentine citizenship process, alongside Dr. Portillo",
+    "c1_title": "Argentine citizenship",
+    "c1_desc": "Certificate of citizenship, from the first consultation to the oath.",
+    "c1_cta": "Consult on WhatsApp",
+    "c1_msg": "Hello, I would like to consult about Argentine citizenship.",
+    "c2_tag": "Real photo from the firm",
+    "c2_alt": "Dr. Portillo with a client at the firm, real photo",
+    "c2_title": "Residency and visas",
+    "c2_desc": "Mercosur and non-Mercosur residency, visas, and entry permits.",
+    "c2_cta": "Consult on WhatsApp",
+    "c2_msg": "Hello, I would like to consult about a residency or visa.",
+    "c3_tag": "Stock photo",
+    "c3_alt": "Open passport with entry and exit stamps, stock photo",
+    "c3_title": "Defense against deportation",
+    "c3_desc": "Legal representation to reverse a deportation order.",
+    "c3_cta": "Consult on WhatsApp",
+    "c3_msg": "Hello, I need advice regarding a deportation order."
+  },
+  "ciudadania": {
+    "eyebrow": "ARGENTINE CITIZENSHIP",
+    "title": "We guide you through the whole process",
+    "text": "We sponsor your citizenship application from start to finish. Since 2020 we've favorably resolved over 1,200 cases, and we also handle Italian and Spanish citizenship.",
+    "step1": "1. Initial consultation, by WhatsApp or at the firm.",
+    "step2": "2. Preparing your documentation.",
+    "step3": "3. Filing and following up on your case.",
+    "step4": "4. Support all the way through the oath ceremony.",
+    "cta": "Consult about my citizenship",
+    "cta_msg": "Hello, I would like to consult about my Argentine citizenship.",
+    "photo_alt": "Dr. Portillo with a client and their Argentine citizenship certificate, in front of the Tribunales Palace",
+    "photo_tag": "Real photo from the firm"
+  },
+  "buenosaires": {
+    "eyebrow": "BUENOS AIRES",
+    "title": "Steps away from where it all happens",
+    "sub": "The firm is right in the Microcentro, on Diagonal Norte, a short walk from Plaza de Mayo.",
+    "ba1_alt": "Facade of the Casa Rosada, with the Argentine flag, at Plaza de Mayo",
+    "ba1_caption": "Steps from Plaza de Mayo",
+    "ba2_alt": "The Obelisk seen from Diagonal Norte, Buenos Aires",
+    "ba2_caption": "Diagonal Norte, Microcentro",
+    "ba3_alt": "Domes of the Edificio Miguel Bencich, where the firm is located",
+    "ba3_caption": "Edificio Miguel Bencich, 4th floor"
+  },
+  "areas": {
+    "eyebrow": "PRACTICE AREAS",
+    "title": "Over 12 areas of law",
+    "sub": "Citizenship and immigration are our strength. We also support our clients in these other matters.",
+    "cta": "Ask about this topic",
+    "photo_tag": "Stock photo",
+    "a1_cat": "Labor", "a1_title": "Wrongful termination & workers' comp", "a1_desc": "Claims for wrongful dismissal and work-related accidents or illness.", "a1_msg": "Hello, I would like to consult about a labor law matter.", "a1_alt": "Reviewed labor document on a desk, stock photo",
+    "a2_cat": "Family", "a2_title": "Family law", "a2_desc": "Mutual and unilateral divorce, child support, and visitation rights.", "a2_msg": "Hello, I would like to consult about a family law matter.", "a2_alt": "A baby's hand resting on their parents' hands, stock photo",
+    "a3_cat": "Criminal", "a3_title": "Criminal law", "a3_desc": "Defense and advice in criminal cases.", "a3_msg": "Hello, I would like to consult about a criminal law matter.", "a3_alt": "Classic columns of a courthouse building, stock photo",
+    "a4_cat": "Probate", "a4_title": "Estates & probate", "a4_desc": "Full probate proceedings from start to finish.", "a4_msg": "Hello, I would like to consult about a probate matter.", "a4_alt": "Antique key ring with ornate keys on wood, stock photo",
+    "a5_cat": "Damages", "a5_title": "Accidents & damages", "a5_desc": "Traffic accidents, damages, and losses.", "a5_msg": "Hello, I would like to consult about a traffic accident.", "a5_alt": "Night traffic on a city avenue, stock photo",
+    "a6_cat": "Consumer", "a6_title": "Consumer protection", "a6_desc": "Claims over products, services, and consumer relationships.", "a6_msg": "Hello, I would like to consult about consumer protection.", "a6_alt": "Contactless payment with a phone, stock photo",
+    "a7_cat": "Business", "a7_title": "Business & contracts", "a7_desc": "Company registration, contracts, and leases.", "a7_msg": "Hello, I would like to consult about a business or contract matter.", "a7_alt": "Facade of a modern office building, stock photo",
+    "a8_cat": "European citizenship", "a8_title": "Italian & Spanish citizenship", "a8_desc": "Citizenship by Italian or Spanish ancestry.", "a8_msg": "Hello, I would like to consult about Italian or Spanish citizenship.", "a8_alt": "Flag of the European Union, stock photo",
+    "a9_cat": "Notary", "a9_title": "Notarial procedures", "a9_desc": "Notarial procedures through a notary public.", "a9_msg": "Hello, I would like to consult about a notarial procedure.", "a9_alt": "Gold wax seals on envelopes, stock photo"
+  },
+  "estudio": {
+    "eyebrow": "THE FIRM",
+    "title": "A comprehensive firm, national and international",
+    "text": "We are lawyers with extensive experience, specialized in multiple areas of law. In just a few years we became one of the leading firms in citizenship and immigration in the country.",
+    "quote": "\"Choosing us means putting your rights in the best hands.\"",
+    "photo_alt": "Statue of Themis on the firm's desk, next to folders with the Portillo Kus & Asociados logo",
+    "name": "Dr. Denis Portillo",
+    "role": "Chief Executive",
+    "tag_matricula": "BAR NUMBER TO BE ADDED",
+    "team_note": "Partners and bar numbers: to be completed"
+  },
+  "opiniones": {
+    "eyebrow": "REVIEWS",
+    "title": "What our clients say",
+    "r1_text": "\"I started my naturalization process with Dr. Portillo and from the very first moment he inspired complete trust in me…\"",
+    "r1_name": "Yocselys B.",
+    "r2_text": "\"Excellent professional. He guided me through the entire process of obtaining Argentine citizenship…\"",
+    "r2_name": "Yania M.",
+    "r3_text": "\"Highly recommend Dr. Portillo for immigration matters…\"",
+    "r3_name": "Jorge R.",
+    "r4_text": "\"Dennis is the BEST! I thought my case was hopeless after visiting other attorneys…\"",
+    "r4_name": "Adsterza",
+    "cta": "See all 417 reviews on Google"
+  },
+  "trabajamos": {
+    "eyebrow": "HOW WE WORK",
+    "title": "Service and payment methods",
+    "g1_title": "Service",
+    "g1_c1": "In person in the Microcentro", "g1_c2": "Consultations via WhatsApp", "g1_c3": "Clients abroad", "g1_c4": "Wheelchair accessible",
+    "g2_title": "Payments within Argentina",
+    "g2_c1": "Cash", "g2_c2": "Bank transfer", "g2_c3": "Mercado Pago",
+    "g3_title": "Payments from abroad",
+    "g3_c1": "PayPal", "g3_c2": "Zelle", "g3_c3": "Western Union", "g3_c4": "Bank of America",
+    "g4_title": "Languages",
+    "g4_text": "We also attend in Spanish and Portuguese. [CONFIRM: any other languages the firm attends in]",
+    "g4_cta": "Consult on WhatsApp",
+    "g4_msg": "Hello, I would like to make a consultation with the firm."
+  },
+  "contacto": {
+    "eyebrow": "CONTACT",
+    "title": "Let's talk",
+    "sub": "Monday to Friday, 10:30 am to 6 pm.",
+    "card1_tag": "Firm · Microcentro",
+    "card1_title": "Portillo Kus & Asociados",
+    "card1_badge": "Wheelchair accessible",
+    "card1_address": "Edificio Miguel Bencich — Av. Pte. Roque Sáenz Peña 616, 4th floor, office 403, C1035, Buenos Aires",
+    "card1_hours": "Monday to Friday, 10:30 am to 6 pm",
+    "wa": "WhatsApp",
+    "wa_msg": "Hello, I would like to make a consultation with the firm.",
+    "call": "Call",
+    "email": "Email",
+    "directions": "Get directions",
+    "card2_tag": "Second line",
+    "card2_pending": "USE TO BE CONFIRMED",
+    "card2_note": "While we confirm what this line is used for, your inquiry will reach the firm's main line."
+  },
+  "footer": {
+    "tagline": "\"The Law is our passion.\"",
+    "disclaimer": "Portillo Kus & Asociados is a private law firm. It is not an official body and has no connection to the Argentine State.",
+    "rights": "© 2026 Portillo Kus & Asociados · Law Firm",
+    "address": "Edificio Miguel Bencich — Av. Pte. Roque Sáenz Peña 616, 4th floor, office 403, C1035, Buenos Aires",
+    "hours": "Monday to Friday, 10:30 am to 6 pm"
+  }
+}
