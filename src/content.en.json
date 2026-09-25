@@ -45,19 +45,16 @@
   "need": {
     "eyebrow": "WHAT DO YOU NEED?",
     "title": "Choose where to start",
-    "c1_tag": "Real photo from the firm",
     "c1_alt": "Client with their completed Argentine citizenship process, alongside Dr. Portillo",
     "c1_title": "Argentine citizenship",
     "c1_desc": "Certificate of citizenship, from the first consultation to the oath.",
     "c1_cta": "Consult on WhatsApp",
     "c1_msg": "Hello, I would like to consult about Argentine citizenship.",
-    "c2_tag": "Real photo from the firm",
     "c2_alt": "Dr. Portillo with a client at the firm, real photo",
     "c2_title": "Residency and visas",
     "c2_desc": "Mercosur and non-Mercosur residency, visas, and entry permits.",
     "c2_cta": "Consult on WhatsApp",
     "c2_msg": "Hello, I would like to consult about a residency or visa.",
-    "c3_tag": "Stock photo",
     "c3_alt": "Open passport with entry and exit stamps, stock photo",
     "c3_title": "Defense against deportation",
     "c3_desc": "Legal representation to reverse a deportation order.",
@@ -74,8 +71,7 @@
     "step4": "4. Support all the way through the oath ceremony.",
     "cta": "Consult about my citizenship",
     "cta_msg": "Hello, I would like to consult about my Argentine citizenship.",
-    "photo_alt": "Dr. Portillo with a client and their Argentine citizenship certificate, in front of the Tribunales Palace",
-    "photo_tag": "Real photo from the firm"
+    "photo_alt": "Dr. Portillo with a client and their Argentine citizenship certificate, in front of the Tribunales Palace"
   },
   "buenosaires": {
     "eyebrow": "BUENOS AIRES",
@@ -100,7 +96,6 @@
     "title": "Over 12 areas of law",
     "sub": "Citizenship and immigration are our strength. We also support our clients in these other matters.",
     "cta": "Ask about this topic",
-    "photo_tag": "Stock photo",
     "a1_cat": "Labor", "a1_title": "Wrongful termination & workers' comp", "a1_desc": "Claims for wrongful dismissal and work-related accidents or illness.", "a1_msg": "Hello, I would like to consult about a labor law matter.", "a1_alt": "Reviewed labor document on a desk, stock photo",
     "a2_cat": "Family", "a2_title": "Family law", "a2_desc": "Mutual and unilateral divorce, child support, and visitation rights.", "a2_msg": "Hello, I would like to consult about a family law matter.", "a2_alt": "A baby's hand resting on their parents' hands, stock photo",
     "a3_cat": "Criminal", "a3_title": "Criminal law", "a3_desc": "Defense and advice in criminal cases.", "a3_msg": "Hello, I would like to consult about a criminal law matter.", "a3_alt": "Classic columns of a courthouse building, stock photo",
@@ -144,10 +139,10 @@
     "g2_c1": "Cash", "g2_c2": "Bank transfer", "g2_c3": "Mercado Pago",
     "g3_title": "Payments from abroad",
     "g3_c1": "PayPal", "g3_c2": "Zelle", "g3_c3": "Western Union", "g3_c4": "Bank of America",
-    "g4_title": "Languages",
-    "g4_text": "We also attend in Spanish and Portuguese. [CONFIRM: any other languages the firm attends in]",
-    "g4_cta": "Consult on WhatsApp",
-    "g4_msg": "Hello, I would like to make a consultation with the firm."
+    "abroad_title": "Living abroad?",
+    "abroad_text": "You can consult us on WhatsApp and pay from your country.",
+    "abroad_cta": "Consult on WhatsApp",
+    "abroad_msg": "Hello, I live abroad and would like to make a consultation with the firm."
   },
   "contacto": {
     "eyebrow": "CONTACT",

@@ -45,19 +45,16 @@
   "need": {
     "eyebrow": "您需要什么帮助?",
     "title": "从这里开始",
-    "c1_tag": "事务所实拍",
     "c1_alt": "客户与 Portillo 律师合影，其阿根廷国籍申请已办结",
     "c1_title": "阿根廷国籍",
     "c1_desc": "入籍申请，从首次咨询到宣誓入籍全程办理。",
     "c1_cta": "WhatsApp 咨询",
     "c1_msg": "您好，我想咨询阿根廷国籍事宜。",
-    "c2_tag": "事务所实拍",
     "c2_alt": "Portillo 律师与客户在事务所，实拍照片",
     "c2_title": "居留与签证",
     "c2_desc": "南方共同市场（Mercosur）成员国及其他国家公民的居留、签证和入境许可。",
     "c2_cta": "WhatsApp 咨询",
     "c2_msg": "您好，我想咨询居留或签证事宜。",
-    "c3_tag": "示意图片",
     "c3_alt": "盖有出入境印章的护照，示意图片",
     "c3_title": "驱逐出境抗辩",
     "c3_desc": "代理申请撤销驱逐出境决定。",
@@ -74,8 +71,7 @@
     "step4": "4. 全程协助，直至宣誓入籍。",
     "cta": "咨询我的国籍申请",
     "cta_msg": "您好，我想咨询阿根廷国籍事宜。",
-    "photo_alt": "Portillo 律师与手持阿根廷国籍证书的客户，摄于司法宫前",
-    "photo_tag": "事务所实拍"
+    "photo_alt": "Portillo 律师与手持阿根廷国籍证书的客户，摄于司法宫前"
   },
   "buenosaires": {
     "eyebrow": "布宜诺斯艾利斯",
@@ -100,7 +96,6 @@
     "title": "涵盖 12 个以上法律领域",
     "sub": "国籍与移民是我们的专长。此外，我们也在以下领域为客户提供服务。",
     "cta": "咨询此项业务",
-    "photo_tag": "示意图片",
     "a1_cat": "劳动法", "a1_title": "解雇与工伤", "a1_desc": "无故解雇索赔，以及工伤事故和职业病索赔。", "a1_msg": "您好，我想咨询劳动法方面的问题。", "a1_alt": "桌上正在审阅的劳动文件，示意图片",
     "a2_cat": "家事法", "a2_title": "婚姻家事", "a2_desc": "协议离婚与单方离婚、抚养费及探视安排。", "a2_msg": "您好，我想咨询婚姻家事方面的问题。", "a2_alt": "婴儿的小手放在父母的手上，示意图片",
     "a3_cat": "刑法", "a3_title": "刑事案件", "a3_desc": "刑事案件辩护与法律咨询。", "a3_msg": "您好，我想咨询刑事方面的问题。", "a3_alt": "法院建筑的古典立柱，示意图片",
@@ -144,10 +139,10 @@
     "g2_c1": "现金", "g2_c2": "银行转账", "g2_c3": "Mercado Pago",
     "g3_title": "境外付款",
     "g3_c1": "PayPal", "g3_c2": "Zelle", "g3_c3": "Western Union", "g3_c4": "Bank of America",
-    "g4_title": "语言",
-    "g4_text": "您可以用中文通过 WhatsApp 给我们留言。我们也提供西班牙语和英语咨询。[CONFIRMAR: en qué idioma responde el estudio las consultas en chino]",
-    "g4_cta": "WhatsApp 咨询",
-    "g4_msg": "您好，我想向贵所咨询。"
+    "abroad_title": "身在海外？",
+    "abroad_text": "您可以通过 WhatsApp 咨询，并在您所在的国家付款。",
+    "abroad_cta": "WhatsApp 咨询",
+    "abroad_msg": "您好，我在海外，想向贵所咨询。"
   },
   "contacto": {
     "eyebrow": "联系我们",

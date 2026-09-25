@@ -25,6 +25,18 @@ Ejecutivo**. Trámites de ciudadanía, con atención en varios idiomas.
   pisaba entre 900 y 1150 px).
 - Mapa de Google con la ubicación del estudio y botón "Cómo llegar", pedido para
   destacar la ubicación.
+- "¿Qué necesitás?": la foto queda despejada arriba y el texto va debajo, sobre
+  blanco (antes el texto y el velo oscuro tapaban las fotos reales del estudio).
+- Logo en PNG con fondo transparente (`logo.png`), sin el recuadro blanco que
+  resaltaba sobre el crema. `logo.jpg` queda para los bocetos originales.
+- "Cómo trabajamos": tres tarjetas con ícono (atención con horario, pagos en
+  Argentina, pagos desde el exterior) y una franja para clientes en el exterior
+  con botón de WhatsApp. Se sacó el bloque "English", redundante con el selector
+  de idiomas.
+- Carrusel de áreas: desde tablet ocupa el mismo ancho que el contenido y muestra
+  tarjetas enteras (2 en tablet, 3 en escritorio); las flechas avanzan de a una
+  página. En celular sigue asomando la tarjeta siguiente.
+- Sin las etiquetas "Foto real del estudio" / "Foto ilustrativa" sobre las fotos.
 
 ## Cómo está armado
 

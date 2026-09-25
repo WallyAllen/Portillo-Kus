@@ -45,19 +45,16 @@
   "need": {
     "eyebrow": "O QUE VOCÊ PRECISA?",
     "title": "Escolha por onde começar",
-    "c1_tag": "Foto real do escritório",
     "c1_alt": "Cliente com seu processo de cidadania argentina resolvido, junto ao Dr. Portillo",
     "c1_title": "Cidadania argentina",
     "c1_desc": "Carta de cidadania, da consulta até o juramento.",
     "c1_cta": "Consultar pelo WhatsApp",
     "c1_msg": "Olá, gostaria de consultar sobre a cidadania argentina.",
-    "c2_tag": "Foto real do escritório",
     "c2_alt": "Dr. Portillo com um cliente no escritório, foto real",
     "c2_title": "Residência e visas",
     "c2_desc": "Residências Mercosul e extra Mercosul, visas e permissões de entrada.",
     "c2_cta": "Consultar pelo WhatsApp",
     "c2_msg": "Olá, gostaria de consultar sobre uma residência ou visa.",
-    "c3_tag": "Foto ilustrativa",
     "c3_alt": "Passaporte aberto com selos de entrada e saída, foto ilustrativa",
     "c3_title": "Defesa contra expulsão",
     "c3_desc": "Assessoria jurídica para reverter uma ordem de expulsão.",
@@ -74,8 +71,7 @@
     "step4": "4. Acompanhamento até o juramento.",
     "cta": "Consultar sobre minha cidadania",
     "cta_msg": "Olá, gostaria de consultar sobre minha cidadania argentina.",
-    "photo_alt": "Dr. Portillo com um cliente e sua carta de cidadania argentina, em frente ao Palácio de Tribunales",
-    "photo_tag": "Foto real do escritório"
+    "photo_alt": "Dr. Portillo com um cliente e sua carta de cidadania argentina, em frente ao Palácio de Tribunales"
   },
   "buenosaires": {
     "eyebrow": "BUENOS AIRES",
@@ -100,7 +96,6 @@
     "title": "Mais de 12 áreas do direito",
     "sub": "Cidadania e imigração são nosso forte. Além disso, acompanhamos nossos clientes nestes outros temas.",
     "cta": "Consultar sobre este tema",
-    "photo_tag": "Foto ilustrativa",
     "a1_cat": "Trabalhista", "a1_title": "Demissões e acidentes de trabalho", "a1_desc": "Reclamações por demissão sem justa causa e acidentes ou doenças do trabalho.", "a1_msg": "Olá, gostaria de consultar sobre um tema trabalhista.", "a1_alt": "Documento trabalhista revisado sobre uma mesa, foto ilustrativa",
     "a2_cat": "Família", "a2_title": "Família", "a2_desc": "Divórcio consensual e litigioso, pensão alimentícia e regime de visitas.", "a2_msg": "Olá, gostaria de consultar sobre um tema de família.", "a2_alt": "Mão de um bebê sobre as mãos dos pais, foto ilustrativa",
     "a3_cat": "Penal", "a3_title": "Penal", "a3_desc": "Defesa e assessoria em processos penais.", "a3_msg": "Olá, gostaria de consultar sobre um tema penal.", "a3_alt": "Colunas clássicas de um prédio de tribunais, foto ilustrativa",
@@ -144,10 +139,10 @@
     "g2_c1": "Dinheiro", "g2_c2": "Transferência", "g2_c3": "Mercado Pago",
     "g3_title": "Pagamentos do exterior",
     "g3_c1": "PayPal", "g3_c2": "Zelle", "g3_c3": "Western Union", "g3_c4": "Bank of America",
-    "g4_title": "Idiomas",
-    "g4_text": "Também atendemos em espanhol e inglês. [CONFIRMAR: outros idiomas em que o escritório atende]",
-    "g4_cta": "Consultar pelo WhatsApp",
-    "g4_msg": "Olá, gostaria de fazer uma consulta com o escritório."
+    "abroad_title": "Está no exterior?",
+    "abroad_text": "Você pode fazer sua consulta pelo WhatsApp e pagar do seu país.",
+    "abroad_cta": "Consultar pelo WhatsApp",
+    "abroad_msg": "Olá, estou no exterior e gostaria de fazer uma consulta com o escritório."
   },
   "contacto": {
     "eyebrow": "CONTATO",
