@@ -456,8 +456,9 @@ section{ position: relative; }
 @media (min-width: 900px){ .carousel{ --fade: 7%; } }
 @media (min-width: 1200px){ .carousel{ --card-w: 360px; --gap: var(--sp-5); } }
 .carousel::-webkit-scrollbar{ display: none; }
-/* Espaciadores: permiten centrar también la primera y la última tarjeta */
-.carousel::before, .carousel::after{ content: ""; flex: 0 0 calc(50% - var(--card-w) / 2 - var(--gap)); }
+/* Espaciadores: permiten centrar también la primera y la última tarjeta. Van a toda
+   la altura: Firefox y Safari no cuentan cajas de alto cero en el largo del scroll. */
+.carousel-spacer{ flex: 0 0 calc(50% - var(--card-w) / 2 - var(--gap)); align-self: stretch; }
 /* .area-card es el punto de encastre del scroll y no se transforma (Chrome corta el
    scroll suave si el elemento que encastra está transformado); el efecto va en .area-card-inner */
 .area-card{
@@ -868,6 +869,7 @@ section{ position: relative; }
       </div>
     </div>
     <div class="carousel" id="carousel">
+      <div class="carousel-spacer" aria-hidden="true"></div>
 
       <article class="area-card">
         <div class="area-card-inner">
@@ -995,6 +997,7 @@ section{ position: relative; }
         </div>
       </article>
 
+      <div class="carousel-spacer" aria-hidden="true"></div>
     </div>
     <div class="carousel-dots" id="carDots" role="group" aria-label="ÁREAS DE ATUAÇÃO"></div>
   </section>
@@ -1397,12 +1400,17 @@ section{ position: relative; }
       return b;
     });
 
+    var centerOf = function(card){ return card.offsetLeft + card.offsetWidth / 2 - carousel.clientWidth / 2; };
     var goTo = function(i, instant){
-      var card = cards[Math.max(0, Math.min(cards.length - 1, i))];
       carousel.scrollTo({
-        left: card.offsetLeft + card.offsetWidth / 2 - carousel.clientWidth / 2,
+        left: centerOf(cards[Math.max(0, Math.min(cards.length - 1, i))]),
         behavior: instant || prefersReducedMotion ? 'auto' : 'smooth'
       });
+    };
+    // true si el scroll puede moverse para centrar la tarjeta (no está ya en el tope)
+    var canCenter = function(card){
+      var target = Math.max(0, Math.min(carousel.scrollWidth - carousel.clientWidth, centerOf(card)));
+      return Math.abs(target - carousel.scrollLeft) > 2;
     };
 
     // Con escala lineal s = 1 - a·d, correr cada tarjeta (w/2)·a·d² hacia el centro
@@ -1441,7 +1449,7 @@ section{ position: relative; }
     // Una tarjeta lateral primero se centra; recién centrada, su botón abre WhatsApp
     cards.forEach(function(card, i){
       card.addEventListener('click', function(e){
-        if (i !== active){ e.preventDefault(); goTo(i); }
+        if (i !== active && canCenter(card)){ e.preventDefault(); goTo(i); }
       });
       card.addEventListener('focusin', function(){ if (i !== active) goTo(i); });
     });
