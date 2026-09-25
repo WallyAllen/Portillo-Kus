@@ -3,11 +3,28 @@
 Estudio jurídico en CABA. Interlocutor: **Dr. Denis Portillo, Presidente
 Ejecutivo**. Trámites de ciudadanía, con atención en varios idiomas.
 
-## Estado (18/09/2026)
+## Estado (25/09/2026)
 
 - **Comercial:** propuesta enviada. **Falta la seña** (50% para arrancar).
-- **Producto:** boceto v2 en tres idiomas (ES / EN / PT), paleta clara.
+- **Producto:** boceto v2.1 en cinco idiomas (ES / EN / PT / RU / 中文), paleta
+  clara, con mapa de ubicación en la franja "Buenos Aires".
 - **Publicado en:** todavía no.
+
+### Cambios v2.1
+
+- Contraste: el título de la portada era blanco sobre el cielo casi blanco de la
+  foto. El velo oscuro ahora cubre toda la altura del texto (y en escritorio se
+  concentra a la izquierda, para que la foto siga luciendo clara a la derecha).
+- Contraste: en "¿Qué necesitás?" el degradé quedaba pintado detrás de la foto y
+  no oscurecía nada; ahora va encima. "CONTACTO" pasa a celeste claro sobre el
+  fondo oscuro.
+- Ruso y chino simplificado, pedidos por el Dr. Portillo, en `/ru` y `/zh`, con
+  sus imágenes para compartir (`og-ru.jpg`, `og-zh.jpg`).
+- Selector de idioma desplegable en escritorio (con 5 idiomas la fila no entraba).
+- El menú completo aparece desde 1200 px; debajo, menú hamburguesa (antes se
+  pisaba entre 900 y 1150 px).
+- Mapa de Google con la ubicación del estudio y botón "Cómo llegar", pedido para
+  destacar la ubicación.
 
 ## Cómo está armado
 
@@ -19,19 +36,21 @@ src/
   content.es.json    el texto de cada idioma
   content.en.json
   content.pt.json
-  build.py           combina molde + contenido y escribe las tres salidas
+  content.ru.json
+  content.zh.json
+  build.py           combina molde + contenido y escribe una salida por idioma
 ```
 
 ```bash
 python src/build.py
 ```
 
-Genera `index.html` (español), `en/index.html` y `pt/index.html`. **El texto se
-edita en los JSON, nunca en los HTML generados**: el próximo build los pisa.
+Genera `index.html` (español), `en/`, `pt/`, `ru/` y `zh/index.html`. **El texto
+se edita en los JSON, nunca en los HTML generados**: el próximo build los pisa.
 
 `portillo-portada.html` y `portillo-portada-v1.html` son el boceto original de
-una sola página, anterior al sistema de tres idiomas. Quedan como referencia de
-lo que vio el cliente primero.
+una sola página, anterior al sistema multilingüe. Quedan como referencia de lo
+que vio el cliente primero.
 
 ## Ver en local
 
@@ -50,7 +69,7 @@ python -m http.server 8532
 - **Autogestión:** Pages CMS (pagescms.org). El contenido vive en el repo y
   Cloudflare republica en cada cambio. Editable: fotos, reseñas, áreas, equipo,
   contacto. Fijo: diseño, colores, estructura.
-- Lo que se cargue en español hay que cargarlo también en los otros dos idiomas.
+- Lo que se cargue en español hay que cargarlo también en los otros cuatro idiomas.
 
 ## Pendiente del cliente
 
@@ -59,7 +78,9 @@ python -m http.server 8532
 - [ ] Nombres y matrículas del CPACF de los socios.
 - [ ] Fotos propias del estudio y de la fachada.
 - [ ] Para qué usan la segunda línea telefónica.
-- [ ] En qué idiomas atienden y quién revisa cada traducción.
+- [ ] En qué idiomas atienden y quién revisa cada traducción (EN, PT, RU y 中文
+      las armó una IA: hay que revisarlas antes de publicar).
+- [ ] En qué idioma responden las consultas que lleguen en ruso o en chino.
 - [ ] Los pasos reales del trámite de ciudadanía.
 - [ ] Con qué mails entran al panel.
 - [ ] Acceso de administrador a la ficha de Google Business.

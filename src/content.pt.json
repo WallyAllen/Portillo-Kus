@@ -86,7 +86,14 @@
     "ba2_alt": "O Obelisco visto da Diagonal Norte, Buenos Aires",
     "ba2_caption": "Diagonal Norte, Microcentro",
     "ba3_alt": "Cúpulas do Edificio Miguel Bencich, onde está o escritório",
-    "ba3_caption": "Edificio Miguel Bencich, 4º andar"
+    "ba3_caption": "Edificio Miguel Bencich, 4º andar",
+    "map_kicker": "Localização",
+    "map_title": "Edificio Miguel Bencich, na Diagonal Norte",
+    "map_p1": "A poucos passos da Plaza de Mayo e da Casa Rosada",
+    "map_p2": "Na avenida que termina no Obelisco",
+    "map_p3": "Acesso para cadeira de rodas",
+    "map_hl": "pt-BR",
+    "map_iframe_title": "Mapa com a localização do escritório na Av. Roque Sáenz Peña 616, Buenos Aires"
   },
   "areas": {
     "eyebrow": "ÁREAS DE ATUAÇÃO",

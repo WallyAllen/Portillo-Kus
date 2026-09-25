@@ -1,8 +1,8 @@
-"""Arma index.html, en/index.html y pt/index.html desde template.html + content.<lang>.json.
+"""Arma index.html y <idioma>/index.html desde template.html + content.<lang>.json.
 
 Uso: python build.py [--base-url https://dominio/ruta/]
-Para sumar un idioma nuevo (ru, zh): crear content.<lang>.json con las mismas
-claves que content.es.json y agregar una entrada a LANGS.
+Para sumar un idioma nuevo: crear content.<lang>.json con las mismas claves que
+content.es.json, agregar una entrada a LANGS y una imagen og-<lang>.jpg.
 """
 import json
 import re
@@ -14,12 +14,11 @@ SITE_ROOT = BASE.parent
 
 # slug: carpeta de salida ("" = raíz) · html_lang: atributo lang · hreflang: código hreflang
 LANGS = [
-    {"code": "es", "slug": "", "html_lang": "es", "hreflang": "es", "label": "ES"},
-    {"code": "en", "slug": "en", "html_lang": "en", "hreflang": "en", "label": "EN"},
-    {"code": "pt", "slug": "pt", "html_lang": "pt-BR", "hreflang": "pt-BR", "label": "PT"},
-    # Preparado para sumar más adelante:
-    # {"code": "ru", "slug": "ru", "html_lang": "ru", "hreflang": "ru", "label": "RU"},
-    # {"code": "zh", "slug": "zh", "html_lang": "zh", "hreflang": "zh", "label": "ZH"},
+    {"code": "es", "slug": "", "html_lang": "es", "hreflang": "es", "label": "ES", "name": "Español"},
+    {"code": "en", "slug": "en", "html_lang": "en", "hreflang": "en", "label": "EN", "name": "English"},
+    {"code": "pt", "slug": "pt", "html_lang": "pt-BR", "hreflang": "pt-BR", "label": "PT", "name": "Português"},
+    {"code": "ru", "slug": "ru", "html_lang": "ru", "hreflang": "ru", "label": "RU", "name": "Русский"},
+    {"code": "zh", "slug": "zh", "html_lang": "zh-Hans", "hreflang": "zh-Hans", "label": "中文", "name": "中文"},
 ]
 DEFAULT_LANG = "es"
 
@@ -77,9 +76,18 @@ def build(lang, template, base_url):
     flat["img_prefix"] = rel_prefix_for(lang)
     flat["og_image_url"] = f"{base_url}portillo-images/og-{lang['code']}.jpg"
     flat["hreflang_tags"] = build_hreflang_tags(lang, base_url)
-    for l in LANGS:
-        flat[f"lang_link_{l['code']}"] = link_to(l, lang)
-        flat[f"lang_class_{l['code']}"] = "is-current" if l["code"] == lang["code"] else ""
+    flat["lang_label"] = lang["label"]
+
+    def lang_links(text_key):
+        return "\n".join(
+            f'<a href="{link_to(l, lang)}" hreflang="{l["hreflang"]}" lang="{l["html_lang"]}"'
+            + (' class="is-current" aria-current="page"' if l["code"] == lang["code"] else "")
+            + f'>{l[text_key]}</a>'
+            for l in LANGS
+        )
+
+    flat["lang_links"] = lang_links("label")
+    flat["lang_links_named"] = lang_links("name")
 
     def repl(m):
         key = m.group(1)

@@ -86,7 +86,14 @@
     "ba2_alt": "The Obelisk seen from Diagonal Norte, Buenos Aires",
     "ba2_caption": "Diagonal Norte, Microcentro",
     "ba3_alt": "Domes of the Edificio Miguel Bencich, where the firm is located",
-    "ba3_caption": "Edificio Miguel Bencich, 4th floor"
+    "ba3_caption": "Edificio Miguel Bencich, 4th floor",
+    "map_kicker": "Location",
+    "map_title": "Edificio Miguel Bencich, on Diagonal Norte",
+    "map_p1": "Steps from Plaza de Mayo and the Casa Rosada",
+    "map_p2": "On the avenue that leads to the Obelisk",
+    "map_p3": "Wheelchair accessible",
+    "map_hl": "en",
+    "map_iframe_title": "Map showing the firm's location at Av. Roque Sáenz Peña 616, Buenos Aires"
   },
   "areas": {
     "eyebrow": "PRACTICE AREAS",

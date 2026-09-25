@@ -86,7 +86,14 @@
     "ba2_alt": "El Obelisco visto desde Diagonal Norte, Buenos Aires",
     "ba2_caption": "Diagonal Norte, Microcentro",
     "ba3_alt": "Cúpulas del Edificio Miguel Bencich, donde está el estudio",
-    "ba3_caption": "Edificio Miguel Bencich, piso 4"
+    "ba3_caption": "Edificio Miguel Bencich, piso 4",
+    "map_kicker": "Ubicación",
+    "map_title": "Edificio Miguel Bencich, sobre Diagonal Norte",
+    "map_p1": "A pasos de Plaza de Mayo y la Casa Rosada",
+    "map_p2": "Sobre la avenida que termina en el Obelisco",
+    "map_p3": "Acceso para silla de ruedas",
+    "map_hl": "es",
+    "map_iframe_title": "Mapa con la ubicación del estudio en Av. Roque Sáenz Peña 616, CABA"
   },
   "areas": {
     "eyebrow": "ÁREAS DE PRÁCTICA",
