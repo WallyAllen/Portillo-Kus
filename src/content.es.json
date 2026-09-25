@@ -1,20 +1,22 @@
 {
   "meta": {
     "title": "Portillo Kus & Asociados — Estudio jurídico en CABA · Ciudadanía y migraciones",
-    "description": "Patrocinio en ciudadanía argentina, residencias y visas en Microcentro, CABA. 5,0★ con 417 reseñas en Google.",
+    "description": "Patrocinio en ciudadanía argentina, residencias y visas en Microcentro, CABA. 5,0★ con {reviews} reseñas en Google.",
     "og_title": "Portillo Kus & Asociados — Estudio Jurídico",
-    "og_description": "Ciudadanía argentina, residencias y visas. 5,0★ con 417 reseñas en Google."
+    "og_description": "Ciudadanía argentina, residencias y visas. 5,0★ con {reviews} reseñas en Google."
   },
   "a11y": {
     "open_menu": "Abrir menú",
     "close_menu": "Cerrar menú",
     "lang_switch": "Cambiar idioma",
+    "main_nav": "Navegación principal",
+    "stats": "El estudio en cifras",
     "carousel_prev": "Área anterior",
     "carousel_next": "Área siguiente"
   },
   "nav": {
     "ciudadania": "Ciudadanía",
-    "migraciones": "Migraciones",
+    "opiniones": "Opiniones",
     "areas": "Áreas",
     "estudio": "El estudio",
     "contacto": "Contacto",
@@ -32,13 +34,13 @@
     "sub": "Patrocinio en ciudadanía, residencias y visas. Más de 1.200 expedientes de ciudadanía resueltos favorablemente desde 2020.",
     "cta_primary": "Consultar por WhatsApp",
     "cta_primary_msg": "Hola, quiero consultar por mi ciudadanía argentina.",
-    "cta_secondary": "Ver áreas de práctica",
-    "reviews_text": "417 reseñas en Google",
+    "cta_secondary": "Cómo es el trámite",
+    "reviews_text": "{reviews} reseñas en Google",
     "address": "Av. Roque Sáenz Peña 616, CABA"
   },
   "stats": {
     "s1_label": "Ciudadanías resueltas desde 2020",
-    "s2_label": "417 reseñas en Google",
+    "s2_label": "{reviews} reseñas en Google",
     "s3_label": "Áreas del derecho",
     "s4_label": "Medios de pago, también desde el exterior"
   },
@@ -83,17 +85,12 @@
     "ba2_caption": "Diagonal Norte, Microcentro",
     "ba3_alt": "Cúpulas del Edificio Miguel Bencich, donde está el estudio",
     "ba3_caption": "Edificio Miguel Bencich, piso 4",
-    "map_kicker": "Ubicación",
-    "map_title": "Edificio Miguel Bencich, sobre Diagonal Norte",
-    "map_p1": "A pasos de Plaza de Mayo y la Casa Rosada",
-    "map_p2": "Sobre la avenida que termina en el Obelisco",
-    "map_p3": "Acceso para silla de ruedas",
     "map_hl": "es",
     "map_iframe_title": "Mapa con la ubicación del estudio en Av. Roque Sáenz Peña 616, CABA"
   },
   "areas": {
     "eyebrow": "ÁREAS DE PRÁCTICA",
-    "title": "Más de 12 áreas del derecho",
+    "title": "Otras áreas en las que te acompañamos",
     "sub": "La ciudadanía y las migraciones son nuestro fuerte. Además, acompañamos a nuestros clientes en estos otros temas.",
     "cta": "Consultar sobre este tema",
     "a1_cat": "Laboral", "a1_title": "Despidos y ART", "a1_desc": "Reclamos por despidos sin causa y por accidentes o enfermedades laborales.", "a1_msg": "Hola, quiero consultar por un tema laboral.", "a1_alt": "Documento laboral revisado sobre un escritorio, foto ilustrativa",
@@ -128,7 +125,7 @@
     "r3_name": "Jorge R.",
     "r4_text": "\"Dennis is the BEST! I thought my case was hopeless after visiting other attorneys…\"",
     "r4_name": "Adsterza",
-    "cta": "Ver las 417 opiniones en Google"
+    "cta": "Ver las {reviews} opiniones en Google"
   },
   "trabajamos": {
     "eyebrow": "CÓMO TRABAJAMOS",
@@ -157,10 +154,7 @@
     "wa_msg": "Hola, quiero hacer una consulta con el estudio.",
     "call": "Llamar",
     "email": "Email",
-    "directions": "Cómo llegar",
-    "card2_tag": "Segunda línea",
-    "card2_pending": "CONFIRMAR USO",
-    "card2_note": "Mientras confirmamos para qué se usa esta línea, tu consulta llega por la línea principal del estudio."
+    "directions": "Cómo llegar"
   },
   "footer": {
     "tagline": "\"El Derecho es nuestra pasión.\"",

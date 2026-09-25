@@ -8,19 +8,34 @@ import json
 import re
 import sys
 import pathlib
+from urllib.parse import quote
 
 BASE = pathlib.Path(__file__).parent
 SITE_ROOT = BASE.parent
 
+# Datos del estudio que se repiten en toda la página: se cambian solo acá.
+# En los textos de los JSON, "{reviews}" se reemplaza por la cantidad de reseñas.
+WA_NUMBER = "5491127111987"
+TEL = "+5491127111987"
+REVIEWS = 417
+RATING = 5.0
+CLIENTS = 1200
+
 # slug: carpeta de salida ("" = raíz) · html_lang: atributo lang · hreflang: código hreflang
+# thousands / decimal: separadores numéricos de cada idioma
 LANGS = [
-    {"code": "es", "slug": "", "html_lang": "es", "hreflang": "es", "label": "ES", "name": "Español"},
-    {"code": "en", "slug": "en", "html_lang": "en", "hreflang": "en", "label": "EN", "name": "English"},
-    {"code": "pt", "slug": "pt", "html_lang": "pt-BR", "hreflang": "pt-BR", "label": "PT", "name": "Português"},
-    {"code": "ru", "slug": "ru", "html_lang": "ru", "hreflang": "ru", "label": "RU", "name": "Русский"},
-    {"code": "zh", "slug": "zh", "html_lang": "zh-Hans", "hreflang": "zh-Hans", "label": "中文", "name": "中文"},
+    {"code": "es", "slug": "", "html_lang": "es", "hreflang": "es", "label": "ES", "name": "Español", "thousands": ".", "decimal": ","},
+    {"code": "en", "slug": "en", "html_lang": "en", "hreflang": "en", "label": "EN", "name": "English", "thousands": ",", "decimal": "."},
+    {"code": "pt", "slug": "pt", "html_lang": "pt-BR", "hreflang": "pt-BR", "label": "PT", "name": "Português", "thousands": ".", "decimal": ","},
+    {"code": "ru", "slug": "ru", "html_lang": "ru", "hreflang": "ru", "label": "RU", "name": "Русский", "thousands": " ", "decimal": ","},
+    {"code": "zh", "slug": "zh", "html_lang": "zh-Hans", "hreflang": "zh-Hans", "label": "中文", "name": "中文", "thousands": ",", "decimal": "."},
 ]
 DEFAULT_LANG = "es"
+
+
+def fmt_number(value, lang, decimals=0):
+    s = f"{value:,.{decimals}f}"  # formato inglés: 1,200.0
+    return s.replace(",", "\x00").replace(".", lang["decimal"]).replace("\x00", lang["thousands"])
 
 
 def flatten(d, prefix=""):
@@ -70,8 +85,15 @@ def build_hreflang_tags(lang, base_url):
 
 def build(lang, template, base_url):
     data = json.loads((BASE / f"content.{lang['code']}.json").read_text(encoding="utf-8"))
-    flat = flatten(data)
+    flat = {k: v.replace("{reviews}", str(REVIEWS)) if isinstance(v, str) else v
+            for k, v in flatten(data).items()}
 
+    flat["wa_number"] = WA_NUMBER
+    flat["tel"] = TEL
+    flat["num.clients"] = fmt_number(CLIENTS, lang)
+    flat["num.clients_raw"] = str(CLIENTS)
+    flat["num.rating"] = fmt_number(RATING, lang, 1)
+    flat["num.rating_raw"] = str(RATING)
     flat["html_lang"] = lang["html_lang"]
     flat["img_prefix"] = rel_prefix_for(lang)
     flat["og_image_url"] = f"{base_url}portillo-images/og-{lang['code']}.jpg"
@@ -89,20 +111,22 @@ def build(lang, template, base_url):
     flat["lang_links"] = lang_links("label")
     flat["lang_links_named"] = lang_links("name")
 
+    # {{clave}} inserta el texto tal cual; {{url:clave}} lo codifica para usarlo en una URL
     def repl(m):
-        key = m.group(1)
+        as_url, key = m.group(1), m.group(2)
         if key not in flat:
             raise KeyError(f"Falta la clave {{{{{key}}}}} en content.{lang['code']}.json")
-        return str(flat[key])
+        value = str(flat[key])
+        return quote(value, safe="") if as_url else value
 
-    html = re.sub(r"\{\{([\w.\-]+)\}\}", repl, template)
+    html = re.sub(r"\{\{(url:)?([\w.\-]+)\}\}", repl, template)
 
     out = out_path_for(lang)
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(html, encoding="utf-8")
     print(f"  {out.relative_to(SITE_ROOT)}  ({len(html.encode('utf-8'))/1024:.1f} KB)")
 
-    leftover = re.findall(r"\{\{[\w.\-]+\}\}", html)
+    leftover = re.findall(r"\{\{[\w.:\-]+\}\}|\{reviews\}", html)
     if leftover:
         print(f"  ADVERTENCIA: quedaron marcadores sin reemplazar en {lang['code']}:", set(leftover))
 

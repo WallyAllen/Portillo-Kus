@@ -13,7 +13,7 @@
 {{hreflang_tags}}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Playfair+Display:wght@600;700&family=Karla:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Karla:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
 /* ==========================================================================
@@ -25,7 +25,7 @@
    ========================================================================== */
 
 :root{
-  --font-display: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+  --font-display: 'Cormorant Garamond', Georgia, serif;
   --font-body: 'Karla', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 
   --text-xs:   clamp(0.8rem, 0.78rem + 0.1vw, 0.86rem);
@@ -102,7 +102,7 @@ body.has-mobile-bar{ padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px
 body.is-navigating{ opacity: 0; transition: opacity 200ms var(--ease-out); }
 h1,h2,h3{ font-family: var(--font-display); font-weight: 600; line-height: 1.08; letter-spacing: -0.01em; margin: 0; overflow-wrap: break-word; color: var(--ink); }
 @media (max-width: 640px){
-  h1,h2,h3{ font-family: 'Playfair Display', Georgia, serif; font-weight: 700; }
+  h1,h2,h3{ font-weight: 700; }
 }
 
 /* Karla no trae cirílico: en ruso el cuerpo usa la fuente del sistema para no mezclar tipografías */
@@ -165,6 +165,12 @@ svg{ display: block; flex-shrink: 0; }
 .btn-primary{ background: var(--brand); color: #fff; box-shadow: var(--shadow-md); }
 .btn-primary:hover{ filter: brightness(1.1); box-shadow: var(--shadow-lg); }
 .btn-secondary{ background: transparent; color: var(--ink); border: 1.5px solid var(--line); }
+/* Bordó con borde: el rojo relleno queda para las acciones principales */
+.btn-outline{
+  background: transparent; color: var(--brand); border: 1.5px solid var(--brand);
+  transition: background var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
+}
+.btn-outline:hover, .area-card.is-active .btn-outline{ background: var(--brand); color: #fff; }
 .btn-secondary:hover{ border-color: var(--ink-muted); background: hsl(30 20% 92% / 0.6); }
 .section--dark .btn-secondary{ color: var(--ink-on-dark); border-color: rgba(245,245,243,0.5); }
 .section--dark .btn-secondary:hover{ border-color: var(--ink-on-dark); background: rgba(245,245,243,0.08); }
@@ -365,6 +371,8 @@ svg{ display: block; flex-shrink: 0; }
    5. SECCIONES GENERALES
    ========================================================================== */
 section{ position: relative; }
+/* Las anclas del menú no quedan debajo del header fijo */
+section[id]{ scroll-margin-top: 60px; }
 .section--bg{ background: var(--bg); color: var(--ink); }
 .section--surface{ background: var(--surface); color: var(--ink); }
 .section--dark{ background: var(--dark); color: var(--ink-on-dark); }
@@ -405,27 +413,6 @@ section{ position: relative; }
 .ba-card .media img{ transition: transform 600ms var(--ease-out); }
 .ba-card::before{ content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgba(8,14,19,0.85), rgba(8,14,19,0.05) 55%); z-index: 1; }
 .ba-caption{ position: absolute; left: var(--sp-4); bottom: var(--sp-4); right: var(--sp-4); z-index: 2; color: #fff; font-family: var(--font-display); font-weight: 600; font-size: var(--text-md); }
-
-/* Ubicación con mapa */
-.map-card{
-  margin-top: var(--sp-7); display: grid; grid-template-columns: 1fr;
-  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg);
-  overflow: hidden; box-shadow: var(--shadow-sm);
-}
-@media (min-width: 900px){ .map-card{ grid-template-columns: 5fr 7fr; } }
-.map-info{ padding: var(--sp-6); display: flex; flex-direction: column; align-items: flex-start; gap: var(--sp-3); }
-.map-kicker{ font-size: var(--text-xs); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--celeste-ink); }
-.map-info h3{ font-size: var(--text-xl); }
-.map-address{ font-size: var(--text-sm); color: var(--ink-muted); }
-.map-points{ display: flex; flex-direction: column; gap: var(--sp-2); margin: var(--sp-1) 0 var(--sp-3); }
-.map-points li{ position: relative; padding-left: 22px; font-size: var(--text-sm); color: var(--ink); }
-.map-points li::before{
-  content: ""; position: absolute; left: 0; top: 0.5em; width: 9px; height: 9px; border-radius: 50%;
-  background: var(--celeste); box-shadow: 0 0 0 3px hsl(209 60% 90%);
-}
-.map-frame{ position: relative; min-height: 300px; background: var(--line); }
-@media (min-width: 900px){ .map-frame{ min-height: 400px; } }
-.map-frame iframe{ position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
 
 /* Carrusel de áreas de práctica */
 .carousel-controls{ display: none; }
@@ -608,6 +595,17 @@ section{ position: relative; }
 .contact-detail{ font-size: var(--text-sm); color: var(--ink-on-dark-muted); }
 .contact-actions{ display: flex; flex-wrap: wrap; gap: var(--sp-3); margin-top: auto; }
 .contact-actions .btn{ flex: 1 1 auto; }
+.contact-map{
+  position: relative; min-height: 320px; overflow: hidden;
+  border: 1px solid var(--dark-line); border-radius: var(--radius-lg); background: var(--dark-surface);
+}
+.contact-map iframe{ position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+/* Visible mientras el mapa carga (o si un bloqueador lo impide); el iframe lo tapa al cargar */
+.contact-map-fallback{
+  position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: var(--sp-2); padding: var(--sp-5); text-align: center; font-size: var(--text-sm); color: var(--ink-on-dark-muted);
+}
+.contact-map-fallback svg{ color: var(--celeste); }
 
 /* Footer (claro) */
 .site-footer{ background: var(--bg); border-top: 1px solid var(--line); padding: var(--sp-8) 0 var(--sp-6); }
@@ -642,9 +640,9 @@ section{ position: relative; }
 <header class="site-header" id="siteHeader">
   <div class="container header-inner">
     <a href="#top" class="logo"><strong>Portillo Kus</strong><span class="logo-sub">&amp; Asociados · Estudio Jurídico</span></a>
-    <nav class="main-nav" aria-label="{{a11y.lang_switch}}">
+    <nav class="main-nav" aria-label="{{a11y.main_nav}}">
       <a href="#ciudadania">{{nav.ciudadania}}</a>
-      <a href="#migraciones">{{nav.migraciones}}</a>
+      <a href="#opiniones">{{nav.opiniones}}</a>
       <a href="#areas">{{nav.areas}}</a>
       <a href="#estudio">{{nav.estudio}}</a>
       <a href="#contacto">{{nav.contacto}}</a>
@@ -660,7 +658,7 @@ section{ position: relative; }
           {{lang_links_named}}
         </nav>
       </details>
-      <a class="btn btn-primary btn-pill-sm" data-wa data-wa-number="5491127111987" data-wa-msg="{{nav.consultar_msg}}" href="#">{{nav.consultar}}</a>
+      <a class="btn btn-primary btn-pill-sm" href="https://wa.me/{{wa_number}}?text={{url:nav.consultar_msg}}" target="_blank" rel="noopener">{{nav.consultar}}</a>
       <button class="menu-toggle" id="menuOpenBtn" aria-expanded="false" aria-controls="mobilePanel" aria-label="{{a11y.open_menu}}">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
       </button>
@@ -675,15 +673,15 @@ section{ position: relative; }
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg>
     </button>
   </div>
-  <nav aria-label="{{a11y.lang_switch}}">
+  <nav aria-label="{{a11y.main_nav}}">
     <a href="#ciudadania" class="mp-link">{{nav.ciudadania}}</a>
-    <a href="#migraciones" class="mp-link">{{nav.migraciones}}</a>
+    <a href="#opiniones" class="mp-link">{{nav.opiniones}}</a>
     <a href="#areas" class="mp-link">{{nav.areas}}</a>
     <a href="#estudio" class="mp-link">{{nav.estudio}}</a>
     <a href="#contacto" class="mp-link">{{nav.contacto}}</a>
   </nav>
   <div class="mobile-panel-footer">
-    <a class="btn btn-primary btn-block" data-wa data-wa-number="5491127111987" data-wa-msg="{{nav.consultar_msg}}" href="#">{{mobile.wa_cta}}</a>
+    <a class="btn btn-primary btn-block" href="https://wa.me/{{wa_number}}?text={{url:nav.consultar_msg}}" target="_blank" rel="noopener">{{mobile.wa_cta}}</a>
     <span class="contact-line">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
       {{mobile.hours}}
@@ -709,11 +707,11 @@ section{ position: relative; }
         <h1 class="hero-title">{{hero.title}}</h1>
         <p class="hero-sub">{{hero.sub}}</p>
         <div class="hero-actions">
-          <a class="btn btn-primary" data-wa data-wa-number="5491127111987" data-wa-msg="{{hero.cta_primary_msg}}" href="#">{{hero.cta_primary}}</a>
-          <a class="btn btn-secondary" href="#areas">{{hero.cta_secondary}}</a>
+          <a class="btn btn-primary" href="https://wa.me/{{wa_number}}?text={{url:hero.cta_primary_msg}}" target="_blank" rel="noopener">{{hero.cta_primary}}</a>
+          <a class="btn btn-secondary" href="#ciudadania">{{hero.cta_secondary}}</a>
         </div>
         <div class="hero-trust">
-          <a href="https://www.google.com/maps/search/?api=1&query=Portillo+Kus+%26+Asociados+Estudio+Jur%C3%ADdico" target="_blank" rel="noopener"><span class="stars">★ 5,0</span> · {{hero.reviews_text}}</a>
+          <a href="https://www.google.com/maps/search/?api=1&query=Portillo+Kus+%26+Asociados+Estudio+Jur%C3%ADdico" target="_blank" rel="noopener"><span class="stars">★ {{num.rating}}</span> · {{hero.reviews_text}}</a>
           <span class="sep">·</span>
           <span>{{hero.address}}</span>
         </div>
@@ -722,16 +720,16 @@ section{ position: relative; }
   </section>
 
   <!-- 3. CIFRAS -->
-  <section class="stats" aria-label="Portillo Kus & Asociados">
+  <section class="stats" aria-label="{{a11y.stats}}">
     <svg class="stats-sun" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="100" cy="100" r="46" fill="currentColor"/><path d="M146.0,106.0 L180.0,100.0 L146.0,94.0 Z M142.5,118.0 L162.8,120.4 L145.0,110.4 Z M133.7,131.9 L164.7,147.0 L140.7,122.2 Z M123.8,139.6 L138.8,153.4 L130.3,134.9 Z M108.5,145.6 L124.7,176.1 L119.9,141.9 Z M96.0,146.0 L100.0,166.0 L104.0,146.0 Z M80.1,141.9 L75.3,176.1 L91.5,145.6 Z M69.7,134.9 L61.2,153.4 L76.2,139.6 Z M59.3,122.2 L35.3,147.0 L66.3,131.9 Z M55.0,110.4 L37.2,120.4 L57.5,118.0 Z M54.0,94.0 L20.0,100.0 L54.0,106.0 Z M57.5,82.0 L37.2,79.6 L55.0,89.6 Z M66.3,68.1 L35.3,53.0 L59.3,77.8 Z M76.2,60.4 L61.2,46.6 L69.7,65.1 Z M91.5,54.4 L75.3,23.9 L80.1,58.1 Z M104.0,54.0 L100.0,34.0 L96.0,54.0 Z M119.9,58.1 L124.7,23.9 L108.5,54.4 Z M130.3,65.1 L138.8,46.6 L123.8,60.4 Z M140.7,77.8 L164.7,53.0 L133.7,68.1 Z M145.0,89.6 L162.8,79.6 L142.5,82.0 Z" fill="currentColor"/></svg>
     <div class="container">
       <div class="stats-grid stagger">
         <div class="stat reveal" style="--i:0">
-          <div class="stat-value"><span class="js-counter" data-target="1200" data-decimals="0" data-grouping="true" data-prefix="+">+1.200</span></div>
+          <div class="stat-value"><span class="js-counter" data-target="{{num.clients_raw}}" data-decimals="0" data-grouping="true" data-prefix="+">+{{num.clients}}</span></div>
           <p class="stat-label">{{stats.s1_label}}</p>
         </div>
         <div class="stat reveal" style="--i:1">
-          <div class="stat-value"><span class="js-counter" data-target="5.0" data-decimals="1">5,0</span><span class="stat-unit">★</span></div>
+          <div class="stat-value"><span class="js-counter" data-target="{{num.rating_raw}}" data-decimals="1">{{num.rating}}</span><span class="stat-unit">★</span></div>
           <p class="stat-label">{{stats.s2_label}}</p>
         </div>
         <div class="stat reveal" style="--i:2">
@@ -761,17 +759,17 @@ section{ position: relative; }
           <div class="need-card-body">
             <h3>{{need.c1_title}}</h3>
             <p>{{need.c1_desc}}</p>
-            <a class="btn btn-primary" data-wa data-wa-number="5491127111987" data-wa-msg="{{need.c1_msg}}" href="#">{{need.c1_cta}}</a>
+            <a class="btn btn-outline" href="https://wa.me/{{wa_number}}?text={{url:need.c1_msg}}" target="_blank" rel="noopener">{{need.c1_cta}}</a>
           </div>
         </article>
-        <article class="need-card reveal" id="migraciones" style="--i:1">
+        <article class="need-card reveal" style="--i:1">
           <div class="media">
             <img src="{{img_prefix}}portillo-images/need-residencia.jpg" alt="{{need.c2_alt}}" loading="lazy">
           </div>
           <div class="need-card-body">
             <h3>{{need.c2_title}}</h3>
             <p>{{need.c2_desc}}</p>
-            <a class="btn btn-primary" data-wa data-wa-number="5491127111987" data-wa-msg="{{need.c2_msg}}" href="#">{{need.c2_cta}}</a>
+            <a class="btn btn-outline" href="https://wa.me/{{wa_number}}?text={{url:need.c2_msg}}" target="_blank" rel="noopener">{{need.c2_cta}}</a>
           </div>
         </article>
         <article class="need-card reveal" style="--i:2">
@@ -781,7 +779,7 @@ section{ position: relative; }
           <div class="need-card-body">
             <h3>{{need.c3_title}}</h3>
             <p>{{need.c3_desc}}</p>
-            <a class="btn btn-primary" data-wa data-wa-number="5491127111987" data-wa-msg="{{need.c3_msg}}" href="#">{{need.c3_cta}}</a>
+            <a class="btn btn-outline" href="https://wa.me/{{wa_number}}?text={{url:need.c3_msg}}" target="_blank" rel="noopener">{{need.c3_cta}}</a>
           </div>
         </article>
       </div>
@@ -807,234 +805,14 @@ section{ position: relative; }
             <li>{{ciudadania.step3}}</li>
             <li>{{ciudadania.step4}}</li>
           </ul>
-          <a class="btn btn-primary" style="margin-top:var(--sp-6);" data-wa data-wa-number="5491127111987" data-wa-msg="{{ciudadania.cta_msg}}" href="#">{{ciudadania.cta}}</a>
+          <a class="btn btn-primary" style="margin-top:var(--sp-6);" href="https://wa.me/{{wa_number}}?text={{url:ciudadania.cta_msg}}" target="_blank" rel="noopener">{{ciudadania.cta}}</a>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 5.5 FRANJA BUENOS AIRES -->
-  <section class="section--bg section-pad">
-    <div class="container">
-      <div class="section-head reveal">
-        <span class="section-label">{{buenosaires.eyebrow}}</span>
-        <h2>{{buenosaires.title}}</h2>
-        <p class="section-text">{{buenosaires.sub}}</p>
-      </div>
-      <div class="ba-grid stagger">
-        <div class="ba-card reveal-scale" style="--i:0">
-          <div class="media"><img src="{{img_prefix}}portillo-images/ba-casarosada.jpg" alt="{{buenosaires.ba1_alt}}" loading="lazy"></div>
-          <span class="ba-caption">{{buenosaires.ba1_caption}}</span>
-        </div>
-        <div class="ba-card reveal-scale" style="--i:1">
-          <div class="media"><img src="{{img_prefix}}portillo-images/ba-obelisco.jpg" alt="{{buenosaires.ba2_alt}}" loading="lazy"></div>
-          <span class="ba-caption">{{buenosaires.ba2_caption}}</span>
-        </div>
-        <div class="ba-card reveal-scale" style="--i:2">
-          <div class="media"><img src="{{img_prefix}}portillo-images/ba-bencich.jpg" alt="{{buenosaires.ba3_alt}}" loading="lazy"></div>
-          <span class="ba-caption">{{buenosaires.ba3_caption}}</span>
-        </div>
-      </div>
-      <div class="map-card reveal">
-        <div class="map-info">
-          <span class="map-kicker">{{buenosaires.map_kicker}}</span>
-          <h3>{{buenosaires.map_title}}</h3>
-          <p class="map-address">{{contacto.card1_address}}</p>
-          <ul class="map-points">
-            <li>{{buenosaires.map_p1}}</li>
-            <li>{{buenosaires.map_p2}}</li>
-            <li>{{buenosaires.map_p3}}</li>
-          </ul>
-          <a class="btn btn-primary" href="https://www.google.com/maps/dir/?api=1&amp;destination=Av.+Pres.+Roque+S%C3%A1enz+Pe%C3%B1a+616,+C1035+CABA,+Argentina" target="_blank" rel="noopener">{{contacto.directions}}</a>
-        </div>
-        <div class="map-frame">
-          <iframe src="https://www.google.com/maps?q=Av.+Pres.+Roque+S%C3%A1enz+Pe%C3%B1a+616,+C1035+CABA,+Argentina&amp;hl={{buenosaires.map_hl}}&amp;z=16&amp;output=embed" title="{{buenosaires.map_iframe_title}}" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 6. ÁREAS DE PRÁCTICA -->
-  <section class="section--surface section-pad" id="areas">
-    <div class="container">
-      <div class="section-head reveal">
-        <span class="section-label">{{areas.eyebrow}}</span>
-        <h2>{{areas.title}}</h2>
-        <p class="section-text">{{areas.sub}}</p>
-      </div>
-      <div class="carousel-controls">
-        <button class="carousel-btn" id="carPrev" aria-label="{{a11y.carousel_prev}}">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
-        </button>
-        <button class="carousel-btn" id="carNext" aria-label="{{a11y.carousel_next}}">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-        </button>
-      </div>
-    </div>
-    <div class="carousel" id="carousel">
-      <div class="carousel-spacer" aria-hidden="true"></div>
-
-      <article class="area-card">
-        <div class="area-card-inner">
-          <div class="media">
-            <img src="{{img_prefix}}portillo-images/area-laboral.jpg" alt="{{areas.a1_alt}}" loading="lazy">
-          </div>
-          <div class="area-card-body">
-            <div class="area-badge-row"><span class="area-type-badge">{{areas.a1_cat}}</span></div>
-            <h3>{{areas.a1_title}}</h3>
-            <p class="area-desc">{{areas.a1_desc}}</p>
-            <a class="btn btn-primary btn-block" data-wa data-wa-number="5491127111987" data-wa-msg="{{areas.a1_msg}}" href="#">{{areas.cta}}</a>
-          </div>
-        </div>
-      </article>
-
-      <article class="area-card">
-        <div class="area-card-inner">
-          <div class="media">
-            <img src="{{img_prefix}}portillo-images/area-familia.jpg" alt="{{areas.a2_alt}}" loading="lazy">
-          </div>
-          <div class="area-card-body">
-            <div class="area-badge-row"><span class="area-type-badge">{{areas.a2_cat}}</span></div>
-            <h3>{{areas.a2_title}}</h3>
-            <p class="area-desc">{{areas.a2_desc}}</p>
-            <a class="btn btn-primary btn-block" data-wa data-wa-number="5491127111987" data-wa-msg="{{areas.a2_msg}}" href="#">{{areas.cta}}</a>
-          </div>
-        </div>
-      </article>
-
-      <article class="area-card">
-        <div class="area-card-inner">
-          <div class="media">
-            <img src="{{img_prefix}}portillo-images/area-penal.jpg" alt="{{areas.a3_alt}}" loading="lazy">
-          </div>
-          <div class="area-card-body">
-            <div class="area-badge-row"><span class="area-type-badge">{{areas.a3_cat}}</span></div>
-            <h3>{{areas.a3_title}}</h3>
-            <p class="area-desc">{{areas.a3_desc}}</p>
-            <a class="btn btn-primary btn-block" data-wa data-wa-number="5491127111987" data-wa-msg="{{areas.a3_msg}}" href="#">{{areas.cta}}</a>
-          </div>
-        </div>
-      </article>
-
-      <article class="area-card">
-        <div class="area-card-inner">
-          <div class="media">
-            <img src="{{img_prefix}}portillo-images/area-sucesiones.jpg" alt="{{areas.a4_alt}}" loading="lazy">
-          </div>
-          <div class="area-card-body">
-            <div class="area-badge-row"><span class="area-type-badge">{{areas.a4_cat}}</span></div>
-            <h3>{{areas.a4_title}}</h3>
-            <p class="area-desc">{{areas.a4_desc}}</p>
-            <a class="btn btn-primary btn-block" data-wa data-wa-number="5491127111987" data-wa-msg="{{areas.a4_msg}}" href="#">{{areas.cta}}</a>
-          </div>
-        </div>
-      </article>
-
-      <article class="area-card">
-        <div class="area-card-inner">
-          <div class="media">
-            <img src="{{img_prefix}}portillo-images/area-ciudadania-europea.jpg" alt="{{areas.a8_alt}}" loading="lazy">
-          </div>
-          <div class="area-card-body">
-            <div class="area-badge-row"><span class="area-type-badge">{{areas.a8_cat}}</span></div>
-            <h3>{{areas.a8_title}}</h3>
-            <p class="area-desc">{{areas.a8_desc}}</p>
-            <a class="btn btn-primary btn-block" data-wa data-wa-number="5491127111987" data-wa-msg="{{areas.a8_msg}}" href="#">{{areas.cta}}</a>
-          </div>
-        </div>
-      </article>
-
-      <article class="area-card">
-        <div class="area-card-inner">
-          <div class="media">
-            <img src="{{img_prefix}}portillo-images/area-danos.jpg" alt="{{areas.a5_alt}}" loading="lazy">
-          </div>
-          <div class="area-card-body">
-            <div class="area-badge-row"><span class="area-type-badge">{{areas.a5_cat}}</span></div>
-            <h3>{{areas.a5_title}}</h3>
-            <p class="area-desc">{{areas.a5_desc}}</p>
-            <a class="btn btn-primary btn-block" data-wa data-wa-number="5491127111987" data-wa-msg="{{areas.a5_msg}}" href="#">{{areas.cta}}</a>
-          </div>
-        </div>
-      </article>
-
-      <article class="area-card">
-        <div class="area-card-inner">
-          <div class="media">
-            <img src="{{img_prefix}}portillo-images/area-consumidor.jpg" alt="{{areas.a6_alt}}" loading="lazy">
-          </div>
-          <div class="area-card-body">
-            <div class="area-badge-row"><span class="area-type-badge">{{areas.a6_cat}}</span></div>
-            <h3>{{areas.a6_title}}</h3>
-            <p class="area-desc">{{areas.a6_desc}}</p>
-            <a class="btn btn-primary btn-block" data-wa data-wa-number="5491127111987" data-wa-msg="{{areas.a6_msg}}" href="#">{{areas.cta}}</a>
-          </div>
-        </div>
-      </article>
-
-      <article class="area-card">
-        <div class="area-card-inner">
-          <div class="media">
-            <img src="{{img_prefix}}portillo-images/area-empresas.jpg" alt="{{areas.a7_alt}}" loading="lazy">
-          </div>
-          <div class="area-card-body">
-            <div class="area-badge-row"><span class="area-type-badge">{{areas.a7_cat}}</span></div>
-            <h3>{{areas.a7_title}}</h3>
-            <p class="area-desc">{{areas.a7_desc}}</p>
-            <a class="btn btn-primary btn-block" data-wa data-wa-number="5491127111987" data-wa-msg="{{areas.a7_msg}}" href="#">{{areas.cta}}</a>
-          </div>
-        </div>
-      </article>
-
-      <article class="area-card">
-        <div class="area-card-inner">
-          <div class="media">
-            <img src="{{img_prefix}}portillo-images/area-escribania.jpg" alt="{{areas.a9_alt}}" loading="lazy">
-          </div>
-          <div class="area-card-body">
-            <div class="area-badge-row"><span class="area-type-badge">{{areas.a9_cat}}</span></div>
-            <h3>{{areas.a9_title}}</h3>
-            <p class="area-desc">{{areas.a9_desc}}</p>
-            <a class="btn btn-primary btn-block" data-wa data-wa-number="5491127111987" data-wa-msg="{{areas.a9_msg}}" href="#">{{areas.cta}}</a>
-          </div>
-        </div>
-      </article>
-
-      <div class="carousel-spacer" aria-hidden="true"></div>
-    </div>
-    <div class="carousel-dots" id="carDots" role="group" aria-label="{{areas.eyebrow}}"></div>
-  </section>
-
-  <!-- 7. EL ESTUDIO -->
-  <section class="section--bg section-pad" id="estudio">
-    <div class="container">
-      <div class="nosotros-grid">
-        <div class="team-photo reveal-scale">
-          <div class="media">
-            <img src="{{img_prefix}}portillo-images/estudio.jpg" alt="{{estudio.photo_alt}}" width="717" height="800" loading="lazy">
-          </div>
-        </div>
-        <div class="reveal">
-          <span class="section-label">{{estudio.eyebrow}}</span>
-          <h2 style="font-size:var(--text-2xl);">{{estudio.title}}</h2>
-          <p class="section-text">{{estudio.text}}</p>
-          <blockquote class="team-quote"><p>{{estudio.quote}}</p></blockquote>
-          <div class="team-sign">
-            <img src="{{img_prefix}}portillo-images/logo.png" alt="Portillo Kus & Asociados" width="150" height="80" loading="lazy">
-            <div class="team-sign-text">
-              <p class="team-name">{{estudio.name}}</p>
-              <p class="team-role">{{estudio.role}}</p>
-              <p class="team-pending"><span class="tag-pending">{{estudio.tag_matricula}}</span></p>
-            </div>
-          </div>
-          <p class="team-note">{{estudio.team_note}}</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 8. OPINIONES -->
-  <section class="section--surface section-pad">
+  <!-- 6. OPINIONES -->
+  <section class="section--bg section-pad" id="opiniones">
     <div class="container">
       <div class="section-head reveal">
         <span class="section-label">{{opiniones.eyebrow}}</span>
@@ -1068,7 +846,211 @@ section{ position: relative; }
     </div>
   </section>
 
-  <!-- 9. CÓMO TRABAJAMOS -->
+  <!-- 7. ÁREAS DE PRÁCTICA -->
+  <section class="section--surface section-pad" id="areas">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="section-label">{{areas.eyebrow}}</span>
+        <h2>{{areas.title}}</h2>
+        <p class="section-text">{{areas.sub}}</p>
+      </div>
+      <div class="carousel-controls">
+        <button class="carousel-btn" id="carPrev" aria-label="{{a11y.carousel_prev}}">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <button class="carousel-btn" id="carNext" aria-label="{{a11y.carousel_next}}">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="carousel" id="carousel">
+      <div class="carousel-spacer" aria-hidden="true"></div>
+
+      <article class="area-card">
+        <div class="area-card-inner">
+          <div class="media">
+            <img src="{{img_prefix}}portillo-images/area-laboral.jpg" alt="{{areas.a1_alt}}" loading="lazy">
+          </div>
+          <div class="area-card-body">
+            <div class="area-badge-row"><span class="area-type-badge">{{areas.a1_cat}}</span></div>
+            <h3>{{areas.a1_title}}</h3>
+            <p class="area-desc">{{areas.a1_desc}}</p>
+            <a class="btn btn-outline btn-block" href="https://wa.me/{{wa_number}}?text={{url:areas.a1_msg}}" target="_blank" rel="noopener">{{areas.cta}}</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="area-card">
+        <div class="area-card-inner">
+          <div class="media">
+            <img src="{{img_prefix}}portillo-images/area-familia.jpg" alt="{{areas.a2_alt}}" loading="lazy">
+          </div>
+          <div class="area-card-body">
+            <div class="area-badge-row"><span class="area-type-badge">{{areas.a2_cat}}</span></div>
+            <h3>{{areas.a2_title}}</h3>
+            <p class="area-desc">{{areas.a2_desc}}</p>
+            <a class="btn btn-outline btn-block" href="https://wa.me/{{wa_number}}?text={{url:areas.a2_msg}}" target="_blank" rel="noopener">{{areas.cta}}</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="area-card">
+        <div class="area-card-inner">
+          <div class="media">
+            <img src="{{img_prefix}}portillo-images/area-penal.jpg" alt="{{areas.a3_alt}}" loading="lazy">
+          </div>
+          <div class="area-card-body">
+            <div class="area-badge-row"><span class="area-type-badge">{{areas.a3_cat}}</span></div>
+            <h3>{{areas.a3_title}}</h3>
+            <p class="area-desc">{{areas.a3_desc}}</p>
+            <a class="btn btn-outline btn-block" href="https://wa.me/{{wa_number}}?text={{url:areas.a3_msg}}" target="_blank" rel="noopener">{{areas.cta}}</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="area-card">
+        <div class="area-card-inner">
+          <div class="media">
+            <img src="{{img_prefix}}portillo-images/area-sucesiones.jpg" alt="{{areas.a4_alt}}" loading="lazy">
+          </div>
+          <div class="area-card-body">
+            <div class="area-badge-row"><span class="area-type-badge">{{areas.a4_cat}}</span></div>
+            <h3>{{areas.a4_title}}</h3>
+            <p class="area-desc">{{areas.a4_desc}}</p>
+            <a class="btn btn-outline btn-block" href="https://wa.me/{{wa_number}}?text={{url:areas.a4_msg}}" target="_blank" rel="noopener">{{areas.cta}}</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="area-card">
+        <div class="area-card-inner">
+          <div class="media">
+            <img src="{{img_prefix}}portillo-images/area-ciudadania-europea.jpg" alt="{{areas.a8_alt}}" loading="lazy">
+          </div>
+          <div class="area-card-body">
+            <div class="area-badge-row"><span class="area-type-badge">{{areas.a8_cat}}</span></div>
+            <h3>{{areas.a8_title}}</h3>
+            <p class="area-desc">{{areas.a8_desc}}</p>
+            <a class="btn btn-outline btn-block" href="https://wa.me/{{wa_number}}?text={{url:areas.a8_msg}}" target="_blank" rel="noopener">{{areas.cta}}</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="area-card">
+        <div class="area-card-inner">
+          <div class="media">
+            <img src="{{img_prefix}}portillo-images/area-danos.jpg" alt="{{areas.a5_alt}}" loading="lazy">
+          </div>
+          <div class="area-card-body">
+            <div class="area-badge-row"><span class="area-type-badge">{{areas.a5_cat}}</span></div>
+            <h3>{{areas.a5_title}}</h3>
+            <p class="area-desc">{{areas.a5_desc}}</p>
+            <a class="btn btn-outline btn-block" href="https://wa.me/{{wa_number}}?text={{url:areas.a5_msg}}" target="_blank" rel="noopener">{{areas.cta}}</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="area-card">
+        <div class="area-card-inner">
+          <div class="media">
+            <img src="{{img_prefix}}portillo-images/area-consumidor.jpg" alt="{{areas.a6_alt}}" loading="lazy">
+          </div>
+          <div class="area-card-body">
+            <div class="area-badge-row"><span class="area-type-badge">{{areas.a6_cat}}</span></div>
+            <h3>{{areas.a6_title}}</h3>
+            <p class="area-desc">{{areas.a6_desc}}</p>
+            <a class="btn btn-outline btn-block" href="https://wa.me/{{wa_number}}?text={{url:areas.a6_msg}}" target="_blank" rel="noopener">{{areas.cta}}</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="area-card">
+        <div class="area-card-inner">
+          <div class="media">
+            <img src="{{img_prefix}}portillo-images/area-empresas.jpg" alt="{{areas.a7_alt}}" loading="lazy">
+          </div>
+          <div class="area-card-body">
+            <div class="area-badge-row"><span class="area-type-badge">{{areas.a7_cat}}</span></div>
+            <h3>{{areas.a7_title}}</h3>
+            <p class="area-desc">{{areas.a7_desc}}</p>
+            <a class="btn btn-outline btn-block" href="https://wa.me/{{wa_number}}?text={{url:areas.a7_msg}}" target="_blank" rel="noopener">{{areas.cta}}</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="area-card">
+        <div class="area-card-inner">
+          <div class="media">
+            <img src="{{img_prefix}}portillo-images/area-escribania.jpg" alt="{{areas.a9_alt}}" loading="lazy">
+          </div>
+          <div class="area-card-body">
+            <div class="area-badge-row"><span class="area-type-badge">{{areas.a9_cat}}</span></div>
+            <h3>{{areas.a9_title}}</h3>
+            <p class="area-desc">{{areas.a9_desc}}</p>
+            <a class="btn btn-outline btn-block" href="https://wa.me/{{wa_number}}?text={{url:areas.a9_msg}}" target="_blank" rel="noopener">{{areas.cta}}</a>
+          </div>
+        </div>
+      </article>
+
+      <div class="carousel-spacer" aria-hidden="true"></div>
+    </div>
+    <div class="carousel-dots" id="carDots" role="group" aria-label="{{areas.eyebrow}}"></div>
+  </section>
+
+  <!-- 8. EL ESTUDIO -->
+  <section class="section--bg section-pad" id="estudio">
+    <div class="container">
+      <div class="nosotros-grid">
+        <div class="team-photo reveal-scale">
+          <div class="media">
+            <img src="{{img_prefix}}portillo-images/estudio.jpg" alt="{{estudio.photo_alt}}" width="717" height="800" loading="lazy">
+          </div>
+        </div>
+        <div class="reveal">
+          <span class="section-label">{{estudio.eyebrow}}</span>
+          <h2 style="font-size:var(--text-2xl);">{{estudio.title}}</h2>
+          <p class="section-text">{{estudio.text}}</p>
+          <blockquote class="team-quote"><p>{{estudio.quote}}</p></blockquote>
+          <div class="team-sign">
+            <img src="{{img_prefix}}portillo-images/logo.png" alt="Portillo Kus & Asociados" width="150" height="80" loading="lazy">
+            <div class="team-sign-text">
+              <p class="team-name">{{estudio.name}}</p>
+              <p class="team-role">{{estudio.role}}</p>
+              <p class="team-pending"><span class="tag-pending">{{estudio.tag_matricula}}</span></p>
+            </div>
+          </div>
+          <p class="team-note">{{estudio.team_note}}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9. FRANJA BUENOS AIRES -->
+  <section class="section--surface section-pad">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="section-label">{{buenosaires.eyebrow}}</span>
+        <h2>{{buenosaires.title}}</h2>
+        <p class="section-text">{{buenosaires.sub}}</p>
+      </div>
+      <div class="ba-grid stagger">
+        <div class="ba-card reveal-scale" style="--i:0">
+          <div class="media"><img src="{{img_prefix}}portillo-images/ba-casarosada.jpg" alt="{{buenosaires.ba1_alt}}" loading="lazy"></div>
+          <span class="ba-caption">{{buenosaires.ba1_caption}}</span>
+        </div>
+        <div class="ba-card reveal-scale" style="--i:1">
+          <div class="media"><img src="{{img_prefix}}portillo-images/ba-obelisco.jpg" alt="{{buenosaires.ba2_alt}}" loading="lazy"></div>
+          <span class="ba-caption">{{buenosaires.ba2_caption}}</span>
+        </div>
+        <div class="ba-card reveal-scale" style="--i:2">
+          <div class="media"><img src="{{img_prefix}}portillo-images/ba-bencich.jpg" alt="{{buenosaires.ba3_alt}}" loading="lazy"></div>
+          <span class="ba-caption">{{buenosaires.ba3_caption}}</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10. CÓMO TRABAJAMOS -->
   <section class="section--bg section-pad">
     <div class="container">
       <div class="section-head reveal">
@@ -1121,7 +1103,7 @@ section{ position: relative; }
           <p class="abroad-title">{{trabajamos.abroad_title}}</p>
           <p class="abroad-text">{{trabajamos.abroad_text}}</p>
         </div>
-        <a class="btn btn-primary" data-wa data-wa-number="5491127111987" data-wa-msg="{{trabajamos.abroad_msg}}" href="#">
+        <a class="btn btn-primary" href="https://wa.me/{{wa_number}}?text={{url:trabajamos.abroad_msg}}" target="_blank" rel="noopener">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.5 14.4c-.3-.1-1.6-.8-1.8-.9-.2-.1-.4-.1-.6.1-.2.3-.7.9-.8 1-.1.2-.3.2-.5.1-1.5-.7-2.5-1.3-3.5-3-.3-.5.3-.4.8-1.4.1-.2 0-.4 0-.5C11 9.6 10.5 8.3 10.3 7.8c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.7.7-1 1.5-1 2.5.1 1.2.9 2.4 1 2.6 1.3 2 2.8 3.7 4.9 4.5 1.8.7 2.4.6 2.8.5.6-.1 1.6-.7 1.9-1.3.2-.6.2-1.1.1-1.2-.1-.2-.3-.3-.6-.4z"/><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2z" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
           {{trabajamos.abroad_cta}}
         </a>
@@ -1129,7 +1111,7 @@ section{ position: relative; }
     </div>
   </section>
 
-  <!-- 10. CONTACTO -->
+  <!-- 11. CONTACTO -->
   <section class="section--dark section-pad" id="contacto">
     <div class="container">
       <div class="section-head reveal">
@@ -1150,27 +1132,19 @@ section{ position: relative; }
           </div>
           <p class="contact-detail">{{contacto.card1_address}}<br>{{contacto.card1_hours}}</p>
           <div class="contact-actions">
-            <a class="btn btn-primary" data-wa data-wa-number="5491127111987" data-wa-msg="{{contacto.wa_msg}}" href="#">{{contacto.wa}}</a>
-            <a class="btn btn-secondary" href="tel:+5491127111987">{{contacto.call}}</a>
+            <a class="btn btn-primary" href="https://wa.me/{{wa_number}}?text={{url:contacto.wa_msg}}" target="_blank" rel="noopener">{{contacto.wa}}</a>
+            <a class="btn btn-secondary" href="tel:{{tel}}">{{contacto.call}}</a>
             <a class="btn btn-secondary" href="mailto:portillokusyasociados@gmail.com">{{contacto.email}}</a>
-            <a class="btn btn-secondary" href="https://www.google.com/maps/search/?api=1&query=Portillo+Kus+%26+Asociados+Estudio+Jur%C3%ADdico" target="_blank" rel="noopener">{{contacto.directions}}</a>
+            <a class="btn btn-secondary" href="https://www.google.com/maps/dir/?api=1&amp;destination=Av.+Pres.+Roque+S%C3%A1enz+Pe%C3%B1a+616,+C1035+CABA,+Argentina" target="_blank" rel="noopener">{{contacto.directions}}</a>
           </div>
         </article>
-        <article class="contact-card reveal">
-          <div class="contact-card-head">
-            <div>
-              <span class="office-tag">{{contacto.card2_tag}}</span>
-              <h3>+54 9 11 3511-1987</h3>
-            </div>
+        <div class="contact-map reveal">
+          <div class="contact-map-fallback" aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+            <span>{{hero.address}}</span>
           </div>
-          <p class="contact-detail">portillokuslegal@gmail.com <span class="tag-pending" style="vertical-align:middle;">{{contacto.card2_pending}}</span></p>
-          <p class="contact-detail" style="font-style:italic;">{{contacto.card2_note}}</p>
-          <div class="contact-actions">
-            <a class="btn btn-primary" data-wa data-wa-number="5491127111987" data-wa-msg="{{contacto.wa_msg}}" href="#">{{contacto.wa}}</a>
-            <a class="btn btn-secondary" href="tel:+5491127111987">{{contacto.call}}</a>
-            <a class="btn btn-secondary" href="mailto:portillokusyasociados@gmail.com">{{contacto.email}}</a>
-          </div>
-        </article>
+          <iframe src="https://www.google.com/maps?q=Av.+Pres.+Roque+S%C3%A1enz+Pe%C3%B1a+616,+C1035+CABA,+Argentina&amp;hl={{buenosaires.map_hl}}&amp;z=16&amp;output=embed" title="{{buenosaires.map_iframe_title}}" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+        </div>
       </div>
     </div>
   </section>
@@ -1212,11 +1186,11 @@ section{ position: relative; }
 </footer>
 
 <nav class="mobile-bar" id="mobileBar" aria-label="{{contacto.title}}">
-  <a class="btn btn-primary" data-wa data-wa-number="5491127111987" data-wa-msg="{{contacto.wa_msg}}" href="#">
+  <a class="btn btn-primary" href="https://wa.me/{{wa_number}}?text={{url:contacto.wa_msg}}" target="_blank" rel="noopener">
     <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.1-1.6-.8-1.8-.9-.2-.1-.4-.1-.6.1-.2.3-.7.9-.8 1-.1.2-.3.2-.5.1-1.5-.7-2.5-1.3-3.5-3-.3-.5.3-.4.8-1.4.1-.2 0-.4 0-.5C11 9.6 10.5 8.3 10.3 7.8c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.7.7-1 1.5-1 2.5.1 1.2.9 2.4 1 2.6 1.3 2 2.8 3.7 4.9 4.5 1.8.7 2.4.6 2.8.5.6-.1 1.6-.7 1.9-1.3.2-.6.2-1.1.1-1.2-.1-.2-.3-.3-.6-.4z"/><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2z" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
     {{contacto.wa}}
   </a>
-  <a class="btn btn-secondary" href="tel:+5491127111987">
+  <a class="btn btn-secondary" href="tel:{{tel}}">
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
     {{contacto.call}}
   </a>
@@ -1230,15 +1204,6 @@ section{ position: relative; }
   var pageLang = (document.documentElement.lang || 'es').split('-')[0];
   var locale = LOCALE_MAP[pageLang] || 'es-AR';
   var prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  // WhatsApp: arma los href con encodeURIComponent
-  document.querySelectorAll('[data-wa]').forEach(function(el){
-    var number = el.getAttribute('data-wa-number');
-    var msg = el.getAttribute('data-wa-msg') || '';
-    el.setAttribute('href', 'https://wa.me/' + number + '?text=' + encodeURIComponent(msg));
-    el.setAttribute('target', '_blank');
-    el.setAttribute('rel', 'noopener');
-  });
 
   // Header: compactar al hacer scroll
   var header = document.getElementById('siteHeader');
@@ -1499,9 +1464,10 @@ PENDIENTE / CONFIRMAR con el estudio antes de pasar esto a producción (boceto v
 [PENDIENTE] Matrícula del Dr. Portillo (CPACF): el nombre "Denis" ya está
   confirmado por las reseñas y por la placa de escritorio (foto real, sección
   "El estudio"); falta el número de matrícula.
-[CONFIRMAR] Uso de la segunda línea (+54 9 11 3511-1987): mientras no se confirme,
-  sus botones de contacto redirigen a la línea principal (+54 9 11 2711-1987),
-  con una nota aclaratoria en la tarjeta.
+[CONFIRMAR] Uso de la segunda línea (+54 9 11 3511-1987, portillokuslegal@gmail.com):
+  su tarjeta se sacó de "Contacto" hasta que el estudio confirme para qué se usa
+  (mostraba ese número pero sus botones iban a la línea principal). Su lugar lo
+  ocupa el mapa.
 [CONFIRMAR] En qué idiomas atiende el estudio además de español. La franja de
   idiomas de "Cómo trabajamos" se sacó (con el selector de 5 idiomas era
   redundante); si el estudio confirma idiomas de atención, sumarlo como ítem.
@@ -1539,8 +1505,15 @@ PENDIENTE / CONFIRMAR con el estudio antes de pasar esto a producción (boceto v
 [CONFIRMAR] Ruso y chino: en qué idioma responde el estudio cuando llega una
   consulta en esos idiomas (los botones de WhatsApp de /ru y /zh escriben el
   mensaje en ese idioma).
-[INFO] Mapa de la franja "Buenos Aires": embed de Google Maps sin API key
-  (output=embed), con loading="lazy" para no demorar la carga inicial.
+[INFO] Mapa en "Contacto": embed de Google Maps sin API key (output=embed), con
+  loading="lazy" para no demorar la carga inicial.
+[INFO] Número de WhatsApp, teléfono, cantidad de reseñas, calificación y
+  expedientes resueltos se definen una sola vez en src/build.py. En los JSON,
+  la palabra reviews entre llaves se reemplaza por la cantidad de reseñas. Las imágenes og-*.jpg
+  tienen el 417 escrito en la imagen: regenerarlas si cambia.
+[PENDIENTE] Cifra "7 medios de pago" (4.ª de la franja de cifras): es la más floja;
+  reemplazarla por un dato real del estudio (p. ej., países de origen de sus
+  clientes) cuando lo pasen.
 -->
 
 </body>

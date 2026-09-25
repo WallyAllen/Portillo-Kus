@@ -1,20 +1,22 @@
 {
   "meta": {
     "title": "Portillo Kus & Asociados — 布宜诺斯艾利斯律师事务所 · 国籍与移民",
-    "description": "在布宜诺斯艾利斯市中心（Microcentro）代理阿根廷国籍、居留和签证事务。Google 评分 5.0★，共 417 条评价。",
+    "description": "在布宜诺斯艾利斯市中心（Microcentro）代理阿根廷国籍、居留和签证事务。Google 评分 5.0★，共 {reviews} 条评价。",
     "og_title": "Portillo Kus & Asociados — 律师事务所",
-    "og_description": "阿根廷国籍、居留与签证。Google 评分 5.0★，共 417 条评价。"
+    "og_description": "阿根廷国籍、居留与签证。Google 评分 5.0★，共 {reviews} 条评价。"
   },
   "a11y": {
     "open_menu": "打开菜单",
     "close_menu": "关闭菜单",
     "lang_switch": "切换语言",
+    "main_nav": "主导航",
+    "stats": "事务所数据",
     "carousel_prev": "上一个领域",
     "carousel_next": "下一个领域"
   },
   "nav": {
     "ciudadania": "国籍",
-    "migraciones": "移民",
+    "opiniones": "客户评价",
     "areas": "业务领域",
     "estudio": "关于我们",
     "contacto": "联系我们",
@@ -32,13 +34,13 @@
     "sub": "代理国籍、居留和签证申请。自 2020 年以来，已成功办结 1,200 多件国籍案件。",
     "cta_primary": "WhatsApp 咨询",
     "cta_primary_msg": "您好，我想咨询阿根廷国籍事宜。",
-    "cta_secondary": "查看业务领域",
-    "reviews_text": "Google 上 417 条评价",
+    "cta_secondary": "了解办理流程",
+    "reviews_text": "Google 上 {reviews} 条评价",
     "address": "Av. Roque Sáenz Peña 616, 布宜诺斯艾利斯"
   },
   "stats": {
     "s1_label": "2020 年以来成功办结的国籍案件",
-    "s2_label": "Google 上 417 条评价",
+    "s2_label": "Google 上 {reviews} 条评价",
     "s3_label": "法律业务领域",
     "s4_label": "付款方式，支持境外付款"
   },
@@ -83,17 +85,12 @@
     "ba2_caption": "北斜街，市中心",
     "ba3_alt": "事务所所在的 Miguel Bencich 大厦圆顶",
     "ba3_caption": "Miguel Bencich 大厦 4 楼",
-    "map_kicker": "位置",
-    "map_title": "北斜街上的 Miguel Bencich 大厦",
-    "map_p1": "步行即到五月广场和玫瑰宫",
-    "map_p2": "位于通往方尖碑的大道上",
-    "map_p3": "设有无障碍通道",
     "map_hl": "zh-CN",
     "map_iframe_title": "地图：事务所位于 Av. Roque Sáenz Peña 616, 布宜诺斯艾利斯"
   },
   "areas": {
     "eyebrow": "业务领域",
-    "title": "涵盖 12 个以上法律领域",
+    "title": "我们还提供以下法律服务",
     "sub": "国籍与移民是我们的专长。此外，我们也在以下领域为客户提供服务。",
     "cta": "咨询此项业务",
     "a1_cat": "劳动法", "a1_title": "解雇与工伤", "a1_desc": "无故解雇索赔，以及工伤事故和职业病索赔。", "a1_msg": "您好，我想咨询劳动法方面的问题。", "a1_alt": "桌上正在审阅的劳动文件，示意图片",
@@ -128,7 +125,7 @@
     "r3_name": "Jorge R.",
     "r4_text": "\"Dennis is the BEST! I thought my case was hopeless after visiting other attorneys…\"",
     "r4_name": "Adsterza",
-    "cta": "在 Google 上查看全部 417 条评价"
+    "cta": "在 Google 上查看全部 {reviews} 条评价"
   },
   "trabajamos": {
     "eyebrow": "服务方式",
@@ -157,10 +154,7 @@
     "wa_msg": "您好，我想向贵所咨询。",
     "call": "致电",
     "email": "邮件",
-    "directions": "查看路线",
-    "card2_tag": "第二条线路",
-    "card2_pending": "用途待确认",
-    "card2_note": "在确认此线路的用途之前，您的咨询将转至事务所主线。"
+    "directions": "查看路线"
   },
   "footer": {
     "tagline": "\"法律是我们的热忱所在。\"",

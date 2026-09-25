@@ -6,9 +6,39 @@ Ejecutivo**. Trámites de ciudadanía, con atención en varios idiomas.
 ## Estado (25/09/2026)
 
 - **Comercial:** propuesta enviada. **Falta la seña** (50% para arrancar).
-- **Producto:** boceto v2.1 en cinco idiomas (ES / EN / PT / RU / 中文), paleta
-  clara, con mapa de ubicación en la franja "Buenos Aires".
+- **Producto:** boceto v2.2 en cinco idiomas (ES / EN / PT / RU / 中文), paleta
+  clara, con mapa de ubicación en "Contacto".
 - **Publicado en:** todavía no.
+
+### Orden de la página (v2.2)
+
+Portada → Cifras → ¿Qué necesitás? → Ciudadanía → Opiniones → Otras áreas →
+El estudio → Buenos Aires → Cómo trabajamos → Contacto (con mapa).
+
+Criterio: primero la oferta y la prueba social (las reseñas son el mayor activo),
+después los servicios secundarios, quiénes somos y dónde, y al final lo práctico
+(pagos y contacto). El menú sigue ese mismo orden.
+
+### Cambios v2.2
+
+- Opiniones sube justo después de Ciudadanía; Buenos Aires baja junto a
+  El estudio, y el mapa pasa a Contacto.
+- La tarjeta de la segunda línea se sacó hasta confirmar su uso: mostraba un
+  número pero sus botones llamaban a otro.
+- Menú: "Opiniones" reemplaza a "Migraciones", que llevaba a una tarjeta y no a
+  una sección. Los ítems siguen el orden de la página.
+- Portada: el botón secundario es "Cómo es el trámite" y lleva a Ciudadanía.
+- Áreas: el título ya no promete "12" cuando el carrusel muestra 9.
+- Menos rojo: las tarjetas usan botón con borde bordó; en el carrusel solo la
+  tarjeta del centro lo tiene relleno (de 21 botones rojos a 7).
+- Una sola tipografía de títulos (Cormorant) en todos los dispositivos; se
+  quitó Playfair.
+- Los enlaces de WhatsApp se generan en el build (antes los armaba JavaScript y
+  en el HTML eran `href="#"`). Número, teléfono, reseñas, calificación y
+  expedientes están definidos una sola vez en `src/build.py`.
+- Cifras con el formato de cada idioma (5,0 / 5.0; 1.200 / 1,200 / 1 200).
+- Las anclas del menú ya no quedan debajo del header fijo.
+- Rótulos de accesibilidad: el menú principal se anunciaba como "Cambiar idioma".
 
 ### Cambios v2.1
 
@@ -92,7 +122,9 @@ python -m http.server 8532
       transferencia.
 - [ ] Nombres y matrículas del CPACF de los socios.
 - [ ] Fotos propias del estudio y de la fachada.
-- [ ] Para qué usan la segunda línea telefónica.
+- [ ] Para qué usan la segunda línea telefónica (hoy oculta en la página).
+- [ ] Un dato fuerte para reemplazar "7 medios de pago" en las cifras (por
+      ejemplo, de cuántos países son sus clientes).
 - [ ] En qué idiomas atienden y quién revisa cada traducción (EN, PT, RU y 中文
       las armó una IA: hay que revisarlas antes de publicar).
 - [ ] En qué idioma responden las consultas que lleguen en ruso o en chino.

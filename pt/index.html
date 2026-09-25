@@ -18,7 +18,7 @@
 <link rel="alternate" hreflang="x-default" href="https://landing-page-mockup-gx22s9gro-landing-page-7035.vercel.app/nichos/abogados/landings/portillo-kus/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Playfair+Display:wght@600;700&family=Karla:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Karla:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
 /* ==========================================================================
@@ -30,7 +30,7 @@
    ========================================================================== */
 
 :root{
-  --font-display: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+  --font-display: 'Cormorant Garamond', Georgia, serif;
   --font-body: 'Karla', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 
   --text-xs:   clamp(0.8rem, 0.78rem + 0.1vw, 0.86rem);
@@ -107,7 +107,7 @@ body.has-mobile-bar{ padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px
 body.is-navigating{ opacity: 0; transition: opacity 200ms var(--ease-out); }
 h1,h2,h3{ font-family: var(--font-display); font-weight: 600; line-height: 1.08; letter-spacing: -0.01em; margin: 0; overflow-wrap: break-word; color: var(--ink); }
 @media (max-width: 640px){
-  h1,h2,h3{ font-family: 'Playfair Display', Georgia, serif; font-weight: 700; }
+  h1,h2,h3{ font-weight: 700; }
 }
 
 /* Karla no trae cirílico: en ruso el cuerpo usa la fuente del sistema para no mezclar tipografías */
@@ -170,6 +170,12 @@ svg{ display: block; flex-shrink: 0; }
 .btn-primary{ background: var(--brand); color: #fff; box-shadow: var(--shadow-md); }
 .btn-primary:hover{ filter: brightness(1.1); box-shadow: var(--shadow-lg); }
 .btn-secondary{ background: transparent; color: var(--ink); border: 1.5px solid var(--line); }
+/* Bordó con borde: el rojo relleno queda para las acciones principales */
+.btn-outline{
+  background: transparent; color: var(--brand); border: 1.5px solid var(--brand);
+  transition: background var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
+}
+.btn-outline:hover, .area-card.is-active .btn-outline{ background: var(--brand); color: #fff; }
 .btn-secondary:hover{ border-color: var(--ink-muted); background: hsl(30 20% 92% / 0.6); }
 .section--dark .btn-secondary{ color: var(--ink-on-dark); border-color: rgba(245,245,243,0.5); }
 .section--dark .btn-secondary:hover{ border-color: var(--ink-on-dark); background: rgba(245,245,243,0.08); }
@@ -370,6 +376,8 @@ svg{ display: block; flex-shrink: 0; }
    5. SECCIONES GENERALES
    ========================================================================== */
 section{ position: relative; }
+/* Las anclas del menú no quedan debajo del header fijo */
+section[id]{ scroll-margin-top: 60px; }
 .section--bg{ background: var(--bg); color: var(--ink); }
 .section--surface{ background: var(--surface); color: var(--ink); }
 .section--dark{ background: var(--dark); color: var(--ink-on-dark); }
@@ -410,27 +418,6 @@ section{ position: relative; }
 .ba-card .media img{ transition: transform 600ms var(--ease-out); }
 .ba-card::before{ content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgba(8,14,19,0.85), rgba(8,14,19,0.05) 55%); z-index: 1; }
 .ba-caption{ position: absolute; left: var(--sp-4); bottom: var(--sp-4); right: var(--sp-4); z-index: 2; color: #fff; font-family: var(--font-display); font-weight: 600; font-size: var(--text-md); }
-
-/* Ubicación con mapa */
-.map-card{
-  margin-top: var(--sp-7); display: grid; grid-template-columns: 1fr;
-  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg);
-  overflow: hidden; box-shadow: var(--shadow-sm);
-}
-@media (min-width: 900px){ .map-card{ grid-template-columns: 5fr 7fr; } }
-.map-info{ padding: var(--sp-6); display: flex; flex-direction: column; align-items: flex-start; gap: var(--sp-3); }
-.map-kicker{ font-size: var(--text-xs); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--celeste-ink); }
-.map-info h3{ font-size: var(--text-xl); }
-.map-address{ font-size: var(--text-sm); color: var(--ink-muted); }
-.map-points{ display: flex; flex-direction: column; gap: var(--sp-2); margin: var(--sp-1) 0 var(--sp-3); }
-.map-points li{ position: relative; padding-left: 22px; font-size: var(--text-sm); color: var(--ink); }
-.map-points li::before{
-  content: ""; position: absolute; left: 0; top: 0.5em; width: 9px; height: 9px; border-radius: 50%;
-  background: var(--celeste); box-shadow: 0 0 0 3px hsl(209 60% 90%);
-}
-.map-frame{ position: relative; min-height: 300px; background: var(--line); }
-@media (min-width: 900px){ .map-frame{ min-height: 400px; } }
-.map-frame iframe{ position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
 
 /* Carrusel de áreas de práctica */
 .carousel-controls{ display: none; }
@@ -613,6 +600,17 @@ section{ position: relative; }
 .contact-detail{ font-size: var(--text-sm); color: var(--ink-on-dark-muted); }
 .contact-actions{ display: flex; flex-wrap: wrap; gap: var(--sp-3); margin-top: auto; }
 .contact-actions .btn{ flex: 1 1 auto; }
+.contact-map{
+  position: relative; min-height: 320px; overflow: hidden;
+  border: 1px solid var(--dark-line); border-radius: var(--radius-lg); background: var(--dark-surface);
+}
+.contact-map iframe{ position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+/* Visible mientras el mapa carga (o si un bloqueador lo impide); el iframe lo tapa al cargar */
+.contact-map-fallback{
+  position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: var(--sp-2); padding: var(--sp-5); text-align: center; font-size: var(--text-sm); color: var(--ink-on-dark-muted);
+}
+.contact-map-fallback svg{ color: var(--celeste); }
 
 /* Footer (claro) */
 .site-footer{ background: var(--bg); border-top: 1px solid var(--line); padding: var(--sp-8) 0 var(--sp-6); }
@@ -647,10 +645,10 @@ section{ position: relative; }
 <header class="site-header" id="siteHeader">
   <div class="container header-inner">
     <a href="#top" class="logo"><strong>Portillo Kus</strong><span class="logo-sub">&amp; Asociados · Estudio Jurídico</span></a>
-    <nav class="main-nav" aria-label="Mudar idioma">
+    <nav class="main-nav" aria-label="Navegação principal">
       <a href="#ciudadania">Cidadania</a>
-      <a href="#migraciones">Imigração</a>
-      <a href="#areas">Áreas de atuação</a>
+      <a href="#opiniones">Avaliações</a>
+      <a href="#areas">Áreas</a>
       <a href="#estudio">O escritório</a>
       <a href="#contacto">Contato</a>
     </nav>
@@ -669,7 +667,7 @@ section{ position: relative; }
 <a href="../zh/" hreflang="zh-Hans" lang="zh-Hans">中文</a>
         </nav>
       </details>
-      <a class="btn btn-primary btn-pill-sm" data-wa data-wa-number="5491127111987" data-wa-msg="Olá, gostaria de fazer uma consulta com o escritório." href="#">Consultar</a>
+      <a class="btn btn-primary btn-pill-sm" href="https://wa.me/5491127111987?text=Ol%C3%A1%2C%20gostaria%20de%20fazer%20uma%20consulta%20com%20o%20escrit%C3%B3rio." target="_blank" rel="noopener">Consultar</a>
       <button class="menu-toggle" id="menuOpenBtn" aria-expanded="false" aria-controls="mobilePanel" aria-label="Abrir menu">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
       </button>
@@ -684,15 +682,15 @@ section{ position: relative; }
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg>
     </button>
   </div>
-  <nav aria-label="Mudar idioma">
+  <nav aria-label="Navegação principal">
     <a href="#ciudadania" class="mp-link">Cidadania</a>
-    <a href="#migraciones" class="mp-link">Imigração</a>
-    <a href="#areas" class="mp-link">Áreas de atuação</a>
+    <a href="#opiniones" class="mp-link">Avaliações</a>
+    <a href="#areas" class="mp-link">Áreas</a>
     <a href="#estudio" class="mp-link">O escritório</a>
     <a href="#contacto" class="mp-link">Contato</a>
   </nav>
   <div class="mobile-panel-footer">
-    <a class="btn btn-primary btn-block" data-wa data-wa-number="5491127111987" data-wa-msg="Olá, gostaria de fazer uma consulta com o escritório." href="#">Falar pelo WhatsApp</a>
+    <a class="btn btn-primary btn-block" href="https://wa.me/5491127111987?text=Ol%C3%A1%2C%20gostaria%20de%20fazer%20uma%20consulta%20com%20o%20escrit%C3%B3rio." target="_blank" rel="noopener">Falar pelo WhatsApp</a>
     <span class="contact-line">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
       Segunda a sexta, das 10h30 às 18h
@@ -722,8 +720,8 @@ section{ position: relative; }
         <h1 class="hero-title">Sua cidadania argentina, nas melhores mãos</h1>
         <p class="hero-sub">Assessoria em cidadania, residência e visas. Mais de 1.200 processos de cidadania resolvidos com sucesso desde 2020.</p>
         <div class="hero-actions">
-          <a class="btn btn-primary" data-wa data-wa-number="5491127111987" data-wa-msg="Olá, gostaria de consultar sobre minha cidadania argentina." href="#">Consultar pelo WhatsApp</a>
-          <a class="btn btn-secondary" href="#areas">Ver áreas de atuação</a>
+          <a class="btn btn-primary" href="https://wa.me/5491127111987?text=Ol%C3%A1%2C%20gostaria%20de%20consultar%20sobre%20minha%20cidadania%20argentina." target="_blank" rel="noopener">Consultar pelo WhatsApp</a>
+          <a class="btn btn-secondary" href="#ciudadania">Como funciona o processo</a>
         </div>
         <div class="hero-trust">
           <a href="https://www.google.com/maps/search/?api=1&query=Portillo+Kus+%26+Asociados+Estudio+Jur%C3%ADdico" target="_blank" rel="noopener"><span class="stars">★ 5,0</span> · 417 avaliações no Google</a>
@@ -735,7 +733,7 @@ section{ position: relative; }
   </section>
 
   <!-- 3. CIFRAS -->
-  <section class="stats" aria-label="Portillo Kus & Asociados">
+  <section class="stats" aria-label="O escritório em números">
     <svg class="stats-sun" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="100" cy="100" r="46" fill="currentColor"/><path d="M146.0,106.0 L180.0,100.0 L146.0,94.0 Z M142.5,118.0 L162.8,120.4 L145.0,110.4 Z M133.7,131.9 L164.7,147.0 L140.7,122.2 Z M123.8,139.6 L138.8,153.4 L130.3,134.9 Z M108.5,145.6 L124.7,176.1 L119.9,141.9 Z M96.0,146.0 L100.0,166.0 L104.0,146.0 Z M80.1,141.9 L75.3,176.1 L91.5,145.6 Z M69.7,134.9 L61.2,153.4 L76.2,139.6 Z M59.3,122.2 L35.3,147.0 L66.3,131.9 Z M55.0,110.4 L37.2,120.4 L57.5,118.0 Z M54.0,94.0 L20.0,100.0 L54.0,106.0 Z M57.5,82.0 L37.2,79.6 L55.0,89.6 Z M66.3,68.1 L35.3,53.0 L59.3,77.8 Z M76.2,60.4 L61.2,46.6 L69.7,65.1 Z M91.5,54.4 L75.3,23.9 L80.1,58.1 Z M104.0,54.0 L100.0,34.0 L96.0,54.0 Z M119.9,58.1 L124.7,23.9 L108.5,54.4 Z M130.3,65.1 L138.8,46.6 L123.8,60.4 Z M140.7,77.8 L164.7,53.0 L133.7,68.1 Z M145.0,89.6 L162.8,79.6 L142.5,82.0 Z" fill="currentColor"/></svg>
     <div class="container">
       <div class="stats-grid stagger">
@@ -774,17 +772,17 @@ section{ position: relative; }
           <div class="need-card-body">
             <h3>Cidadania argentina</h3>
             <p>Carta de cidadania, da consulta até o juramento.</p>
-            <a class="btn btn-primary" data-wa data-wa-number="5491127111987" data-wa-msg="Olá, gostaria de consultar sobre a cidadania argentina." href="#">Consultar pelo WhatsApp</a>
+            <a class="btn btn-outline" href="https://wa.me/5491127111987?text=Ol%C3%A1%2C%20gostaria%20de%20consultar%20sobre%20a%20cidadania%20argentina." target="_blank" rel="noopener">Consultar pelo WhatsApp</a>
           </div>
         </article>
-        <article class="need-card reveal" id="migraciones" style="--i:1">
+        <article class="need-card reveal" style="--i:1">
           <div class="media">
             <img src="../portillo-images/need-residencia.jpg" alt="Dr. Portillo com um cliente no escritório, foto real" loading="lazy">
           </div>
           <div class="need-card-body">
             <h3>Residência e visas</h3>
             <p>Residências Mercosul e extra Mercosul, visas e permissões de entrada.</p>
-            <a class="btn btn-primary" data-wa data-wa-number="5491127111987" data-wa-msg="Olá, gostaria de consultar sobre uma residência ou visa." href="#">Consultar pelo WhatsApp</a>
+            <a class="btn btn-outline" href="https://wa.me/5491127111987?text=Ol%C3%A1%2C%20gostaria%20de%20consultar%20sobre%20uma%20resid%C3%AAncia%20ou%20visa." target="_blank" rel="noopener">Consultar pelo WhatsApp</a>
           </div>
         </article>
         <article class="need-card reveal" style="--i:2">
@@ -794,7 +792,7 @@ section{ position: relative; }
           <div class="need-card-body">
             <h3>Defesa contra expulsão</h3>
             <p>Assessoria jurídica para reverter uma ordem de expulsão.</p>
-            <a class="btn btn-primary" data-wa data-wa-number="5491127111987" data-wa-msg="Olá, preciso de assessoria sobre uma ordem de expulsão." href="#">Consultar pelo WhatsApp</a>
+            <a class="btn btn-outline" href="https://wa.me/5491127111987?text=Ol%C3%A1%2C%20preciso%20de%20assessoria%20sobre%20uma%20ordem%20de%20expuls%C3%A3o." target="_blank" rel="noopener">Consultar pelo WhatsApp</a>
           </div>
         </article>
       </div>
@@ -820,234 +818,14 @@ section{ position: relative; }
             <li>3. Apresentação e acompanhamento do processo.</li>
             <li>4. Acompanhamento até o juramento.</li>
           </ul>
-          <a class="btn btn-primary" style="margin-top:var(--sp-6);" data-wa data-wa-number="5491127111987" data-wa-msg="Olá, gostaria de consultar sobre minha cidadania argentina." href="#">Consultar sobre minha cidadania</a>
+          <a class="btn btn-primary" style="margin-top:var(--sp-6);" href="https://wa.me/5491127111987?text=Ol%C3%A1%2C%20gostaria%20de%20consultar%20sobre%20minha%20cidadania%20argentina." target="_blank" rel="noopener">Consultar sobre minha cidadania</a>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 5.5 FRANJA BUENOS AIRES -->
-  <section class="section--bg section-pad">
-    <div class="container">
-      <div class="section-head reveal">
-        <span class="section-label">BUENOS AIRES</span>
-        <h2>A poucos passos de onde tudo acontece</h2>
-        <p class="section-text">O escritório está no coração do Microcentro, na Diagonal Norte, a poucos passos da Plaza de Mayo.</p>
-      </div>
-      <div class="ba-grid stagger">
-        <div class="ba-card reveal-scale" style="--i:0">
-          <div class="media"><img src="../portillo-images/ba-casarosada.jpg" alt="Fachada da Casa Rosada, com a bandeira argentina, na Plaza de Mayo" loading="lazy"></div>
-          <span class="ba-caption">A poucos passos da Plaza de Mayo</span>
-        </div>
-        <div class="ba-card reveal-scale" style="--i:1">
-          <div class="media"><img src="../portillo-images/ba-obelisco.jpg" alt="O Obelisco visto da Diagonal Norte, Buenos Aires" loading="lazy"></div>
-          <span class="ba-caption">Diagonal Norte, Microcentro</span>
-        </div>
-        <div class="ba-card reveal-scale" style="--i:2">
-          <div class="media"><img src="../portillo-images/ba-bencich.jpg" alt="Cúpulas do Edificio Miguel Bencich, onde está o escritório" loading="lazy"></div>
-          <span class="ba-caption">Edificio Miguel Bencich, 4º andar</span>
-        </div>
-      </div>
-      <div class="map-card reveal">
-        <div class="map-info">
-          <span class="map-kicker">Localização</span>
-          <h3>Edificio Miguel Bencich, na Diagonal Norte</h3>
-          <p class="map-address">Edificio Miguel Bencich — Av. Pte. Roque Sáenz Peña 616, 4º andar, sala 403, C1035, Buenos Aires</p>
-          <ul class="map-points">
-            <li>A poucos passos da Plaza de Mayo e da Casa Rosada</li>
-            <li>Na avenida que termina no Obelisco</li>
-            <li>Acesso para cadeira de rodas</li>
-          </ul>
-          <a class="btn btn-primary" href="https://www.google.com/maps/dir/?api=1&amp;destination=Av.+Pres.+Roque+S%C3%A1enz+Pe%C3%B1a+616,+C1035+CABA,+Argentina" target="_blank" rel="noopener">Como chegar</a>
-        </div>
-        <div class="map-frame">
-          <iframe src="https://www.google.com/maps?q=Av.+Pres.+Roque+S%C3%A1enz+Pe%C3%B1a+616,+C1035+CABA,+Argentina&amp;hl=pt-BR&amp;z=16&amp;output=embed" title="Mapa com a localização do escritório na Av. Roque Sáenz Peña 616, Buenos Aires" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 6. ÁREAS DE PRÁCTICA -->
-  <section class="section--surface section-pad" id="areas">
-    <div class="container">
-      <div class="section-head reveal">
-        <span class="section-label">ÁREAS DE ATUAÇÃO</span>
-        <h2>Mais de 12 áreas do direito</h2>
-        <p class="section-text">Cidadania e imigração são nosso forte. Além disso, acompanhamos nossos clientes nestes outros temas.</p>
-      </div>
-      <div class="carousel-controls">
-        <button class="carousel-btn" id="carPrev" aria-label="Área anterior">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
-        </button>
-        <button class="carousel-btn" id="carNext" aria-label="Próxima área">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-        </button>
-      </div>
-    </div>
-    <div class="carousel" id="carousel">
-      <div class="carousel-spacer" aria-hidden="true"></div>
-
-      <article class="area-card">
-        <div class="area-card-inner">
-          <div class="media">
-            <img src="../portillo-images/area-laboral.jpg" alt="Documento trabalhista revisado sobre uma mesa, foto ilustrativa" loading="lazy">
-          </div>
-          <div class="area-card-body">
-            <div class="area-badge-row"><span class="area-type-badge">Trabalhista</span></div>
-            <h3>Demissões e acidentes de trabalho</h3>
-            <p class="area-desc">Reclamações por demissão sem justa causa e acidentes ou doenças do trabalho.</p>
-            <a class="btn btn-primary btn-block" data-wa data-wa-number="5491127111987" data-wa-msg="Olá, gostaria de consultar sobre um tema trabalhista." href="#">Consultar sobre este tema</a>
-          </div>
-        </div>
-      </article>
-
-      <article class="area-card">
-        <div class="area-card-inner">
-          <div class="media">
-            <img src="../portillo-images/area-familia.jpg" alt="Mão de um bebê sobre as mãos dos pais, foto ilustrativa" loading="lazy">
-          </div>
-          <div class="area-card-body">
-            <div class="area-badge-row"><span class="area-type-badge">Família</span></div>
-            <h3>Família</h3>
-            <p class="area-desc">Divórcio consensual e litigioso, pensão alimentícia e regime de visitas.</p>
-            <a class="btn btn-primary btn-block" data-wa data-wa-number="5491127111987" data-wa-msg="Olá, gostaria de consultar sobre um tema de família." href="#">Consultar sobre este tema</a>
-          </div>
-        </div>
-      </article>
-
-      <article class="area-card">
-        <div class="area-card-inner">
-          <div class="media">
-            <img src="../portillo-images/area-penal.jpg" alt="Colunas clássicas de um prédio de tribunais, foto ilustrativa" loading="lazy">
-          </div>
-          <div class="area-card-body">
-            <div class="area-badge-row"><span class="area-type-badge">Penal</span></div>
-            <h3>Penal</h3>
-            <p class="area-desc">Defesa e assessoria em processos penais.</p>
-            <a class="btn btn-primary btn-block" data-wa data-wa-number="5491127111987" data-wa-msg="Olá, gostaria de consultar sobre um tema penal." href="#">Consultar sobre este tema</a>
-          </div>
-        </div>
-      </article>
-
-      <article class="area-card">
-        <div class="area-card-inner">
-          <div class="media">
-            <img src="../portillo-images/area-sucesiones.jpg" alt="Molho de chaves antigo e ornamentado sobre madeira, foto ilustrativa" loading="lazy">
-          </div>
-          <div class="area-card-body">
-            <div class="area-badge-row"><span class="area-type-badge">Inventário</span></div>
-            <h3>Inventário e sucessões</h3>
-            <p class="area-desc">Processo de inventário do início ao fim.</p>
-            <a class="btn btn-primary btn-block" data-wa data-wa-number="5491127111987" data-wa-msg="Olá, gostaria de consultar sobre um inventário." href="#">Consultar sobre este tema</a>
-          </div>
-        </div>
-      </article>
-
-      <article class="area-card">
-        <div class="area-card-inner">
-          <div class="media">
-            <img src="../portillo-images/area-ciudadania-europea.jpg" alt="Bandeira da União Europeia, foto ilustrativa" loading="lazy">
-          </div>
-          <div class="area-card-body">
-            <div class="area-badge-row"><span class="area-type-badge">Cidadania europeia</span></div>
-            <h3>Cidadania italiana e espanhola</h3>
-            <p class="area-desc">Processos de cidadania por ascendência italiana ou espanhola.</p>
-            <a class="btn btn-primary btn-block" data-wa data-wa-number="5491127111987" data-wa-msg="Olá, gostaria de consultar sobre cidadania italiana ou espanhola." href="#">Consultar sobre este tema</a>
-          </div>
-        </div>
-      </article>
-
-      <article class="area-card">
-        <div class="area-card-inner">
-          <div class="media">
-            <img src="../portillo-images/area-danos.jpg" alt="Trânsito noturno em uma avenida da cidade, foto ilustrativa" loading="lazy">
-          </div>
-          <div class="area-card-body">
-            <div class="area-badge-row"><span class="area-type-badge">Danos</span></div>
-            <h3>Acidentes e danos</h3>
-            <p class="area-desc">Acidentes de trânsito, danos e prejuízos.</p>
-            <a class="btn btn-primary btn-block" data-wa data-wa-number="5491127111987" data-wa-msg="Olá, gostaria de consultar sobre um acidente de trânsito." href="#">Consultar sobre este tema</a>
-          </div>
-        </div>
-      </article>
-
-      <article class="area-card">
-        <div class="area-card-inner">
-          <div class="media">
-            <img src="../portillo-images/area-consumidor.jpg" alt="Pagamento por aproximação com celular, foto ilustrativa" loading="lazy">
-          </div>
-          <div class="area-card-body">
-            <div class="area-badge-row"><span class="area-type-badge">Consumidor</span></div>
-            <h3>Defesa do consumidor</h3>
-            <p class="area-desc">Reclamações sobre produtos, serviços e relações de consumo.</p>
-            <a class="btn btn-primary btn-block" data-wa data-wa-number="5491127111987" data-wa-msg="Olá, gostaria de consultar sobre defesa do consumidor." href="#">Consultar sobre este tema</a>
-          </div>
-        </div>
-      </article>
-
-      <article class="area-card">
-        <div class="area-card-inner">
-          <div class="media">
-            <img src="../portillo-images/area-empresas.jpg" alt="Fachada de um edifício de escritórios moderno, foto ilustrativa" loading="lazy">
-          </div>
-          <div class="area-card-body">
-            <div class="area-badge-row"><span class="area-type-badge">Empresas</span></div>
-            <h3>Empresas e contratos</h3>
-            <p class="area-desc">Registro de sociedades, contratos e locações.</p>
-            <a class="btn btn-primary btn-block" data-wa data-wa-number="5491127111987" data-wa-msg="Olá, gostaria de consultar sobre um tema de empresas ou contratos." href="#">Consultar sobre este tema</a>
-          </div>
-        </div>
-      </article>
-
-      <article class="area-card">
-        <div class="area-card-inner">
-          <div class="media">
-            <img src="../portillo-images/area-escribania.jpg" alt="Selos de lacre dourados sobre envelopes, foto ilustrativa" loading="lazy">
-          </div>
-          <div class="area-card-body">
-            <div class="area-badge-row"><span class="area-type-badge">Cartório</span></div>
-            <h3>Procedimentos notariais</h3>
-            <p class="area-desc">Procedimentos notariais em cartório.</p>
-            <a class="btn btn-primary btn-block" data-wa data-wa-number="5491127111987" data-wa-msg="Olá, gostaria de consultar sobre um procedimento notarial." href="#">Consultar sobre este tema</a>
-          </div>
-        </div>
-      </article>
-
-      <div class="carousel-spacer" aria-hidden="true"></div>
-    </div>
-    <div class="carousel-dots" id="carDots" role="group" aria-label="ÁREAS DE ATUAÇÃO"></div>
-  </section>
-
-  <!-- 7. EL ESTUDIO -->
-  <section class="section--bg section-pad" id="estudio">
-    <div class="container">
-      <div class="nosotros-grid">
-        <div class="team-photo reveal-scale">
-          <div class="media">
-            <img src="../portillo-images/estudio.jpg" alt="Estátua de Têmis sobre a mesa do escritório, junto a pastas com o logotipo da Portillo Kus & Asociados" width="717" height="800" loading="lazy">
-          </div>
-        </div>
-        <div class="reveal">
-          <span class="section-label">O ESCRITÓRIO</span>
-          <h2 style="font-size:var(--text-2xl);">Um escritório completo, nacional e internacional</h2>
-          <p class="section-text">Somos advogados com ampla experiência e especialistas em múltiplas áreas do Direito. Em poucos anos nos tornamos um dos escritórios de referência em cidadania e imigração do país.</p>
-          <blockquote class="team-quote"><p>“Escolher-nos é colocar seus direitos nas melhores mãos.”</p></blockquote>
-          <div class="team-sign">
-            <img src="../portillo-images/logo.png" alt="Portillo Kus & Asociados" width="150" height="80" loading="lazy">
-            <div class="team-sign-text">
-              <p class="team-name">Dr. Denis Portillo</p>
-              <p class="team-role">Presidente Executivo</p>
-              <p class="team-pending"><span class="tag-pending">REGISTRO PROFISSIONAL A CONFIRMAR</span></p>
-            </div>
-          </div>
-          <p class="team-note">Sócios e registros profissionais: a completar</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 8. OPINIONES -->
-  <section class="section--surface section-pad">
+  <!-- 6. OPINIONES -->
+  <section class="section--bg section-pad" id="opiniones">
     <div class="container">
       <div class="section-head reveal">
         <span class="section-label">AVALIAÇÕES</span>
@@ -1081,7 +859,211 @@ section{ position: relative; }
     </div>
   </section>
 
-  <!-- 9. CÓMO TRABAJAMOS -->
+  <!-- 7. ÁREAS DE PRÁCTICA -->
+  <section class="section--surface section-pad" id="areas">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="section-label">ÁREAS DE ATUAÇÃO</span>
+        <h2>Outras áreas em que acompanhamos você</h2>
+        <p class="section-text">Cidadania e imigração são nosso forte. Além disso, acompanhamos nossos clientes nestes outros temas.</p>
+      </div>
+      <div class="carousel-controls">
+        <button class="carousel-btn" id="carPrev" aria-label="Área anterior">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <button class="carousel-btn" id="carNext" aria-label="Próxima área">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="carousel" id="carousel">
+      <div class="carousel-spacer" aria-hidden="true"></div>
+
+      <article class="area-card">
+        <div class="area-card-inner">
+          <div class="media">
+            <img src="../portillo-images/area-laboral.jpg" alt="Documento trabalhista revisado sobre uma mesa, foto ilustrativa" loading="lazy">
+          </div>
+          <div class="area-card-body">
+            <div class="area-badge-row"><span class="area-type-badge">Trabalhista</span></div>
+            <h3>Demissões e acidentes de trabalho</h3>
+            <p class="area-desc">Reclamações por demissão sem justa causa e acidentes ou doenças do trabalho.</p>
+            <a class="btn btn-outline btn-block" href="https://wa.me/5491127111987?text=Ol%C3%A1%2C%20gostaria%20de%20consultar%20sobre%20um%20tema%20trabalhista." target="_blank" rel="noopener">Consultar sobre este tema</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="area-card">
+        <div class="area-card-inner">
+          <div class="media">
+            <img src="../portillo-images/area-familia.jpg" alt="Mão de um bebê sobre as mãos dos pais, foto ilustrativa" loading="lazy">
+          </div>
+          <div class="area-card-body">
+            <div class="area-badge-row"><span class="area-type-badge">Família</span></div>
+            <h3>Família</h3>
+            <p class="area-desc">Divórcio consensual e litigioso, pensão alimentícia e regime de visitas.</p>
+            <a class="btn btn-outline btn-block" href="https://wa.me/5491127111987?text=Ol%C3%A1%2C%20gostaria%20de%20consultar%20sobre%20um%20tema%20de%20fam%C3%ADlia." target="_blank" rel="noopener">Consultar sobre este tema</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="area-card">
+        <div class="area-card-inner">
+          <div class="media">
+            <img src="../portillo-images/area-penal.jpg" alt="Colunas clássicas de um prédio de tribunais, foto ilustrativa" loading="lazy">
+          </div>
+          <div class="area-card-body">
+            <div class="area-badge-row"><span class="area-type-badge">Penal</span></div>
+            <h3>Penal</h3>
+            <p class="area-desc">Defesa e assessoria em processos penais.</p>
+            <a class="btn btn-outline btn-block" href="https://wa.me/5491127111987?text=Ol%C3%A1%2C%20gostaria%20de%20consultar%20sobre%20um%20tema%20penal." target="_blank" rel="noopener">Consultar sobre este tema</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="area-card">
+        <div class="area-card-inner">
+          <div class="media">
+            <img src="../portillo-images/area-sucesiones.jpg" alt="Molho de chaves antigo e ornamentado sobre madeira, foto ilustrativa" loading="lazy">
+          </div>
+          <div class="area-card-body">
+            <div class="area-badge-row"><span class="area-type-badge">Inventário</span></div>
+            <h3>Inventário e sucessões</h3>
+            <p class="area-desc">Processo de inventário do início ao fim.</p>
+            <a class="btn btn-outline btn-block" href="https://wa.me/5491127111987?text=Ol%C3%A1%2C%20gostaria%20de%20consultar%20sobre%20um%20invent%C3%A1rio." target="_blank" rel="noopener">Consultar sobre este tema</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="area-card">
+        <div class="area-card-inner">
+          <div class="media">
+            <img src="../portillo-images/area-ciudadania-europea.jpg" alt="Bandeira da União Europeia, foto ilustrativa" loading="lazy">
+          </div>
+          <div class="area-card-body">
+            <div class="area-badge-row"><span class="area-type-badge">Cidadania europeia</span></div>
+            <h3>Cidadania italiana e espanhola</h3>
+            <p class="area-desc">Processos de cidadania por ascendência italiana ou espanhola.</p>
+            <a class="btn btn-outline btn-block" href="https://wa.me/5491127111987?text=Ol%C3%A1%2C%20gostaria%20de%20consultar%20sobre%20cidadania%20italiana%20ou%20espanhola." target="_blank" rel="noopener">Consultar sobre este tema</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="area-card">
+        <div class="area-card-inner">
+          <div class="media">
+            <img src="../portillo-images/area-danos.jpg" alt="Trânsito noturno em uma avenida da cidade, foto ilustrativa" loading="lazy">
+          </div>
+          <div class="area-card-body">
+            <div class="area-badge-row"><span class="area-type-badge">Danos</span></div>
+            <h3>Acidentes e danos</h3>
+            <p class="area-desc">Acidentes de trânsito, danos e prejuízos.</p>
+            <a class="btn btn-outline btn-block" href="https://wa.me/5491127111987?text=Ol%C3%A1%2C%20gostaria%20de%20consultar%20sobre%20um%20acidente%20de%20tr%C3%A2nsito." target="_blank" rel="noopener">Consultar sobre este tema</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="area-card">
+        <div class="area-card-inner">
+          <div class="media">
+            <img src="../portillo-images/area-consumidor.jpg" alt="Pagamento por aproximação com celular, foto ilustrativa" loading="lazy">
+          </div>
+          <div class="area-card-body">
+            <div class="area-badge-row"><span class="area-type-badge">Consumidor</span></div>
+            <h3>Defesa do consumidor</h3>
+            <p class="area-desc">Reclamações sobre produtos, serviços e relações de consumo.</p>
+            <a class="btn btn-outline btn-block" href="https://wa.me/5491127111987?text=Ol%C3%A1%2C%20gostaria%20de%20consultar%20sobre%20defesa%20do%20consumidor." target="_blank" rel="noopener">Consultar sobre este tema</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="area-card">
+        <div class="area-card-inner">
+          <div class="media">
+            <img src="../portillo-images/area-empresas.jpg" alt="Fachada de um edifício de escritórios moderno, foto ilustrativa" loading="lazy">
+          </div>
+          <div class="area-card-body">
+            <div class="area-badge-row"><span class="area-type-badge">Empresas</span></div>
+            <h3>Empresas e contratos</h3>
+            <p class="area-desc">Registro de sociedades, contratos e locações.</p>
+            <a class="btn btn-outline btn-block" href="https://wa.me/5491127111987?text=Ol%C3%A1%2C%20gostaria%20de%20consultar%20sobre%20um%20tema%20de%20empresas%20ou%20contratos." target="_blank" rel="noopener">Consultar sobre este tema</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="area-card">
+        <div class="area-card-inner">
+          <div class="media">
+            <img src="../portillo-images/area-escribania.jpg" alt="Selos de lacre dourados sobre envelopes, foto ilustrativa" loading="lazy">
+          </div>
+          <div class="area-card-body">
+            <div class="area-badge-row"><span class="area-type-badge">Cartório</span></div>
+            <h3>Procedimentos notariais</h3>
+            <p class="area-desc">Procedimentos notariais em cartório.</p>
+            <a class="btn btn-outline btn-block" href="https://wa.me/5491127111987?text=Ol%C3%A1%2C%20gostaria%20de%20consultar%20sobre%20um%20procedimento%20notarial." target="_blank" rel="noopener">Consultar sobre este tema</a>
+          </div>
+        </div>
+      </article>
+
+      <div class="carousel-spacer" aria-hidden="true"></div>
+    </div>
+    <div class="carousel-dots" id="carDots" role="group" aria-label="ÁREAS DE ATUAÇÃO"></div>
+  </section>
+
+  <!-- 8. EL ESTUDIO -->
+  <section class="section--bg section-pad" id="estudio">
+    <div class="container">
+      <div class="nosotros-grid">
+        <div class="team-photo reveal-scale">
+          <div class="media">
+            <img src="../portillo-images/estudio.jpg" alt="Estátua de Têmis sobre a mesa do escritório, junto a pastas com o logotipo da Portillo Kus & Asociados" width="717" height="800" loading="lazy">
+          </div>
+        </div>
+        <div class="reveal">
+          <span class="section-label">O ESCRITÓRIO</span>
+          <h2 style="font-size:var(--text-2xl);">Um escritório completo, nacional e internacional</h2>
+          <p class="section-text">Somos advogados com ampla experiência e especialistas em múltiplas áreas do Direito. Em poucos anos nos tornamos um dos escritórios de referência em cidadania e imigração do país.</p>
+          <blockquote class="team-quote"><p>“Escolher-nos é colocar seus direitos nas melhores mãos.”</p></blockquote>
+          <div class="team-sign">
+            <img src="../portillo-images/logo.png" alt="Portillo Kus & Asociados" width="150" height="80" loading="lazy">
+            <div class="team-sign-text">
+              <p class="team-name">Dr. Denis Portillo</p>
+              <p class="team-role">Presidente Executivo</p>
+              <p class="team-pending"><span class="tag-pending">REGISTRO PROFISSIONAL A CONFIRMAR</span></p>
+            </div>
+          </div>
+          <p class="team-note">Sócios e registros profissionais: a completar</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9. FRANJA BUENOS AIRES -->
+  <section class="section--surface section-pad">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="section-label">BUENOS AIRES</span>
+        <h2>A poucos passos de onde tudo acontece</h2>
+        <p class="section-text">O escritório está no coração do Microcentro, na Diagonal Norte, a poucos passos da Plaza de Mayo.</p>
+      </div>
+      <div class="ba-grid stagger">
+        <div class="ba-card reveal-scale" style="--i:0">
+          <div class="media"><img src="../portillo-images/ba-casarosada.jpg" alt="Fachada da Casa Rosada, com a bandeira argentina, na Plaza de Mayo" loading="lazy"></div>
+          <span class="ba-caption">A poucos passos da Plaza de Mayo</span>
+        </div>
+        <div class="ba-card reveal-scale" style="--i:1">
+          <div class="media"><img src="../portillo-images/ba-obelisco.jpg" alt="O Obelisco visto da Diagonal Norte, Buenos Aires" loading="lazy"></div>
+          <span class="ba-caption">Diagonal Norte, Microcentro</span>
+        </div>
+        <div class="ba-card reveal-scale" style="--i:2">
+          <div class="media"><img src="../portillo-images/ba-bencich.jpg" alt="Cúpulas do Edificio Miguel Bencich, onde está o escritório" loading="lazy"></div>
+          <span class="ba-caption">Edificio Miguel Bencich, 4º andar</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10. CÓMO TRABAJAMOS -->
   <section class="section--bg section-pad">
     <div class="container">
       <div class="section-head reveal">
@@ -1134,7 +1116,7 @@ section{ position: relative; }
           <p class="abroad-title">Está no exterior?</p>
           <p class="abroad-text">Você pode fazer sua consulta pelo WhatsApp e pagar do seu país.</p>
         </div>
-        <a class="btn btn-primary" data-wa data-wa-number="5491127111987" data-wa-msg="Olá, estou no exterior e gostaria de fazer uma consulta com o escritório." href="#">
+        <a class="btn btn-primary" href="https://wa.me/5491127111987?text=Ol%C3%A1%2C%20estou%20no%20exterior%20e%20gostaria%20de%20fazer%20uma%20consulta%20com%20o%20escrit%C3%B3rio." target="_blank" rel="noopener">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.5 14.4c-.3-.1-1.6-.8-1.8-.9-.2-.1-.4-.1-.6.1-.2.3-.7.9-.8 1-.1.2-.3.2-.5.1-1.5-.7-2.5-1.3-3.5-3-.3-.5.3-.4.8-1.4.1-.2 0-.4 0-.5C11 9.6 10.5 8.3 10.3 7.8c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.7.7-1 1.5-1 2.5.1 1.2.9 2.4 1 2.6 1.3 2 2.8 3.7 4.9 4.5 1.8.7 2.4.6 2.8.5.6-.1 1.6-.7 1.9-1.3.2-.6.2-1.1.1-1.2-.1-.2-.3-.3-.6-.4z"/><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2z" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
           Consultar pelo WhatsApp
         </a>
@@ -1142,7 +1124,7 @@ section{ position: relative; }
     </div>
   </section>
 
-  <!-- 10. CONTACTO -->
+  <!-- 11. CONTACTO -->
   <section class="section--dark section-pad" id="contacto">
     <div class="container">
       <div class="section-head reveal">
@@ -1163,27 +1145,19 @@ section{ position: relative; }
           </div>
           <p class="contact-detail">Edificio Miguel Bencich — Av. Pte. Roque Sáenz Peña 616, 4º andar, sala 403, C1035, Buenos Aires<br>Segunda a sexta, das 10h30 às 18h</p>
           <div class="contact-actions">
-            <a class="btn btn-primary" data-wa data-wa-number="5491127111987" data-wa-msg="Olá, gostaria de fazer uma consulta com o escritório." href="#">WhatsApp</a>
+            <a class="btn btn-primary" href="https://wa.me/5491127111987?text=Ol%C3%A1%2C%20gostaria%20de%20fazer%20uma%20consulta%20com%20o%20escrit%C3%B3rio." target="_blank" rel="noopener">WhatsApp</a>
             <a class="btn btn-secondary" href="tel:+5491127111987">Ligar</a>
             <a class="btn btn-secondary" href="mailto:portillokusyasociados@gmail.com">E-mail</a>
-            <a class="btn btn-secondary" href="https://www.google.com/maps/search/?api=1&query=Portillo+Kus+%26+Asociados+Estudio+Jur%C3%ADdico" target="_blank" rel="noopener">Como chegar</a>
+            <a class="btn btn-secondary" href="https://www.google.com/maps/dir/?api=1&amp;destination=Av.+Pres.+Roque+S%C3%A1enz+Pe%C3%B1a+616,+C1035+CABA,+Argentina" target="_blank" rel="noopener">Como chegar</a>
           </div>
         </article>
-        <article class="contact-card reveal">
-          <div class="contact-card-head">
-            <div>
-              <span class="office-tag">Segunda linha</span>
-              <h3>+54 9 11 3511-1987</h3>
-            </div>
+        <div class="contact-map reveal">
+          <div class="contact-map-fallback" aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+            <span>Av. Roque Sáenz Peña 616, Buenos Aires</span>
           </div>
-          <p class="contact-detail">portillokuslegal@gmail.com <span class="tag-pending" style="vertical-align:middle;">USO A CONFIRMAR</span></p>
-          <p class="contact-detail" style="font-style:italic;">Enquanto confirmamos para que esta linha é usada, sua consulta chega pela linha principal do escritório.</p>
-          <div class="contact-actions">
-            <a class="btn btn-primary" data-wa data-wa-number="5491127111987" data-wa-msg="Olá, gostaria de fazer uma consulta com o escritório." href="#">WhatsApp</a>
-            <a class="btn btn-secondary" href="tel:+5491127111987">Ligar</a>
-            <a class="btn btn-secondary" href="mailto:portillokusyasociados@gmail.com">E-mail</a>
-          </div>
-        </article>
+          <iframe src="https://www.google.com/maps?q=Av.+Pres.+Roque+S%C3%A1enz+Pe%C3%B1a+616,+C1035+CABA,+Argentina&amp;hl=pt-BR&amp;z=16&amp;output=embed" title="Mapa com a localização do escritório na Av. Roque Sáenz Peña 616, Buenos Aires" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+        </div>
       </div>
     </div>
   </section>
@@ -1225,7 +1199,7 @@ section{ position: relative; }
 </footer>
 
 <nav class="mobile-bar" id="mobileBar" aria-label="Vamos conversar">
-  <a class="btn btn-primary" data-wa data-wa-number="5491127111987" data-wa-msg="Olá, gostaria de fazer uma consulta com o escritório." href="#">
+  <a class="btn btn-primary" href="https://wa.me/5491127111987?text=Ol%C3%A1%2C%20gostaria%20de%20fazer%20uma%20consulta%20com%20o%20escrit%C3%B3rio." target="_blank" rel="noopener">
     <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.1-1.6-.8-1.8-.9-.2-.1-.4-.1-.6.1-.2.3-.7.9-.8 1-.1.2-.3.2-.5.1-1.5-.7-2.5-1.3-3.5-3-.3-.5.3-.4.8-1.4.1-.2 0-.4 0-.5C11 9.6 10.5 8.3 10.3 7.8c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.7.7-1 1.5-1 2.5.1 1.2.9 2.4 1 2.6 1.3 2 2.8 3.7 4.9 4.5 1.8.7 2.4.6 2.8.5.6-.1 1.6-.7 1.9-1.3.2-.6.2-1.1.1-1.2-.1-.2-.3-.3-.6-.4z"/><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2z" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
     WhatsApp
   </a>
@@ -1243,15 +1217,6 @@ section{ position: relative; }
   var pageLang = (document.documentElement.lang || 'es').split('-')[0];
   var locale = LOCALE_MAP[pageLang] || 'es-AR';
   var prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  // WhatsApp: arma los href con encodeURIComponent
-  document.querySelectorAll('[data-wa]').forEach(function(el){
-    var number = el.getAttribute('data-wa-number');
-    var msg = el.getAttribute('data-wa-msg') || '';
-    el.setAttribute('href', 'https://wa.me/' + number + '?text=' + encodeURIComponent(msg));
-    el.setAttribute('target', '_blank');
-    el.setAttribute('rel', 'noopener');
-  });
 
   // Header: compactar al hacer scroll
   var header = document.getElementById('siteHeader');
@@ -1512,9 +1477,10 @@ PENDIENTE / CONFIRMAR con el estudio antes de pasar esto a producción (boceto v
 [PENDIENTE] Matrícula del Dr. Portillo (CPACF): el nombre "Denis" ya está
   confirmado por las reseñas y por la placa de escritorio (foto real, sección
   "El estudio"); falta el número de matrícula.
-[CONFIRMAR] Uso de la segunda línea (+54 9 11 3511-1987): mientras no se confirme,
-  sus botones de contacto redirigen a la línea principal (+54 9 11 2711-1987),
-  con una nota aclaratoria en la tarjeta.
+[CONFIRMAR] Uso de la segunda línea (+54 9 11 3511-1987, portillokuslegal@gmail.com):
+  su tarjeta se sacó de "Contacto" hasta que el estudio confirme para qué se usa
+  (mostraba ese número pero sus botones iban a la línea principal). Su lugar lo
+  ocupa el mapa.
 [CONFIRMAR] En qué idiomas atiende el estudio además de español. La franja de
   idiomas de "Cómo trabajamos" se sacó (con el selector de 5 idiomas era
   redundante); si el estudio confirma idiomas de atención, sumarlo como ítem.
@@ -1552,8 +1518,15 @@ PENDIENTE / CONFIRMAR con el estudio antes de pasar esto a producción (boceto v
 [CONFIRMAR] Ruso y chino: en qué idioma responde el estudio cuando llega una
   consulta en esos idiomas (los botones de WhatsApp de /ru y /zh escriben el
   mensaje en ese idioma).
-[INFO] Mapa de la franja "Buenos Aires": embed de Google Maps sin API key
-  (output=embed), con loading="lazy" para no demorar la carga inicial.
+[INFO] Mapa en "Contacto": embed de Google Maps sin API key (output=embed), con
+  loading="lazy" para no demorar la carga inicial.
+[INFO] Número de WhatsApp, teléfono, cantidad de reseñas, calificación y
+  expedientes resueltos se definen una sola vez en src/build.py. En los JSON,
+  la palabra reviews entre llaves se reemplaza por la cantidad de reseñas. Las imágenes og-*.jpg
+  tienen el 417 escrito en la imagen: regenerarlas si cambia.
+[PENDIENTE] Cifra "7 medios de pago" (4.ª de la franja de cifras): es la más floja;
+  reemplazarla por un dato real del estudio (p. ej., países de origen de sus
+  clientes) cuando lo pasen.
 -->
 
 </body>

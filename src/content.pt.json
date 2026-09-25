@@ -1,21 +1,23 @@
 {
   "meta": {
     "title": "Portillo Kus & Asociados — Escritório de advocacia em Buenos Aires · Cidadania e imigração",
-    "description": "Assessoria em cidadania argentina, residência e visas no Microcentro, Buenos Aires. 5,0★ com 417 avaliações no Google.",
+    "description": "Assessoria em cidadania argentina, residência e visas no Microcentro, Buenos Aires. 5,0★ com {reviews} avaliações no Google.",
     "og_title": "Portillo Kus & Asociados — Escritório de Advocacia",
-    "og_description": "Cidadania argentina, residência e visas. 5,0★ com 417 avaliações no Google."
+    "og_description": "Cidadania argentina, residência e visas. 5,0★ com {reviews} avaliações no Google."
   },
   "a11y": {
     "open_menu": "Abrir menu",
     "close_menu": "Fechar menu",
     "lang_switch": "Mudar idioma",
+    "main_nav": "Navegação principal",
+    "stats": "O escritório em números",
     "carousel_prev": "Área anterior",
     "carousel_next": "Próxima área"
   },
   "nav": {
     "ciudadania": "Cidadania",
-    "migraciones": "Imigração",
-    "areas": "Áreas de atuação",
+    "opiniones": "Avaliações",
+    "areas": "Áreas",
     "estudio": "O escritório",
     "contacto": "Contato",
     "consultar": "Consultar",
@@ -32,13 +34,13 @@
     "sub": "Assessoria em cidadania, residência e visas. Mais de 1.200 processos de cidadania resolvidos com sucesso desde 2020.",
     "cta_primary": "Consultar pelo WhatsApp",
     "cta_primary_msg": "Olá, gostaria de consultar sobre minha cidadania argentina.",
-    "cta_secondary": "Ver áreas de atuação",
-    "reviews_text": "417 avaliações no Google",
+    "cta_secondary": "Como funciona o processo",
+    "reviews_text": "{reviews} avaliações no Google",
     "address": "Av. Roque Sáenz Peña 616, Buenos Aires"
   },
   "stats": {
     "s1_label": "Cidadanias resolvidas desde 2020",
-    "s2_label": "417 avaliações no Google",
+    "s2_label": "{reviews} avaliações no Google",
     "s3_label": "Áreas do direito",
     "s4_label": "Formas de pagamento, também do exterior"
   },
@@ -83,17 +85,12 @@
     "ba2_caption": "Diagonal Norte, Microcentro",
     "ba3_alt": "Cúpulas do Edificio Miguel Bencich, onde está o escritório",
     "ba3_caption": "Edificio Miguel Bencich, 4º andar",
-    "map_kicker": "Localização",
-    "map_title": "Edificio Miguel Bencich, na Diagonal Norte",
-    "map_p1": "A poucos passos da Plaza de Mayo e da Casa Rosada",
-    "map_p2": "Na avenida que termina no Obelisco",
-    "map_p3": "Acesso para cadeira de rodas",
     "map_hl": "pt-BR",
     "map_iframe_title": "Mapa com a localização do escritório na Av. Roque Sáenz Peña 616, Buenos Aires"
   },
   "areas": {
     "eyebrow": "ÁREAS DE ATUAÇÃO",
-    "title": "Mais de 12 áreas do direito",
+    "title": "Outras áreas em que acompanhamos você",
     "sub": "Cidadania e imigração são nosso forte. Além disso, acompanhamos nossos clientes nestes outros temas.",
     "cta": "Consultar sobre este tema",
     "a1_cat": "Trabalhista", "a1_title": "Demissões e acidentes de trabalho", "a1_desc": "Reclamações por demissão sem justa causa e acidentes ou doenças do trabalho.", "a1_msg": "Olá, gostaria de consultar sobre um tema trabalhista.", "a1_alt": "Documento trabalhista revisado sobre uma mesa, foto ilustrativa",
@@ -128,7 +125,7 @@
     "r3_name": "Jorge R.",
     "r4_text": "\"Dennis is the BEST! I thought my case was hopeless after visiting other attorneys…\"",
     "r4_name": "Adsterza",
-    "cta": "Ver as 417 avaliações no Google"
+    "cta": "Ver as {reviews} avaliações no Google"
   },
   "trabajamos": {
     "eyebrow": "COMO TRABALHAMOS",
@@ -157,10 +154,7 @@
     "wa_msg": "Olá, gostaria de fazer uma consulta com o escritório.",
     "call": "Ligar",
     "email": "E-mail",
-    "directions": "Como chegar",
-    "card2_tag": "Segunda linha",
-    "card2_pending": "USO A CONFIRMAR",
-    "card2_note": "Enquanto confirmamos para que esta linha é usada, sua consulta chega pela linha principal do escritório."
+    "directions": "Como chegar"
   },
   "footer": {
     "tagline": "\"O Direito é nossa paixão.\"",
