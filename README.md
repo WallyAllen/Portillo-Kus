@@ -33,9 +33,12 @@ Ejecutivo**. Trámites de ciudadanía, con atención en varios idiomas.
   Argentina, pagos desde el exterior) y una franja para clientes en el exterior
   con botón de WhatsApp. Se sacó el bloque "English", redundante con el selector
   de idiomas.
-- Carrusel de áreas: desde tablet ocupa el mismo ancho que el contenido y muestra
-  tarjetas enteras (2 en tablet, 3 en escritorio); las flechas avanzan de a una
-  página. En celular sigue asomando la tarjeta siguiente.
+- Carrusel de áreas tipo "coverflow": la tarjeta del centro a tamaño completo y
+  las vecinas achicadas y desvanecidas a ambos lados, de borde a borde, para que
+  se note que hay más áreas. Arranca en el medio ("Ciudadanías italiana y
+  española", la más cercana al fuerte del estudio), con puntos para saltar a
+  cualquier área. Una tarjeta lateral primero se centra y recién ahí su botón
+  abre WhatsApp. Sin loop infinito a propósito (se traba en iPhone).
 - Sin las etiquetas "Foto real del estudio" / "Foto ilustrativa" sobre las fotos.
 
 ## Cómo está armado

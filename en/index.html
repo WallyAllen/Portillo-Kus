@@ -437,40 +437,61 @@ section{ position: relative; }
   .carousel-btn{ width: 48px; height: 48px; border-radius: 50%; border: 1px solid var(--line); display: flex; align-items: center; justify-content: center; color: var(--ink); transition: background var(--dur-fast); background: var(--surface); }
   .carousel-btn:hover{ background: var(--bg); }
 }
+/* Coverflow: la tarjeta del centro a tamaño completo y las vecinas achicadas a los
+   costados, de borde a borde, para que se vea que hay más áreas. La escala, el
+   corrimiento y la opacidad de cada tarjeta los calcula el JS según su distancia
+   al centro (variables --s, --x, --o). */
 .carousel{
-  display: flex; gap: var(--sp-4); overflow-x: auto; scroll-snap-type: x mandatory;
-  padding: var(--sp-2) var(--sp-5) var(--sp-4);
-  scroll-padding-inline: var(--sp-5);
-  scrollbar-width: none;
-}
-.carousel::-webkit-scrollbar{ display: none; }
-/* Desde tablet el carrusel ocupa el mismo ancho que el contenido y muestra tarjetas
-   enteras; los 8px extra por lado evitan que se corte el borde de las tarjetas. */
-@media (min-width: 640px){
-  .carousel{
-    width: calc(min(100%, var(--container-max)) - 2 * var(--sp-5) + 16px);
-    margin-inline: auto; padding-inline: 8px; scroll-padding-inline: 8px;
-  }
-}
-@media (min-width: 900px){
-  .carousel{ width: calc(min(100%, var(--container-max)) - 2 * var(--sp-7) + 16px); }
-}
-.area-card{
-  scroll-snap-align: start; flex: 0 0 78%; max-width: 320px;
-  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg); overflow: hidden;
-  transition: transform var(--dur-base) var(--ease-out), box-shadow var(--dur-base) var(--ease-out);
+  --card-w: min(72vw, 340px);
+  --gap: var(--sp-4);
+  --fade: 3%;
   position: relative;
+  display: flex; align-items: center; gap: var(--gap);
+  overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain;
+  padding-block: var(--sp-5) var(--sp-8);
+  scrollbar-width: none;
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 var(--fade), #000 calc(100% - var(--fade)), transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0, #000 var(--fade), #000 calc(100% - var(--fade)), transparent 100%);
 }
-.area-card::before{
+@media (min-width: 900px){ .carousel{ --fade: 7%; } }
+@media (min-width: 1200px){ .carousel{ --card-w: 360px; --gap: var(--sp-5); } }
+.carousel::-webkit-scrollbar{ display: none; }
+/* Espaciadores: permiten centrar también la primera y la última tarjeta */
+.carousel::before, .carousel::after{ content: ""; flex: 0 0 calc(50% - var(--card-w) / 2 - var(--gap)); }
+/* .area-card es el punto de encastre del scroll y no se transforma (Chrome corta el
+   scroll suave si el elemento que encastra está transformado); el efecto va en .area-card-inner */
+.area-card{
+  position: relative; flex: 0 0 var(--card-w); display: flex; align-self: stretch;
+  scroll-snap-align: center; cursor: pointer;
+}
+.area-card.is-active{ cursor: default; }
+.area-card-inner{
+  position: relative; flex: 1; display: flex; flex-direction: column;
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg); overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transform: translateX(var(--x, 0px)) scale(var(--s, 1));
+  opacity: var(--o, 1);
+  transition: box-shadow var(--dur-base) var(--ease-out);
+}
+/* Sombra acotada: una más larga se recorta contra el borde inferior del carrusel */
+.area-card.is-active .area-card-inner{ box-shadow: 0 18px 40px hsl(210 30% 30% / 0.14), 0 4px 12px hsl(210 30% 30% / 0.06); }
+.area-card-inner::before{
   content: ""; position: absolute; top: 0; left: 0; height: 3px; width: 100%;
   background: var(--brand); transform: scaleX(0); transform-origin: left;
-  transition: transform var(--dur-base) var(--ease-out); z-index: 2;
+  transition: transform var(--dur-slow) var(--ease-out); z-index: 2;
 }
-.area-card:hover{ transform: translateY(-4px); box-shadow: var(--shadow-lg); }
-.area-card:hover::before{ transform: scaleX(1); }
-@media (min-width: 640px){ .area-card{ flex-basis: calc((100% - var(--sp-4)) / 2); max-width: none; } }
-@media (min-width: 900px){ .area-card{ flex-basis: calc((100% - 2 * var(--sp-4)) / 3); } }
-.area-card{ display: flex; flex-direction: column; }
+.area-card.is-active .area-card-inner::before{ transform: scaleX(1); }
+/* Sube sobre el relleno inferior del carrusel: position + z-index para que reciba los clics */
+.carousel-dots{ position: relative; z-index: 1; display: flex; justify-content: center; gap: 6px; margin-top: calc(-1 * var(--sp-5)); }
+.carousel-dots button{
+  width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center;
+}
+.carousel-dots button::before{
+  content: ""; width: 8px; height: 8px; border-radius: var(--radius-full); background: var(--line);
+  transition: width var(--dur-base) var(--ease-out), background var(--dur-base) var(--ease-out);
+}
+.carousel-dots button[aria-current="true"]::before{ width: 24px; background: var(--brand); }
+.carousel-btn:disabled{ opacity: 0.35; cursor: default; }
 .area-card-body{ flex: 1; display: flex; flex-direction: column; padding: var(--sp-5); }
 .area-badge-row{ display: flex; align-items: center; justify-content: space-between; gap: var(--sp-2); margin-bottom: var(--sp-2); }
 .area-type-badge{ font-size: var(--text-xs); font-weight: 700; letter-spacing: 0.04em; color: var(--celeste-ink); text-transform: uppercase; }
@@ -849,114 +870,133 @@ section{ position: relative; }
     <div class="carousel" id="carousel">
 
       <article class="area-card">
-        <div class="media">
-          <img src="../portillo-images/area-laboral.jpg" alt="Reviewed labor document on a desk, stock photo" loading="lazy">
-        </div>
-        <div class="area-card-body">
-          <div class="area-badge-row"><span class="area-type-badge">Labor</span></div>
-          <h3>Wrongful termination & workers' comp</h3>
-          <p class="area-desc">Claims for wrongful dismissal and work-related accidents or illness.</p>
-          <a class="btn btn-primary btn-block" data-wa data-wa-number="5491127111987" data-wa-msg="Hello, I would like to consult about a labor law matter." href="#">Ask about this topic</a>
-        </div>
-      </article>
-
-      <article class="area-card">
-        <div class="media">
-          <img src="../portillo-images/area-familia.jpg" alt="A baby's hand resting on their parents' hands, stock photo" loading="lazy">
-        </div>
-        <div class="area-card-body">
-          <div class="area-badge-row"><span class="area-type-badge">Family</span></div>
-          <h3>Family law</h3>
-          <p class="area-desc">Mutual and unilateral divorce, child support, and visitation rights.</p>
-          <a class="btn btn-primary btn-block" data-wa data-wa-number="5491127111987" data-wa-msg="Hello, I would like to consult about a family law matter." href="#">Ask about this topic</a>
+        <div class="area-card-inner">
+          <div class="media">
+            <img src="../portillo-images/area-laboral.jpg" alt="Reviewed labor document on a desk, stock photo" loading="lazy">
+          </div>
+          <div class="area-card-body">
+            <div class="area-badge-row"><span class="area-type-badge">Labor</span></div>
+            <h3>Wrongful termination & workers' comp</h3>
+            <p class="area-desc">Claims for wrongful dismissal and work-related accidents or illness.</p>
+            <a class="btn btn-primary btn-block" data-wa data-wa-number="5491127111987" data-wa-msg="Hello, I would like to consult about a labor law matter." href="#">Ask about this topic</a>
+          </div>
         </div>
       </article>
 
       <article class="area-card">
-        <div class="media">
-          <img src="../portillo-images/area-penal.jpg" alt="Classic columns of a courthouse building, stock photo" loading="lazy">
-        </div>
-        <div class="area-card-body">
-          <div class="area-badge-row"><span class="area-type-badge">Criminal</span></div>
-          <h3>Criminal law</h3>
-          <p class="area-desc">Defense and advice in criminal cases.</p>
-          <a class="btn btn-primary btn-block" data-wa data-wa-number="5491127111987" data-wa-msg="Hello, I would like to consult about a criminal law matter." href="#">Ask about this topic</a>
-        </div>
-      </article>
-
-      <article class="area-card">
-        <div class="media">
-          <img src="../portillo-images/area-sucesiones.jpg" alt="Antique key ring with ornate keys on wood, stock photo" loading="lazy">
-        </div>
-        <div class="area-card-body">
-          <div class="area-badge-row"><span class="area-type-badge">Probate</span></div>
-          <h3>Estates & probate</h3>
-          <p class="area-desc">Full probate proceedings from start to finish.</p>
-          <a class="btn btn-primary btn-block" data-wa data-wa-number="5491127111987" data-wa-msg="Hello, I would like to consult about a probate matter." href="#">Ask about this topic</a>
+        <div class="area-card-inner">
+          <div class="media">
+            <img src="../portillo-images/area-familia.jpg" alt="A baby's hand resting on their parents' hands, stock photo" loading="lazy">
+          </div>
+          <div class="area-card-body">
+            <div class="area-badge-row"><span class="area-type-badge">Family</span></div>
+            <h3>Family law</h3>
+            <p class="area-desc">Mutual and unilateral divorce, child support, and visitation rights.</p>
+            <a class="btn btn-primary btn-block" data-wa data-wa-number="5491127111987" data-wa-msg="Hello, I would like to consult about a family law matter." href="#">Ask about this topic</a>
+          </div>
         </div>
       </article>
 
       <article class="area-card">
-        <div class="media">
-          <img src="../portillo-images/area-danos.jpg" alt="Night traffic on a city avenue, stock photo" loading="lazy">
-        </div>
-        <div class="area-card-body">
-          <div class="area-badge-row"><span class="area-type-badge">Damages</span></div>
-          <h3>Accidents & damages</h3>
-          <p class="area-desc">Traffic accidents, damages, and losses.</p>
-          <a class="btn btn-primary btn-block" data-wa data-wa-number="5491127111987" data-wa-msg="Hello, I would like to consult about a traffic accident." href="#">Ask about this topic</a>
-        </div>
-      </article>
-
-      <article class="area-card">
-        <div class="media">
-          <img src="../portillo-images/area-consumidor.jpg" alt="Contactless payment with a phone, stock photo" loading="lazy">
-        </div>
-        <div class="area-card-body">
-          <div class="area-badge-row"><span class="area-type-badge">Consumer</span></div>
-          <h3>Consumer protection</h3>
-          <p class="area-desc">Claims over products, services, and consumer relationships.</p>
-          <a class="btn btn-primary btn-block" data-wa data-wa-number="5491127111987" data-wa-msg="Hello, I would like to consult about consumer protection." href="#">Ask about this topic</a>
+        <div class="area-card-inner">
+          <div class="media">
+            <img src="../portillo-images/area-penal.jpg" alt="Classic columns of a courthouse building, stock photo" loading="lazy">
+          </div>
+          <div class="area-card-body">
+            <div class="area-badge-row"><span class="area-type-badge">Criminal</span></div>
+            <h3>Criminal law</h3>
+            <p class="area-desc">Defense and advice in criminal cases.</p>
+            <a class="btn btn-primary btn-block" data-wa data-wa-number="5491127111987" data-wa-msg="Hello, I would like to consult about a criminal law matter." href="#">Ask about this topic</a>
+          </div>
         </div>
       </article>
 
       <article class="area-card">
-        <div class="media">
-          <img src="../portillo-images/area-empresas.jpg" alt="Facade of a modern office building, stock photo" loading="lazy">
-        </div>
-        <div class="area-card-body">
-          <div class="area-badge-row"><span class="area-type-badge">Business</span></div>
-          <h3>Business & contracts</h3>
-          <p class="area-desc">Company registration, contracts, and leases.</p>
-          <a class="btn btn-primary btn-block" data-wa data-wa-number="5491127111987" data-wa-msg="Hello, I would like to consult about a business or contract matter." href="#">Ask about this topic</a>
-        </div>
-      </article>
-
-      <article class="area-card">
-        <div class="media">
-          <img src="../portillo-images/area-ciudadania-europea.jpg" alt="Flag of the European Union, stock photo" loading="lazy">
-        </div>
-        <div class="area-card-body">
-          <div class="area-badge-row"><span class="area-type-badge">European citizenship</span></div>
-          <h3>Italian & Spanish citizenship</h3>
-          <p class="area-desc">Citizenship by Italian or Spanish ancestry.</p>
-          <a class="btn btn-primary btn-block" data-wa data-wa-number="5491127111987" data-wa-msg="Hello, I would like to consult about Italian or Spanish citizenship." href="#">Ask about this topic</a>
+        <div class="area-card-inner">
+          <div class="media">
+            <img src="../portillo-images/area-sucesiones.jpg" alt="Antique key ring with ornate keys on wood, stock photo" loading="lazy">
+          </div>
+          <div class="area-card-body">
+            <div class="area-badge-row"><span class="area-type-badge">Probate</span></div>
+            <h3>Estates & probate</h3>
+            <p class="area-desc">Full probate proceedings from start to finish.</p>
+            <a class="btn btn-primary btn-block" data-wa data-wa-number="5491127111987" data-wa-msg="Hello, I would like to consult about a probate matter." href="#">Ask about this topic</a>
+          </div>
         </div>
       </article>
 
       <article class="area-card">
-        <div class="media">
-          <img src="../portillo-images/area-escribania.jpg" alt="Gold wax seals on envelopes, stock photo" loading="lazy">
+        <div class="area-card-inner">
+          <div class="media">
+            <img src="../portillo-images/area-ciudadania-europea.jpg" alt="Flag of the European Union, stock photo" loading="lazy">
+          </div>
+          <div class="area-card-body">
+            <div class="area-badge-row"><span class="area-type-badge">European citizenship</span></div>
+            <h3>Italian & Spanish citizenship</h3>
+            <p class="area-desc">Citizenship by Italian or Spanish ancestry.</p>
+            <a class="btn btn-primary btn-block" data-wa data-wa-number="5491127111987" data-wa-msg="Hello, I would like to consult about Italian or Spanish citizenship." href="#">Ask about this topic</a>
+          </div>
         </div>
-        <div class="area-card-body">
-          <div class="area-badge-row"><span class="area-type-badge">Notary</span></div>
-          <h3>Notarial procedures</h3>
-          <p class="area-desc">Notarial procedures through a notary public.</p>
-          <a class="btn btn-primary btn-block" data-wa data-wa-number="5491127111987" data-wa-msg="Hello, I would like to consult about a notarial procedure." href="#">Ask about this topic</a>
+      </article>
+
+      <article class="area-card">
+        <div class="area-card-inner">
+          <div class="media">
+            <img src="../portillo-images/area-danos.jpg" alt="Night traffic on a city avenue, stock photo" loading="lazy">
+          </div>
+          <div class="area-card-body">
+            <div class="area-badge-row"><span class="area-type-badge">Damages</span></div>
+            <h3>Accidents & damages</h3>
+            <p class="area-desc">Traffic accidents, damages, and losses.</p>
+            <a class="btn btn-primary btn-block" data-wa data-wa-number="5491127111987" data-wa-msg="Hello, I would like to consult about a traffic accident." href="#">Ask about this topic</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="area-card">
+        <div class="area-card-inner">
+          <div class="media">
+            <img src="../portillo-images/area-consumidor.jpg" alt="Contactless payment with a phone, stock photo" loading="lazy">
+          </div>
+          <div class="area-card-body">
+            <div class="area-badge-row"><span class="area-type-badge">Consumer</span></div>
+            <h3>Consumer protection</h3>
+            <p class="area-desc">Claims over products, services, and consumer relationships.</p>
+            <a class="btn btn-primary btn-block" data-wa data-wa-number="5491127111987" data-wa-msg="Hello, I would like to consult about consumer protection." href="#">Ask about this topic</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="area-card">
+        <div class="area-card-inner">
+          <div class="media">
+            <img src="../portillo-images/area-empresas.jpg" alt="Facade of a modern office building, stock photo" loading="lazy">
+          </div>
+          <div class="area-card-body">
+            <div class="area-badge-row"><span class="area-type-badge">Business</span></div>
+            <h3>Business & contracts</h3>
+            <p class="area-desc">Company registration, contracts, and leases.</p>
+            <a class="btn btn-primary btn-block" data-wa data-wa-number="5491127111987" data-wa-msg="Hello, I would like to consult about a business or contract matter." href="#">Ask about this topic</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="area-card">
+        <div class="area-card-inner">
+          <div class="media">
+            <img src="../portillo-images/area-escribania.jpg" alt="Gold wax seals on envelopes, stock photo" loading="lazy">
+          </div>
+          <div class="area-card-body">
+            <div class="area-badge-row"><span class="area-type-badge">Notary</span></div>
+            <h3>Notarial procedures</h3>
+            <p class="area-desc">Notarial procedures through a notary public.</p>
+            <a class="btn btn-primary btn-block" data-wa data-wa-number="5491127111987" data-wa-msg="Hello, I would like to consult about a notarial procedure." href="#">Ask about this topic</a>
+          </div>
         </div>
       </article>
 
     </div>
+    <div class="carousel-dots" id="carDots" role="group" aria-label="PRACTICE AREAS"></div>
   </section>
 
   <!-- 7. EL ESTUDIO -->
@@ -1337,15 +1377,80 @@ section{ position: relative; }
     });
   }
 
-  // Carrusel: flechas
+  // Carrusel coverflow de áreas
   var carousel = document.getElementById('carousel');
-  var prevBtn = document.getElementById('carPrev');
-  var nextBtn = document.getElementById('carNext');
-  if (carousel && prevBtn && nextBtn){
-    // Avanza una "página" entera: el ancho visible equivale a N tarjetas + sus separaciones
-    var scrollAmount = function(){ return carousel.clientWidth; };
-    prevBtn.addEventListener('click', function(){ carousel.scrollBy({ left: -scrollAmount(), behavior: 'smooth' }); });
-    nextBtn.addEventListener('click', function(){ carousel.scrollBy({ left: scrollAmount(), behavior: 'smooth' }); });
+  if (carousel){
+    var cards = Array.prototype.slice.call(carousel.querySelectorAll('.area-card'));
+    var prevBtn = document.getElementById('carPrev');
+    var nextBtn = document.getElementById('carNext');
+    var dotsWrap = document.getElementById('carDots');
+    var SCALE_STEP = 0.1;   // cuánto se achica cada tarjeta por posición de distancia al centro
+    var MAX_DIST = 4;
+    var active = -1;
+
+    var dots = cards.map(function(card, i){
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.setAttribute('aria-label', card.querySelector('h3').textContent);
+      b.addEventListener('click', function(){ goTo(i); });
+      dotsWrap.appendChild(b);
+      return b;
+    });
+
+    var goTo = function(i, instant){
+      var card = cards[Math.max(0, Math.min(cards.length - 1, i))];
+      carousel.scrollTo({
+        left: card.offsetLeft + card.offsetWidth / 2 - carousel.clientWidth / 2,
+        behavior: instant || prefersReducedMotion ? 'auto' : 'smooth'
+      });
+    };
+
+    // Con escala lineal s = 1 - a·d, correr cada tarjeta (w/2)·a·d² hacia el centro
+    // mantiene la misma separación visual entre tarjetas achicadas.
+    var updateCoverflow = function(){
+      var center = carousel.scrollLeft + carousel.clientWidth / 2;
+      var gap = parseFloat(getComputedStyle(carousel).columnGap) || 0;
+      var nearest = 0, best = Infinity;
+      cards.forEach(function(card, i){
+        var w = card.offsetWidth;
+        var delta = (card.offsetLeft + w / 2 - center) / (w + gap);
+        var d = Math.min(Math.abs(delta), MAX_DIST);
+        card.style.setProperty('--s', (1 - SCALE_STEP * d).toFixed(3));
+        card.style.setProperty('--x', ((delta > 0 ? -1 : 1) * (w / 2) * SCALE_STEP * d * d).toFixed(1) + 'px');
+        card.style.setProperty('--o', (1 - 0.18 * Math.min(d, 3)).toFixed(3));
+        card.style.zIndex = String(10 - Math.round(d));
+        if (Math.abs(delta) < best){ best = Math.abs(delta); nearest = i; }
+      });
+      if (nearest !== active){
+        active = nearest;
+        cards.forEach(function(card, i){ card.classList.toggle('is-active', i === active); });
+        dots.forEach(function(b, i){ b.setAttribute('aria-current', i === active ? 'true' : 'false'); });
+        if (prevBtn) prevBtn.disabled = active === 0;
+        if (nextBtn) nextBtn.disabled = active === cards.length - 1;
+      }
+    };
+
+    var coverTicking = false;
+    carousel.addEventListener('scroll', function(){
+      if (coverTicking) return;
+      coverTicking = true;
+      requestAnimationFrame(function(){ updateCoverflow(); coverTicking = false; });
+    }, { passive: true });
+    window.addEventListener('resize', function(){ goTo(active, true); updateCoverflow(); });
+
+    // Una tarjeta lateral primero se centra; recién centrada, su botón abre WhatsApp
+    cards.forEach(function(card, i){
+      card.addEventListener('click', function(e){
+        if (i !== active){ e.preventDefault(); goTo(i); }
+      });
+      card.addEventListener('focusin', function(){ if (i !== active) goTo(i); });
+    });
+    if (prevBtn) prevBtn.addEventListener('click', function(){ goTo(active - 1); });
+    if (nextBtn) nextBtn.addEventListener('click', function(){ goTo(active + 1); });
+
+    // Arranca en la tarjeta del medio para que haya áreas a ambos lados
+    goTo(Math.floor(cards.length / 2), true);
+    updateCoverflow();
   }
 
   // Selector de idioma (escritorio): cerrar al hacer clic afuera o con Escape
