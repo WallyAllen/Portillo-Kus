@@ -11,6 +11,7 @@ import argparse
 import html as html_tools
 import os
 import pathlib
+import posixpath
 import shutil
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from functools import partial
@@ -42,6 +43,8 @@ LANGS = [
     {"code": "zh", "slug": "zh", "html_lang": "zh-Hans", "hreflang": "zh-Hans", "label": "中文", "name": "中文", "thousands": ",", "decimal": "."},
 ]
 DEFAULT_LANG = "es"
+PRIVACY_SLUGS = {"es": "privacidad", "en": "en/privacy", "pt": "pt/privacidade",
+                 "ru": "ru/privacy", "zh": "zh/privacy"}
 
 
 def fmt_number(value, lang, decimals=0):
@@ -75,39 +78,45 @@ def flatten(d, prefix=""):
     return out
 
 
-def out_path_for(lang):
-    if lang["slug"]:
-        return DIST / lang["slug"] / "index.html"
-    return DIST / "index.html"
+def page_slug(lang, page="home"):
+    return PRIVACY_SLUGS[lang["code"]] if page == "privacy" else lang["slug"]
 
 
-def rel_prefix_for(lang):
+def out_path_for(lang, page="home"):
+    return DIST / page_slug(lang, page) / "index.html"
+
+
+def rel_prefix_for(lang, page="home"):
     """Prefijo relativo hacia la raíz del sitio (donde vive portillo-images/)."""
-    return "../" if lang["slug"] else ""
+    slug = page_slug(lang, page)
+    return "../" * len(slug.split("/")) if slug else ""
 
 
-def link_to(target_lang, from_lang):
+def link_to(target_lang, from_lang, page="home"):
     """Href relativo desde la página de from_lang hacia la home de target_lang."""
-    if from_lang["slug"] == target_lang["slug"]:
+    if from_lang["code"] == target_lang["code"]:
         return "#top"
-    prefix = rel_prefix_for(from_lang)
-    if target_lang["slug"]:
-        return f"{prefix}{target_lang['slug']}/"
+    prefix = rel_prefix_for(from_lang, page)
+    slug = page_slug(target_lang, page)
+    if slug:
+        return f"{prefix}{slug}/"
     return prefix or "./"
 
 
-def build_hreflang_tags(lang, base_url):
+def build_hreflang_tags(lang, base_url, page="home"):
     lines = []
     for l in LANGS:
-        href = f"{base_url}{l['slug']}/" if l["slug"] else f"{base_url}"
+        slug = page_slug(l, page)
+        href = f"{base_url}{slug}/" if slug else base_url
         lines.append(f'<link rel="alternate" hreflang="{l["hreflang"]}" href="{href}">')
     default = next(l for l in LANGS if l["code"] == DEFAULT_LANG)
-    href_default = f"{base_url}{default['slug']}/" if default["slug"] else f"{base_url}"
+    slug_default = page_slug(default, page)
+    href_default = f"{base_url}{slug_default}/" if slug_default else base_url
     lines.append(f'<link rel="alternate" hreflang="x-default" href="{href_default}">')
     return "\n".join(lines)
 
 
-def build(lang, template, base_url, flat):
+def build(lang, template, base_url, flat, page="home"):
     flat = dict(flat)
 
     flat["wa_number"] = WA_NUMBER
@@ -117,14 +126,20 @@ def build(lang, template, base_url, flat):
     flat["num.rating"] = dato("rating", fmt_number(RATING, lang, 1))
     flat["num.rating_raw"] = str(RATING)
     flat["html_lang"] = lang["html_lang"]
-    flat["img_prefix"] = rel_prefix_for(lang)
+    # P04 supplies these fields through its reusable analytics helper.
+    flat.setdefault("analytics_script", "")
+    flat.setdefault("analytics_listener", "")
+    flat.setdefault("analytics_lang", lang["code"])
+    flat["img_prefix"] = rel_prefix_for(lang, page)
+    flat["home_link"] = rel_prefix_for(lang, page) + (lang["slug"] + "/" if lang["slug"] else "") or "./"
+    flat["privacy_link"] = posixpath.relpath(PRIVACY_SLUGS[lang["code"]], page_slug(lang, page) or ".") + "/"
     flat["og_image_url"] = f"{base_url}portillo-images/og-{lang['code']}.jpg"
-    flat["hreflang_tags"] = build_hreflang_tags(lang, base_url)
+    flat["hreflang_tags"] = build_hreflang_tags(lang, base_url, page)
     flat["lang_label"] = lang["label"]
 
     def lang_links(text_key):
         return "\n".join(
-            f'<a href="{link_to(l, lang)}" hreflang="{l["hreflang"]}" lang="{l["html_lang"]}"'
+            f'<a href="{link_to(l, lang, page)}" hreflang="{l["hreflang"]}" lang="{l["html_lang"]}"'
             + (' class="is-current" aria-current="page"' if l["code"] == lang["code"] else "")
             + f'>{l[text_key]}</a>'
             for l in LANGS
@@ -156,6 +171,27 @@ def build(lang, template, base_url, flat):
     if leftover:
         raise ValueError(f"Marcadores sin reemplazar en {lang['code']}: {', '.join(sorted(set(leftover)))}")
     return html
+
+
+def privacy_template(home_template):
+    """Reuse the live home styles, logo and footer without duplicating their source."""
+    source = (BASE / "privacy-template.html").read_text(encoding="utf-8")
+    style = re.search(r"<style>.*?</style>", home_template, re.S).group(0)
+    # Keep the same font/resource declarations, including future local-font changes.
+    head = home_template.split("<style>", 1)[0]
+    resources = "\n".join(tag for tag in re.findall(r"<link\b[^>]*>", head)
+                          if re.search(r'rel="(?:stylesheet|preload|preconnect|dns-prefetch)"', tag))
+    header = re.search(r'<header class="site-header".*?</header>', home_template, re.S).group(0)
+    logo = re.search(r'<a [^>]*class="logo".*?</a>', header, re.S).group(0)
+    logo = logo.replace('href="#top"', 'href="{{home_link}}"')
+    selector = re.search(r'<details class="lang-menu".*?</details>', header, re.S).group(0)
+    privacy_header = ('<header class="site-header is-scrolled" id="siteHeader"><div class="container header-inner">'
+                      + logo + '<div class="header-actions">' + selector + '</div></div></header>')
+    footer = re.search(r'<footer class="site-footer">.*?</footer>', home_template, re.S).group(0)
+    for key, fragment in {"site_styles": style, "site_resources": resources,
+                          "site_header": privacy_header, "site_footer": footer}.items():
+        source = source.replace("{{" + key + "}}", fragment)
+    return source
 
 
 def main():
@@ -197,8 +233,10 @@ def main():
 
     template = (BASE / "template.html").read_text(encoding="utf-8")
     try:
-        pages = [(lang, build(lang, template, base_url, contents[lang["code"]])) for lang in LANGS]
-    except (KeyError, ValueError) as error:
+        privacy = privacy_template(template)
+        pages = [(lang, page, build(lang, source, base_url, contents[lang["code"]], page))
+                 for page, source in (("home", template), ("privacy", privacy)) for lang in LANGS]
+    except (OSError, KeyError, ValueError) as error:
         parser.exit(1, f"No se pudo generar el sitio: {error}\n")
     images = SITE_ROOT / "portillo-images"
     if not images.is_dir():
@@ -210,8 +248,8 @@ def main():
         shutil.rmtree(DIST)
     shutil.copytree(images, DIST / "portillo-images")
     print(f"Base URL: {base_url}")
-    for lang, html in pages:
-        out = out_path_for(lang)
+    for lang, page, html in pages:
+        out = out_path_for(lang, page)
         out.parent.mkdir(parents=True, exist_ok=True)
         out.write_text(html, encoding="utf-8")
         print(f"  {out.relative_to(SITE_ROOT)}  ({len(html.encode('utf-8'))/1024:.1f} KB)")

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="{{html_lang}}">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{privacy.meta_title}}</title>
+<meta name="description" content="{{privacy.description}}">
+<meta name="theme-color" content="#F7F5F1">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/jpeg" href="{{img_prefix}}portillo-images/logo.jpg">
+{{hreflang_tags}}
+{{analytics_script}}
+{{site_resources}}
+{{site_styles}}
+<style>
+.privacy-main{ padding-top: calc(var(--header-h-desktop) + var(--sp-7)); padding-bottom: var(--sp-8); }
+.privacy-content{ max-width: 72ch; overflow-wrap: anywhere; }
+.privacy-content h1{ font-size: var(--text-3xl); margin-top: var(--sp-5); }
+.privacy-content h2{ font-size: var(--text-xl); margin-bottom: var(--sp-3); }
+.privacy-content section{ margin-top: var(--sp-6); }
+.privacy-content p + p{ margin-top: var(--sp-3); }
+.privacy-content a, .footer-bottom a{ text-decoration: underline; text-underline-offset: 0.2em; }
+.privacy-updated{ margin-top: var(--sp-3); color: var(--ink-muted); }
+.privacy-main .container{ max-width: var(--container-max); }
+.site-header .lang-switch a{ min-height: 44px; display: inline-flex; align-items: center; }
+@media(max-width: 360px){ .site-header .header-inner{ gap: var(--sp-2); } }
+</style>
+</head>
+<body>
+{{site_header}}
+<main id="top" class="privacy-main">
+  <div class="container">
+    <article class="privacy-content">
+      <a href="{{home_link}}">{{privacy.back_home}}</a>
+      <h1>{{privacy.title}}</h1>
+      <p class="privacy-updated">{{privacy.updated}}</p>
+      <section aria-labelledby="responsible">
+        <h2 id="responsible">{{privacy.responsible_title}}</h2>
+        <p>{{privacy.responsible_text}} {{footer.address}}.</p>
+        <p>{{privacy.contact_label}} <a href="mailto:{{footer.email}}" data-event="mail_click" data-button="privacidad" data-lang="{{analytics_lang}}">{{footer.email}}</a>.</p>
+      </section>
+      <section aria-labelledby="contact">
+        <h2 id="contact">{{privacy.contact_title}}</h2>
+        <p>{{privacy.contact_text}}</p>
+      </section>
+      <section aria-labelledby="measurement">
+        <h2 id="measurement">{{privacy.measurement_title}}</h2>
+        <p>{{privacy.measurement_text}}</p>
+      </section>
+      <section aria-labelledby="map">
+        <h2 id="map">{{privacy.map_title}}</h2>
+        <p>{{privacy.map_text}}</p>
+        <p><a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">{{privacy.google_privacy}}</a></p>
+      </section>
+      <section aria-labelledby="resources">
+        <h2 id="resources">{{privacy.resources_title}}</h2>
+        <p>{{privacy.resources_text}}</p>
+      </section>
+      <section aria-labelledby="rights">
+        <h2 id="rights">{{privacy.rights_title}}</h2>
+        <p>{{privacy.rights_text}}</p>
+        <p>{{privacy.rights_contact}} <a href="mailto:{{footer.email}}" data-event="mail_click" data-button="privacidad" data-lang="{{analytics_lang}}">{{footer.email}}</a>.</p>
+        <p>{{privacy.authority_text}} <a href="https://www.argentina.gob.ar/aaip/datospersonales/derechos" target="_blank" rel="noopener noreferrer">{{privacy.authority_link}}</a>.</p>
+      </section>
+    </article>
+  </div>
+</main>
+{{site_footer}}
+{{analytics_listener}}
+</body>
+</html>
