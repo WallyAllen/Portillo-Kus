@@ -3,12 +3,13 @@
 Estudio jurídico en CABA. Interlocutor: **Dr. Denis Portillo, Presidente
 Ejecutivo**. Trámites de ciudadanía, con atención en varios idiomas.
 
-## Estado (25/09/2026)
+## Estado (10/10/2026)
 
-- **Comercial:** propuesta enviada. **Falta la seña** (50% para arrancar).
+- **Comercial:** seña de $300.000 recibida, según el plan del 08/10/2026.
 - **Producto:** boceto v2.2 en cinco idiomas (ES / EN / PT / RU / 中文), paleta
-  clara, con mapa de ubicación en "Contacto".
-- **Publicado en:** todavía no.
+  clara, con mapa de ubicación en "Contacto"; generador preparado en P00.
+- **Publicado en:** sin publicación de producción verificada. P07 configura Cloudflare Pages.
+- **Publicación bloqueada:** faltan datos confirmados del estudio y reseñas de Google; ver `PENDIENTES.md`.
 
 ### Orden de la página (v2.2)
 
@@ -90,25 +91,53 @@ src/
 python src/build.py
 ```
 
-Genera `index.html` (español), `en/`, `pt/`, `ru/` y `zh/index.html`. **El texto
-se edita en los JSON, nunca en los HTML generados**: el próximo build los pisa.
+Genera `dist/index.html` (español) y `dist/<idioma>/index.html` (`en`, `pt`,
+`ru`, `zh`), y copia `portillo-images/` dentro de `dist/`. La salida se regenera
+por completo y está ignorada por Git. **El texto se edita en los JSON, nunca en
+los HTML generados**: el próximo build los pisa.
 
-`portillo-portada.html` y `portillo-portada-v1.html` son el boceto original de
-una sola página, anterior al sistema multilingüe. Quedan como referencia de lo
-que vio el cliente primero.
+`_referencia/portillo-portada.html` y `_referencia/portillo-portada-v1.html` son
+el boceto original de una sola página, anterior al sistema multilingüe. Quedan
+como referencia de lo que vio el cliente primero.
 
 ## Ver en local
 
 ```bash
-python -m http.server 8532
+python src/build.py --servir
 # http://localhost:8532/
 ```
+
+El comando genera y sirve únicamente `dist/` en el puerto 8532. Ctrl+C cierra
+el servidor. Las fuentes y referencias HTML quedan fuera de la salida pública.
+
+## Validaciones y URL
+
+Pruebas del generador: `python -m unittest discover -s tests -v`. Trabajan sobre
+copias temporales y no modifican el contenido del estudio.
+
+- Los JSON deben tener las mismas claves, incluidas las anidadas. El build falla
+  y lista las faltantes o sobrantes por idioma, tomando español como referencia.
+- Un valor que empiece con `[PENDIENTE]` aparece resaltado en el build local.
+- `python src/build.py --produccion` falla mientras exista cualquier pendiente;
+  lista idioma y clave sin regenerar `dist/`.
+- `SITE_URL` define la URL base de los hreflang y de la imagen Open Graph.
+  Por defecto: `https://portillokusestudio.com/`. En PowerShell:
+
+```powershell
+$env:SITE_URL = 'https://nombre-del-proyecto.pages.dev/'
+python src/build.py
+```
+
+También se mantiene `--base-url URL` como override opcional. Para agregar un
+idioma, crear `src/content.<idioma>.json` con todas las claves y añadirlo a
+`LANGS` en `src/build.py`; actualizar el selector de la plantilla en esa etapa.
 
 ## Cuando se publique
 
 - **Hosting:** Cloudflare Pages, plan gratis, en una cuenta a nombre del
   estudio administrada por Felipe. **No Vercel Hobby** — no permite uso
-  comercial.
+  comercial. Comando de build: `python src/build.py`; salida: `dist`.
+  Para una salida final sin pendientes: `python src/build.py --produccion`.
 - **DNS:** para servir el dominio sin `www`, los nameservers tienen que estar
   en Cloudflare.
 - **Autogestión:** Pages CMS (pagescms.org). El contenido vive en el repo y
@@ -125,8 +154,8 @@ python -m http.server 8532
 - [ ] Para qué usan la segunda línea telefónica (hoy oculta en la página).
 - [ ] Un dato fuerte para reemplazar "7 medios de pago" en las cifras (por
       ejemplo, de cuántos países son sus clientes).
-- [ ] En qué idiomas atienden y quién revisa cada traducción (EN, PT, RU y 中文
-      las armó una IA: hay que revisarlas antes de publicar).
+- [ ] En qué idiomas atienden. Las traducciones EN y PT tienen revisión propia
+      (P06); RU y 中文 las armó una IA y falta revisarlas.
 - [ ] En qué idioma responden las consultas que lleguen en ruso o en chino.
 - [ ] Los pasos reales del trámite de ciudadanía.
 - [ ] Con qué mails entran al panel.

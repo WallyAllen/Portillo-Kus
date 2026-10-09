@@ -31,7 +31,7 @@
     "img_alt": "北斜街（Av. Roque Sáenz Peña）街景，距事务所仅几步之遥，远处可见方尖碑",
     "eyebrow": "律师事务所 · 布宜诺斯艾利斯市中心",
     "title": "您的阿根廷国籍，交由最专业的团队办理",
-    "sub": "代理国籍、居留和签证申请。自 2020 年以来，已成功办结 1,200 多件国籍案件。",
+    "sub": "[PENDIENTE] 代理国籍、居留和签证申请。自 2020 年以来，已成功办结 1,200 多件国籍案件。",
     "cta_primary": "WhatsApp 咨询",
     "cta_primary_msg": "您好，我想咨询阿根廷国籍事宜。",
     "cta_secondary": "了解办理流程",
@@ -39,7 +39,7 @@
     "address": "Av. Roque Sáenz Peña 616, 布宜诺斯艾利斯"
   },
   "stats": {
-    "s1_label": "2020 年以来成功办结的国籍案件",
+    "s1_label": "[PENDIENTE] 2020 年以来成功办结的国籍案件",
     "s2_label": "Google 上 {reviews} 条评价",
     "s3_label": "法律业务领域",
     "s4_label": "付款方式，支持境外付款"
@@ -66,11 +66,11 @@
   "ciudadania": {
     "eyebrow": "阿根廷国籍",
     "title": "全程为您保驾护航",
-    "text": "我们全程代理您的入籍申请。自 2020 年以来，已成功办结 1,200 多件案件，同时也办理意大利和西班牙国籍。",
-    "step1": "1. 初次咨询，可通过 WhatsApp 或到事务所面谈。",
-    "step2": "2. 准备申请材料。",
-    "step3": "3. 递交申请并跟进案件进度。",
-    "step4": "4. 全程协助，直至宣誓入籍。",
+    "text": "[PENDIENTE] 我们全程代理您的入籍申请。自 2020 年以来，已成功办结 1,200 多件案件，同时也办理意大利和西班牙国籍。",
+    "step1": "[PENDIENTE] 1. 初次咨询，可通过 WhatsApp 或到事务所面谈。",
+    "step2": "[PENDIENTE] 2. 准备申请材料。",
+    "step3": "[PENDIENTE] 3. 递交申请并跟进案件进度。",
+    "step4": "[PENDIENTE] 4. 全程协助，直至宣誓入籍。",
     "cta": "咨询我的国籍申请",
     "cta_msg": "您好，我想咨询阿根廷国籍事宜。",
     "photo_alt": "Portillo 律师与手持阿根廷国籍证书的客户，摄于司法宫前"
@@ -111,20 +111,20 @@
     "photo_alt": "事务所办公桌上的正义女神像，旁边是印有 Portillo Kus & Asociados 标志的文件夹",
     "name": "Denis Portillo 律师",
     "role": "执行总裁",
-    "tag_matricula": "执业证号待补充",
-    "team_note": "合伙人及执业证号：待补充"
+    "tag_matricula": "[PENDIENTE] 执业证号待补充",
+    "team_note": "[PENDIENTE] 合伙人及执业证号：待补充"
   },
   "opiniones": {
     "eyebrow": "客户评价",
     "title": "听听客户怎么说",
-    "r1_text": "\"我在 Portillo 律师的帮助下开始办理入籍手续，从一开始他就让我完全信任……\"",
-    "r1_name": "Yocselys B.",
-    "r2_text": "\"非常专业。他陪伴我走完了取得阿根廷国籍的全过程……\"",
-    "r2_name": "Yania M.",
-    "r3_text": "\"强烈推荐 Portillo 律师处理移民事务……\"",
-    "r3_name": "Jorge R.",
-    "r4_text": "\"Dennis is the BEST! I thought my case was hopeless after visiting other attorneys…\"",
-    "r4_name": "Adsterza",
+    "r1_text": "[PENDIENTE] \"我在 Portillo 律师的帮助下开始办理入籍手续，从一开始他就让我完全信任……\"",
+    "r1_name": "[PENDIENTE] Yocselys B.",
+    "r2_text": "[PENDIENTE] \"非常专业。他陪伴我走完了取得阿根廷国籍的全过程……\"",
+    "r2_name": "[PENDIENTE] Yania M.",
+    "r3_text": "[PENDIENTE] \"强烈推荐 Portillo 律师处理移民事务……\"",
+    "r3_name": "[PENDIENTE] Jorge R.",
+    "r4_text": "[PENDIENTE] \"Dennis is the BEST! I thought my case was hopeless after visiting other attorneys…\"",
+    "r4_name": "[PENDIENTE] Adsterza",
     "cta": "在 Google 上查看全部 {reviews} 条评价"
   },
   "trabajamos": {

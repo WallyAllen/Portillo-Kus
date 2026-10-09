@@ -31,7 +31,7 @@
     "img_alt": "Vista da Diagonal Norte (Av. Roque Sáenz Peña), a poucos passos do escritório, com o Obelisco ao fundo",
     "eyebrow": "ESCRITÓRIO DE ADVOCACIA · MICROCENTRO, BUENOS AIRES",
     "title": "Sua cidadania argentina, nas melhores mãos",
-    "sub": "Assessoria em cidadania, residência e visas. Mais de 1.200 processos de cidadania resolvidos com sucesso desde 2020.",
+    "sub": "[PENDIENTE] Assessoria em cidadania, residência e visas. Mais de 1.200 processos de cidadania resolvidos com sucesso desde 2020.",
     "cta_primary": "Consultar pelo WhatsApp",
     "cta_primary_msg": "Olá, gostaria de consultar sobre minha cidadania argentina.",
     "cta_secondary": "Como funciona o processo",
@@ -39,7 +39,7 @@
     "address": "Av. Roque Sáenz Peña 616, Buenos Aires"
   },
   "stats": {
-    "s1_label": "Cidadanias resolvidas desde 2020",
+    "s1_label": "[PENDIENTE] Cidadanias resolvidas desde 2020",
     "s2_label": "{reviews} avaliações no Google",
     "s3_label": "Áreas do direito",
     "s4_label": "Formas de pagamento, também do exterior"
@@ -66,11 +66,11 @@
   "ciudadania": {
     "eyebrow": "CIDADANIA ARGENTINA",
     "title": "Acompanhamos você em todo o processo",
-    "text": "Assessoramos sua carta de cidadania do início ao fim. Desde 2020 resolvemos com sucesso mais de 1.200 processos, e também tratamos de cidadania italiana e espanhola.",
-    "step1": "1. Consulta inicial, pelo WhatsApp ou no escritório.",
-    "step2": "2. Preparação da documentação.",
-    "step3": "3. Apresentação e acompanhamento do processo.",
-    "step4": "4. Acompanhamento até o juramento.",
+    "text": "[PENDIENTE] Assessoramos sua carta de cidadania do início ao fim. Desde 2020 resolvemos com sucesso mais de 1.200 processos, e também tratamos de cidadania italiana e espanhola.",
+    "step1": "[PENDIENTE] 1. Consulta inicial, pelo WhatsApp ou no escritório.",
+    "step2": "[PENDIENTE] 2. Preparação da documentação.",
+    "step3": "[PENDIENTE] 3. Apresentação e acompanhamento do processo.",
+    "step4": "[PENDIENTE] 4. Acompanhamento até o juramento.",
     "cta": "Consultar sobre minha cidadania",
     "cta_msg": "Olá, gostaria de consultar sobre minha cidadania argentina.",
     "photo_alt": "Dr. Portillo com um cliente e sua carta de cidadania argentina, em frente ao Palácio de Tribunales"
@@ -111,20 +111,20 @@
     "photo_alt": "Estátua de Têmis sobre a mesa do escritório, junto a pastas com o logotipo da Portillo Kus & Asociados",
     "name": "Dr. Denis Portillo",
     "role": "Presidente Executivo",
-    "tag_matricula": "REGISTRO PROFISSIONAL A CONFIRMAR",
-    "team_note": "Sócios e registros profissionais: a completar"
+    "tag_matricula": "[PENDIENTE] REGISTRO PROFISSIONAL A CONFIRMAR",
+    "team_note": "[PENDIENTE] Sócios e registros profissionais: a completar"
   },
   "opiniones": {
     "eyebrow": "AVALIAÇÕES",
     "title": "O que dizem nossos clientes",
-    "r1_text": "\"Iniciei meu processo de naturalização com o Dr. Portillo e desde o primeiro momento ele me inspirou total confiança…\"",
-    "r1_name": "Yocselys B.",
-    "r2_text": "\"Excelente profissional. Ele me acompanhou em todo o processo para obter a cidadania argentina…\"",
-    "r2_name": "Yania M.",
-    "r3_text": "\"Recomendo muito o Dr. Portillo para temas de imigração…\"",
-    "r3_name": "Jorge R.",
-    "r4_text": "\"Dennis is the BEST! I thought my case was hopeless after visiting other attorneys…\"",
-    "r4_name": "Adsterza",
+    "r1_text": "[PENDIENTE] \"Iniciei meu processo de naturalização com o Dr. Portillo e desde o primeiro momento ele me inspirou total confiança…\"",
+    "r1_name": "[PENDIENTE] Yocselys B.",
+    "r2_text": "[PENDIENTE] \"Excelente profissional. Ele me acompanhou em todo o processo para obter a cidadania argentina…\"",
+    "r2_name": "[PENDIENTE] Yania M.",
+    "r3_text": "[PENDIENTE] \"Recomendo muito o Dr. Portillo para temas de imigração…\"",
+    "r3_name": "[PENDIENTE] Jorge R.",
+    "r4_text": "[PENDIENTE] \"Dennis is the BEST! I thought my case was hopeless after visiting other attorneys…\"",
+    "r4_name": "[PENDIENTE] Adsterza",
     "cta": "Ver as {reviews} avaliações no Google"
   },
   "trabajamos": {

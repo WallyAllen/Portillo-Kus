@@ -6,6 +6,7 @@
 <title>{{meta.title}}</title>
 <meta name="description" content="{{meta.description}}">
 <meta name="theme-color" content="#F7F5F1">
+<link rel="icon" type="image/jpeg" href="{{img_prefix}}portillo-images/logo.jpg">
 <meta name="robots" content="noindex, nofollow">
 <meta property="og:title" content="{{meta.og_title}}">
 <meta property="og:description" content="{{meta.og_description}}">
@@ -18,9 +19,9 @@
 <style>
 /* ==========================================================================
    0. NOTAS
-   Boceto v2 (claro, argentino, ES/EN/PT) de Portillo Kus & Asociados.
+   Boceto v2.2 (claro, argentino, ES/EN/PT/RU/中文) de Portillo Kus & Asociados.
    Generado por src/build.py a partir de src/template.html + src/content.<lang>.json.
-   No editar los archivos de salida (index.html, en/index.html, pt/index.html)
+   No editar los archivos de salida (dist/index.html y dist/<idioma>/index.html)
    a mano: editar la plantilla o el JSON y volver a correr build.py.
    ========================================================================== */
 
@@ -633,6 +634,15 @@ section[id]{ scroll-margin-top: 60px; }
 @keyframes barPulse{ 0%{ box-shadow: 0 0 0 0 hsla(350,68%,37%,0.45); } 100%{ box-shadow: 0 0 0 14px hsla(350,68%,37%,0); } }
 .mobile-bar .btn{ flex: 1; min-height: 48px; }
 @media (min-width: 900px){ .mobile-bar{ display: none; } }
+/* Datos sin confirmar: visibles en vista local; bloquean --produccion. */
+.pending-content{
+  color: var(--ink); background: var(--surface);
+  border: 1px solid var(--brand); border-radius: var(--radius-sm);
+  padding: 0.1em 0.25em; box-decoration-break: clone;
+  -webkit-box-decoration-break: clone; overflow-wrap: anywhere;
+}
+.stat-value .pending-content{ font-family: var(--font-body); font-size: var(--text-base); }
+
 </style>
 </head>
 <body>
@@ -1455,66 +1465,7 @@ section[id]{ scroll-margin-top: 60px; }
 })();
 </script>
 
-<!--
-PENDIENTE / CONFIRMAR con el estudio antes de pasar esto a producción (boceto v2):
 
-[PENDIENTE] Nombres y matrículas del CPACF de los demás socios ("Kus" y el resto
-  del equipo). Hoy solo se muestra al Dr. Denis Portillo, Presidente Ejecutivo,
-  con la etiqueta "Socios y matrículas: a completar".
-[PENDIENTE] Matrícula del Dr. Portillo (CPACF): el nombre "Denis" ya está
-  confirmado por las reseñas y por la placa de escritorio (foto real, sección
-  "El estudio"); falta el número de matrícula.
-[CONFIRMAR] Uso de la segunda línea (+54 9 11 3511-1987, portillokuslegal@gmail.com):
-  su tarjeta se sacó de "Contacto" hasta que el estudio confirme para qué se usa
-  (mostraba ese número pero sus botones iban a la línea principal). Su lugar lo
-  ocupa el mapa.
-[CONFIRMAR] En qué idiomas atiende el estudio además de español. La franja de
-  idiomas de "Cómo trabajamos" se sacó (con el selector de 5 idiomas era
-  redundante); si el estudio confirma idiomas de atención, sumarlo como ítem.
-[CONFIRMAR] Expedientes de ciudadanía resueltos: se usó "+1.200" (dato propio del
-  estudio); un directorio externo menciona "más de 1.000".
-[CONFIRMAR] Los 4 pasos del proceso de ciudadanía son una reconstrucción razonable
-  a partir del brief, no un texto provisto por el estudio — revisar con ellos.
-[PENDIENTE] Textos completos de las reseñas de Google: los fragmentos de la
-  sección "Opiniones" están republicados tal como los tomó un directorio externo
-  — copiar el texto completo directamente desde Google Maps antes de publicar.
-[PENDIENTE] Logo en alta resolución o vector: el archivo disponible (onbizz.com)
-  es de baja resolución (150×80).
-[PENDIENTE] Fotos propias del estudio y de la fachada del Edificio Bencich desde
-  la vereda del estudio (hoy la foto del edificio en la franja "Buenos Aires" es
-  una foto aérea de stock/Wikimedia, no una foto propia del cliente).
-[INFO] Fotos de Buenos Aires (franja nueva) — todas de Wikimedia Commons, licencia
-  Creative Commons con atribución, uso comercial permitido:
-    - hero-diagonal.jpg / ba-obelisco.jpg: "Avenida Roque Sáenz Peña (Diagonal
-      Norte)..." y "Vista del Obelisco desde la Plaza de Mayo...", Roberto
-      Fiadone y Mr. Tickle, CC BY-SA / CC BY.
-    - ba-casarosada.jpg: "2019 Buenos Aires - Fachada de la Casa Rosada.jpg",
-      CC BY-SA 4.0.
-    - ba-bencich.jpg: "Edificio Miguel Bencich 616.jpg", Avalosinteriorismo,
-      CC BY-SA 4.0. Es el edificio real del estudio (Av. Roque Sáenz Peña 616).
-  Las fotos ya no llevan la etiqueta visible "Foto real del estudio" / "Foto
-  ilustrativa" (decisión de diseño); el texto alternativo sigue indicándolo.
-[PENDIENTE] Dominio definitivo para "og:image" — hoy usa el deploy de Vercel
-  vigente; actualizar si el estudio pasa a un dominio propio.
-[CONFIRMAR] Si la ficha de Google Maps del estudio va a apuntar a esta página.
-[PENDIENTE] Traducciones: el inglés, el portugués, el ruso y el chino simplificado
-  los armó un modelo de IA con criterio de registro formal y neutro. Alguien que
-  hable cada idioma tiene que revisarlas antes de publicar, en particular los
-  mensajes de WhatsApp, los términos jurídicos (ciudadanía, residencia, expulsión)
-  y los nombres de las áreas de práctica.
-[CONFIRMAR] Ruso y chino: en qué idioma responde el estudio cuando llega una
-  consulta en esos idiomas (los botones de WhatsApp de /ru y /zh escriben el
-  mensaje en ese idioma).
-[INFO] Mapa en "Contacto": embed de Google Maps sin API key (output=embed), con
-  loading="lazy" para no demorar la carga inicial.
-[INFO] Número de WhatsApp, teléfono, cantidad de reseñas, calificación y
-  expedientes resueltos se definen una sola vez en src/build.py. En los JSON,
-  la palabra reviews entre llaves se reemplaza por la cantidad de reseñas. Las imágenes og-*.jpg
-  tienen el 417 escrito en la imagen: regenerarlas si cambia.
-[PENDIENTE] Cifra "7 medios de pago" (4.ª de la franja de cifras): es la más floja;
-  reemplazarla por un dato real del estudio (p. ej., países de origen de sus
-  clientes) cuando lo pasen.
--->
 
 </body>
 </html>

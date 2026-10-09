@@ -31,7 +31,7 @@
     "img_alt": "Vista de Diagonal Norte (Av. Roque Sáenz Peña), a pasos del estudio, con el Obelisco al fondo",
     "eyebrow": "ESTUDIO JURÍDICO · MICROCENTRO, BUENOS AIRES",
     "title": "Tu ciudadanía argentina, en las mejores manos",
-    "sub": "Patrocinio en ciudadanía, residencias y visas. Más de 1.200 expedientes de ciudadanía resueltos favorablemente desde 2020.",
+    "sub": "[PENDIENTE] Patrocinio en ciudadanía, residencias y visas. Más de 1.200 expedientes de ciudadanía resueltos favorablemente desde 2020.",
     "cta_primary": "Consultar por WhatsApp",
     "cta_primary_msg": "Hola, quiero consultar por mi ciudadanía argentina.",
     "cta_secondary": "Cómo es el trámite",
@@ -39,7 +39,7 @@
     "address": "Av. Roque Sáenz Peña 616, CABA"
   },
   "stats": {
-    "s1_label": "Ciudadanías resueltas desde 2020",
+    "s1_label": "[PENDIENTE] Ciudadanías resueltas desde 2020",
     "s2_label": "{reviews} reseñas en Google",
     "s3_label": "Áreas del derecho",
     "s4_label": "Medios de pago, también desde el exterior"
@@ -66,11 +66,11 @@
   "ciudadania": {
     "eyebrow": "CIUDADANÍA ARGENTINA",
     "title": "Te acompañamos en todo el proceso",
-    "text": "Patrocinamos tu carta de ciudadanía de principio a fin. Desde 2020 resolvimos favorablemente más de 1.200 expedientes, y también gestionamos ciudadanías italianas y españolas.",
-    "step1": "1. Consulta inicial, por WhatsApp o en el estudio.",
-    "step2": "2. Armado de la documentación.",
-    "step3": "3. Presentación y seguimiento del expediente.",
-    "step4": "4. Acompañamiento hasta la jura.",
+    "text": "[PENDIENTE] Patrocinamos tu carta de ciudadanía de principio a fin. Desde 2020 resolvimos favorablemente más de 1.200 expedientes, y también gestionamos ciudadanías italianas y españolas.",
+    "step1": "[PENDIENTE] 1. Consulta inicial, por WhatsApp o en el estudio.",
+    "step2": "[PENDIENTE] 2. Armado de la documentación.",
+    "step3": "[PENDIENTE] 3. Presentación y seguimiento del expediente.",
+    "step4": "[PENDIENTE] 4. Acompañamiento hasta la jura.",
     "cta": "Consultar por mi ciudadanía",
     "cta_msg": "Hola, quiero consultar por mi ciudadanía argentina.",
     "photo_alt": "Dr. Portillo con un cliente y su carta de ciudadanía argentina, frente al Palacio de Tribunales"
@@ -111,20 +111,20 @@
     "photo_alt": "Estatua de Themis sobre el escritorio del estudio, junto a carpetas con el logo de Portillo Kus & Asociados",
     "name": "Dr. Denis Portillo",
     "role": "Presidente Ejecutivo",
-    "tag_matricula": "MATRÍCULA A COMPLETAR",
-    "team_note": "Socios y matrículas: a completar"
+    "tag_matricula": "[PENDIENTE] MATRÍCULA A COMPLETAR",
+    "team_note": "[PENDIENTE] Socios y matrículas: a completar"
   },
   "opiniones": {
     "eyebrow": "OPINIONES",
     "title": "Lo que dicen nuestros clientes",
-    "r1_text": "\"Inicié mi trámite de naturalización con el Dr. Portillo y desde el primer momento me inspiró total confianza…\"",
-    "r1_name": "Yocselys B.",
-    "r2_text": "\"Excelente profesional. Me acompañó en todo el proceso para obtener la ciudadanía argentina…\"",
-    "r2_name": "Yania M.",
-    "r3_text": "\"Muy recomendable el Dr. Portillo para temas migratorios…\"",
-    "r3_name": "Jorge R.",
-    "r4_text": "\"Dennis is the BEST! I thought my case was hopeless after visiting other attorneys…\"",
-    "r4_name": "Adsterza",
+    "r1_text": "[PENDIENTE] \"Inicié mi trámite de naturalización con el Dr. Portillo y desde el primer momento me inspiró total confianza…\"",
+    "r1_name": "[PENDIENTE] Yocselys B.",
+    "r2_text": "[PENDIENTE] \"Excelente profesional. Me acompañó en todo el proceso para obtener la ciudadanía argentina…\"",
+    "r2_name": "[PENDIENTE] Yania M.",
+    "r3_text": "[PENDIENTE] \"Muy recomendable el Dr. Portillo para temas migratorios…\"",
+    "r3_name": "[PENDIENTE] Jorge R.",
+    "r4_text": "[PENDIENTE] \"Dennis is the BEST! I thought my case was hopeless after visiting other attorneys…\"",
+    "r4_name": "[PENDIENTE] Adsterza",
     "cta": "Ver las {reviews} opiniones en Google"
   },
   "trabajamos": {

@@ -31,7 +31,7 @@
     "img_alt": "View of Diagonal Norte (Av. Roque Sáenz Peña), steps from the firm, with the Obelisk in the background",
     "eyebrow": "LAW FIRM · MICROCENTRO, BUENOS AIRES",
     "title": "Your Argentine citizenship, in the best hands",
-    "sub": "Sponsorship for citizenship, residency, and visas. Over 1,200 citizenship cases resolved favorably since 2020.",
+    "sub": "[PENDIENTE] Sponsorship for citizenship, residency, and visas. Over 1,200 citizenship cases resolved favorably since 2020.",
     "cta_primary": "Consult on WhatsApp",
     "cta_primary_msg": "Hello, I would like to consult about my Argentine citizenship.",
     "cta_secondary": "How the process works",
@@ -39,7 +39,7 @@
     "address": "Av. Roque Sáenz Peña 616, Buenos Aires"
   },
   "stats": {
-    "s1_label": "Citizenship cases resolved since 2020",
+    "s1_label": "[PENDIENTE] Citizenship cases resolved since 2020",
     "s2_label": "{reviews} Google reviews",
     "s3_label": "Areas of law",
     "s4_label": "Payment methods, including from abroad"
@@ -66,11 +66,11 @@
   "ciudadania": {
     "eyebrow": "ARGENTINE CITIZENSHIP",
     "title": "We guide you through the whole process",
-    "text": "We sponsor your citizenship application from start to finish. Since 2020 we've favorably resolved over 1,200 cases, and we also handle Italian and Spanish citizenship.",
-    "step1": "1. Initial consultation, by WhatsApp or at the firm.",
-    "step2": "2. Preparing your documentation.",
-    "step3": "3. Filing and following up on your case.",
-    "step4": "4. Support all the way through the oath ceremony.",
+    "text": "[PENDIENTE] We sponsor your citizenship application from start to finish. Since 2020 we've favorably resolved over 1,200 cases, and we also handle Italian and Spanish citizenship.",
+    "step1": "[PENDIENTE] 1. Initial consultation, by WhatsApp or at the firm.",
+    "step2": "[PENDIENTE] 2. Preparing your documentation.",
+    "step3": "[PENDIENTE] 3. Filing and following up on your case.",
+    "step4": "[PENDIENTE] 4. Support all the way through the oath ceremony.",
     "cta": "Consult about my citizenship",
     "cta_msg": "Hello, I would like to consult about my Argentine citizenship.",
     "photo_alt": "Dr. Portillo with a client and their Argentine citizenship certificate, in front of the Tribunales Palace"
@@ -111,20 +111,20 @@
     "photo_alt": "Statue of Themis on the firm's desk, next to folders with the Portillo Kus & Asociados logo",
     "name": "Dr. Denis Portillo",
     "role": "Chief Executive",
-    "tag_matricula": "BAR NUMBER TO BE ADDED",
-    "team_note": "Partners and bar numbers: to be completed"
+    "tag_matricula": "[PENDIENTE] BAR NUMBER TO BE ADDED",
+    "team_note": "[PENDIENTE] Partners and bar numbers: to be completed"
   },
   "opiniones": {
     "eyebrow": "REVIEWS",
     "title": "What our clients say",
-    "r1_text": "\"I started my naturalization process with Dr. Portillo and from the very first moment he inspired complete trust in me…\"",
-    "r1_name": "Yocselys B.",
-    "r2_text": "\"Excellent professional. He guided me through the entire process of obtaining Argentine citizenship…\"",
-    "r2_name": "Yania M.",
-    "r3_text": "\"Highly recommend Dr. Portillo for immigration matters…\"",
-    "r3_name": "Jorge R.",
-    "r4_text": "\"Dennis is the BEST! I thought my case was hopeless after visiting other attorneys…\"",
-    "r4_name": "Adsterza",
+    "r1_text": "[PENDIENTE] \"I started my naturalization process with Dr. Portillo and from the very first moment he inspired complete trust in me…\"",
+    "r1_name": "[PENDIENTE] Yocselys B.",
+    "r2_text": "[PENDIENTE] \"Excellent professional. He guided me through the entire process of obtaining Argentine citizenship…\"",
+    "r2_name": "[PENDIENTE] Yania M.",
+    "r3_text": "[PENDIENTE] \"Highly recommend Dr. Portillo for immigration matters…\"",
+    "r3_name": "[PENDIENTE] Jorge R.",
+    "r4_text": "[PENDIENTE] \"Dennis is the BEST! I thought my case was hopeless after visiting other attorneys…\"",
+    "r4_name": "[PENDIENTE] Adsterza",
     "cta": "See all {reviews} reviews on Google"
   },
   "trabajamos": {
