@@ -593,17 +593,17 @@ section[id]{ scroll-margin-top: 60px; }
 .contact-detail{ font-size: var(--text-sm); color: var(--ink-on-dark-muted); }
 .contact-actions{ display: flex; flex-wrap: wrap; gap: var(--sp-3); margin-top: auto; }
 .contact-actions .btn{ flex: 1 1 auto; }
-.contact-map{
-  position: relative; min-height: 320px; overflow: hidden;
-  border: 1px solid var(--dark-line); border-radius: var(--radius-lg); background: var(--dark-surface);
-}
-.contact-map iframe{ position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
-/* Visible mientras el mapa carga (o si un bloqueador lo impide); el iframe lo tapa al cargar */
-.contact-map-fallback{
-  position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: var(--sp-2); padding: var(--sp-5); text-align: center; font-size: var(--text-sm); color: var(--ink-on-dark-muted);
-}
-.contact-map-fallback svg{ color: var(--celeste); }
+.office-map{ margin: 0; display: flex; flex-direction: column; }
+.office-map-frame{ position: relative; flex: 1; min-height: 320px; overflow: hidden; border: 1px solid var(--dark-line); border-radius: var(--radius-md); background: var(--bg); }
+.office-map-preview, .office-map-frame iframe{ width: 100%; height: 100%; display: block; border: 0; }
+.office-map-preview{ color: var(--line); }
+.office-map-preview .map-block{ fill: var(--surface); stroke: var(--line); stroke-width: 2; }
+.office-map-preview .map-road{ stroke: var(--celeste); stroke-width: 22; }
+.office-map-preview .map-pin{ fill: var(--brand); }
+.office-map-preview .map-pin-dot{ fill: var(--surface); }
+.office-map-load{ position: absolute; bottom: var(--sp-4); left: 50%; transform: translateX(-50%); white-space: nowrap; }
+.office-map figcaption{ color: var(--ink-on-dark-muted); font-size: var(--text-xs); margin-top: var(--sp-2); }
+a[aria-disabled="true"]{ opacity: 0.65; cursor: default; }
 
 /* Footer (claro) */
 .site-footer{ background: var(--bg); border-top: 1px solid var(--line); padding: var(--sp-8) 0 var(--sp-6); }
@@ -719,7 +719,7 @@ section[id]{ scroll-margin-top: 60px; }
           <a class="btn btn-secondary" href="#ciudadania">{{hero.cta_secondary}}</a>
         </div>
         <div class="hero-trust">
-          <a href="https://www.google.com/maps/search/?api=1&query=Portillo+Kus+%26+Asociados+Estudio+Jur%C3%ADdico" target="_blank" rel="noopener"><span class="stars">★ {{num.rating}}</span> · {{hero.reviews_text}}</a>
+          <a {{google_maps_link_attrs}} data-button="google_reviews" data-context="hero" data-lang="{{analytics_lang}}"><span class="stars">★ {{num.rating}}</span> · {{hero.reviews_text}}</a>
           <span class="sep">·</span>
           <span>{{hero.address}}</span>
         </div>
@@ -849,7 +849,7 @@ section[id]{ scroll-margin-top: 60px; }
         </article>
       </div>
       <div class="reveal" style="margin-top:var(--sp-7);text-align:center;">
-        <a class="btn btn-secondary" href="https://www.google.com/maps/search/?api=1&query=Portillo+Kus+%26+Asociados+Estudio+Jur%C3%ADdico" target="_blank" rel="noopener">{{opiniones.cta}}</a>
+        <a class="btn btn-secondary" {{google_maps_link_attrs}} data-button="google_reviews" data-context="opiniones" data-lang="{{analytics_lang}}">{{opiniones.cta}}</a>
       </div>
     </div>
   </section>
@@ -1143,16 +1143,29 @@ section[id]{ scroll-margin-top: 60px; }
             <a data-event="whatsapp_click" data-button="contacto-oficina-1" data-lang="{{analytics_lang}}" class="btn btn-primary" href="https://wa.me/{{wa_number}}?text={{url:contacto.wa_msg}}" target="_blank" rel="noopener">{{contacto.wa}}</a>
             <a data-event="telefono_click" data-button="contacto-oficina-1" data-lang="{{analytics_lang}}" class="btn btn-secondary" href="tel:{{tel}}">{{contacto.call}}</a>
             <a data-event="mail_click" data-button="contacto-oficina-1" data-lang="{{analytics_lang}}" class="btn btn-secondary" href="mailto:{{footer.email}}">{{contacto.email}}</a>
-            <a class="btn btn-secondary" href="https://www.google.com/maps/dir/?api=1&amp;destination=Av.+Pres.+Roque+S%C3%A1enz+Pe%C3%B1a+616,+C1035+CABA,+Argentina" target="_blank" rel="noopener">{{contacto.directions}}</a>
+            <a data-event="como_llegar_click" data-button="contacto-como-llegar" data-context="contacto" data-lang="{{analytics_lang}}" class="btn btn-secondary" href="https://www.google.com/maps/dir/?api=1&amp;destination=Av.%20Pres.%20Roque%20S%C3%A1enz%20Pe%C3%B1a%20616%2C%20C1035%20CABA" target="_blank" rel="noopener">{{contacto.directions}}</a>
+            <a class="btn btn-secondary" {{google_maps_link_attrs}} data-button="google_profile" data-context="contacto" data-lang="{{analytics_lang}}">{{contacto.google_maps_cta}}</a>
           </div>
         </article>
-        <div class="contact-map reveal">
-          <div class="contact-map-fallback" aria-hidden="true">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
-            <span>{{hero.address}}</span>
+        <figure class="office-map reveal">
+          <div class="office-map-frame" id="officeMap" data-map-title="{{contacto.map_title}}">
+            <svg class="office-map-preview" viewBox="0 0 600 360" preserveAspectRatio="xMidYMid slice" role="img" aria-label="{{contacto.map_preview}}">
+              <g class="map-block">
+                <rect x="-20" y="-20" width="160" height="115" rx="12"/><rect x="160" y="-20" width="130" height="115" rx="12"/>
+                <rect x="310" y="-20" width="130" height="115" rx="12"/><rect x="460" y="-20" width="160" height="115" rx="12"/>
+                <rect x="-20" y="115" width="160" height="130" rx="12"/><rect x="160" y="115" width="130" height="130" rx="12"/>
+                <rect x="310" y="115" width="130" height="130" rx="12"/><rect x="460" y="115" width="160" height="130" rx="12"/>
+                <rect x="-20" y="265" width="160" height="115" rx="12"/><rect x="160" y="265" width="130" height="115" rx="12"/>
+                <rect x="310" y="265" width="130" height="115" rx="12"/><rect x="460" y="265" width="160" height="115" rx="12"/>
+              </g>
+              <path class="map-road" d="M-40 335 640 15" fill="none"/>
+              <path class="map-pin" d="M300 104c-22 0-40 18-40 40 0 30 40 70 40 70s40-40 40-70c0-22-18-40-40-40Z"/>
+              <circle class="map-pin-dot" cx="300" cy="144" r="13"/>
+            </svg>
+            <button type="button" class="btn btn-primary office-map-load" aria-controls="officeMap" data-map-load data-event="mapa_click" data-button="contacto-mapa" data-context="contacto" data-lang="{{analytics_lang}}">{{contacto.map_button}}</button>
           </div>
-          <iframe src="https://www.google.com/maps?q=Av.+Pres.+Roque+S%C3%A1enz+Pe%C3%B1a+616,+C1035+CABA,+Argentina&amp;hl={{buenosaires.map_hl}}&amp;z=16&amp;output=embed" title="{{buenosaires.map_iframe_title}}" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
-        </div>
+          <figcaption>{{contacto.map_caption}}</figcaption>
+        </figure>
       </div>
     </div>
   </section>
@@ -1213,6 +1226,24 @@ section[id]{ scroll-margin-top: 60px; }
   var pageLang = (document.documentElement.lang || 'es').split('-')[0];
   var locale = LOCALE_MAP[pageLang] || 'es-AR';
   var prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Google Maps se solicita únicamente después de activar el botón.
+  var mapButton = document.querySelector('[data-map-load]');
+  if (mapButton){
+    mapButton.addEventListener('click', function(){
+      var mapFrame = document.getElementById('officeMap');
+      if (!mapFrame || mapFrame.querySelector('iframe')) return;
+      var iframe = document.createElement('iframe');
+      iframe.title = mapFrame.getAttribute('data-map-title');
+      // Embed obtenido de Compartir > Insertar un mapa en la ficha confirmada.
+      iframe.src = 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3283.880795575973!2d-58.37528129999999!3d-34.6071757!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95bccba3e8bdb1fb%3A0x680786357004fb40!2sPortillo%20Kus%20%26%20Asociados.%20Estudio%20Jur%C3%ADdico!5e0!3m2!1ses!2sar!4v1791560789739!5m2!1ses!2sar&hl=' + encodeURIComponent(pageLang);
+      iframe.referrerPolicy = 'no-referrer';
+      iframe.setAttribute('allowfullscreen', '');
+      iframe.setAttribute('tabindex', '0');
+      mapFrame.replaceChildren(iframe);
+      iframe.focus();
+    });
+  }
 
   // Header: compactar al hacer scroll
   var header = document.getElementById('siteHeader');

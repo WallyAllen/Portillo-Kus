@@ -85,9 +85,7 @@
     "ba2_alt": "从北斜街远眺方尖碑，布宜诺斯艾利斯",
     "ba2_caption": "北斜街，市中心",
     "ba3_alt": "事务所所在的 Miguel Bencich 大厦圆顶",
-    "ba3_caption": "Miguel Bencich 大厦 4 楼",
-    "map_hl": "zh-CN",
-    "map_iframe_title": "地图：事务所位于 Av. Roque Sáenz Peña 616, 布宜诺斯艾利斯"
+    "ba3_caption": "Miguel Bencich 大厦 4 楼"
   },
   "areas": {
     "eyebrow": "业务领域",
@@ -199,7 +197,12 @@
     "wa_msg": "您好，我想向贵所咨询。",
     "call": "致电",
     "email": "邮件",
-    "directions": "查看路线"
+    "directions": "查看路线",
+    "map_title": "事务所在 Google Maps 上的位置",
+    "map_button": "查看地图",
+    "google_maps_cta": "Google 商家资料",
+    "map_preview": "Microcentro 市中心区域示意图",
+    "map_caption": "Microcentro · CABA。此图仅供方向参考，不按比例绘制，也不精确表示街道。打开地图时将加载 Google 的内容。"
   },
   "footer": {
     "tagline": "\"法律是我们的热忱所在。\"",
@@ -237,5 +240,6 @@
   "seo": {
     "street_address": "Av. Pres. Roque Sáenz Peña 616, piso 4, oficina 403",
     "contact_languages": "[PENDIENTE] Confirmar los idiomas de atención del estudio."
-  }
+  },
+  "google_maps_url": "https://www.google.com/maps/place/Portillo+Kus+%26+Asociados.+Estudio+Jur%C3%ADdico/@-34.6071757,-58.3752813,17z/data=!3m1!4b1!4m6!3m5!1s0x95bccba3e8bdb1fb:0x680786357004fb40!8m2!3d-34.6071757!4d-58.3752813!16s%2Fg%2F11v014vn49"
 }

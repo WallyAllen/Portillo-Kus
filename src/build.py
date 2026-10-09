@@ -123,6 +123,22 @@ def build_hreflang_tags(lang, base_url, page="home"):
     return "\n".join(lines)
 
 
+def google_maps_link_attrs(value):
+    """Un pendiente o URL ajena a Maps nunca genera un enlace navegable."""
+    maps_url = str(value).strip()
+    try:
+        maps_parts = urlsplit(maps_url)
+        valid = (maps_parts.scheme == "https" and maps_parts.hostname in
+                 ("www.google.com", "google.com", "maps.google.com", "maps.app.goo.gl")
+                 and not maps_parts.username and not maps_parts.password
+                 and (maps_parts.path.startswith("/maps/") or maps_parts.hostname == "maps.app.goo.gl"))
+    except ValueError:
+        valid = False
+    if valid:
+        return f'href="{html_tools.escape(maps_url, quote=True)}" target="_blank" rel="noopener"'
+    return 'role="link" aria-disabled="true"'
+
+
 def build(lang, template, base_url, flat, page="home"):
     flat = dict(flat)
 
@@ -133,6 +149,7 @@ def build(lang, template, base_url, flat, page="home"):
     flat["num.rating"] = dato("rating", fmt_number(RATING, lang, 1))
     flat["num.rating_raw"] = str(RATING)
     flat["num.reviews"] = dato("reviews", str(REVIEWS))
+    flat["google_maps_link_attrs"] = google_maps_link_attrs(flat.get("google_maps_url", ""))
     flat["html_lang"] = lang["html_lang"]
     flat.update(analytics_fields(lang["code"], os.environ.get("UMAMI_ID")))
     flat["img_prefix"] = rel_prefix_for(lang, page)

@@ -85,9 +85,7 @@
     "ba2_alt": "El Obelisco visto desde Diagonal Norte, Buenos Aires",
     "ba2_caption": "Diagonal Norte, Microcentro",
     "ba3_alt": "Cúpulas del Edificio Miguel Bencich, donde está el estudio",
-    "ba3_caption": "Edificio Miguel Bencich, piso 4",
-    "map_hl": "es",
-    "map_iframe_title": "Mapa con la ubicación del estudio en Av. Roque Sáenz Peña 616, CABA"
+    "ba3_caption": "Edificio Miguel Bencich, piso 4"
   },
   "areas": {
     "eyebrow": "ÁREAS DE PRÁCTICA",
@@ -199,7 +197,12 @@
     "wa_msg": "Hola, quiero hacer una consulta con el estudio.",
     "call": "Llamar",
     "email": "Email",
-    "directions": "Cómo llegar"
+    "directions": "Cómo llegar",
+    "map_title": "Ubicación del estudio en Google Maps",
+    "map_button": "Ver mapa",
+    "google_maps_cta": "Ficha en Google",
+    "map_preview": "Ilustración esquemática de la zona de Microcentro",
+    "map_caption": "Microcentro · CABA. Ilustración orientativa, sin escala ni precisión de calles. Al abrir el mapa se carga contenido de Google."
   },
   "footer": {
     "tagline": "\"El Derecho es nuestra pasión.\"",
@@ -237,5 +240,6 @@
   "seo": {
     "street_address": "Av. Pres. Roque Sáenz Peña 616, piso 4, oficina 403",
     "contact_languages": "[PENDIENTE] Confirmar los idiomas de atención del estudio."
-  }
+  },
+  "google_maps_url": "https://www.google.com/maps/place/Portillo+Kus+%26+Asociados.+Estudio+Jur%C3%ADdico/@-34.6071757,-58.3752813,17z/data=!3m1!4b1!4m6!3m5!1s0x95bccba3e8bdb1fb:0x680786357004fb40!8m2!3d-34.6071757!4d-58.3752813!16s%2Fg%2F11v014vn49"
 }

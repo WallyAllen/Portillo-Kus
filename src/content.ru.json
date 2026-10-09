@@ -85,9 +85,7 @@
     "ba2_alt": "Обелиск, вид с Диагонали Норте, Буэнос-Айрес",
     "ba2_caption": "Диагональ Норте, Микросентро",
     "ba3_alt": "Купола здания Edificio Miguel Bencich, где находится офис",
-    "ba3_caption": "Edificio Miguel Bencich, 4-й этаж",
-    "map_hl": "ru",
-    "map_iframe_title": "Карта: офис фирмы по адресу Av. Roque Sáenz Peña 616, Буэнос-Айрес"
+    "ba3_caption": "Edificio Miguel Bencich, 4-й этаж"
   },
   "areas": {
     "eyebrow": "НАПРАВЛЕНИЯ ПРАКТИКИ",
@@ -199,7 +197,12 @@
     "wa_msg": "Здравствуйте! Я хотел(а) бы получить консультацию в вашей фирме.",
     "call": "Позвонить",
     "email": "E-mail",
-    "directions": "Как добраться"
+    "directions": "Как добраться",
+    "map_title": "Расположение офиса фирмы на Google Maps",
+    "map_button": "Посмотреть карту",
+    "google_maps_cta": "Карточка в Google",
+    "map_preview": "Схематическое изображение района Microcentro",
+    "map_caption": "Microcentro · CABA. Схема для ориентира, без соблюдения масштаба и точного расположения улиц. При открытии карты загружается содержимое Google."
   },
   "footer": {
     "tagline": "\"Право — наше призвание.\"",
@@ -237,5 +240,6 @@
   "seo": {
     "street_address": "Av. Pres. Roque Sáenz Peña 616, piso 4, oficina 403",
     "contact_languages": "[PENDIENTE] Confirmar los idiomas de atención del estudio."
-  }
+  },
+  "google_maps_url": "https://www.google.com/maps/place/Portillo+Kus+%26+Asociados.+Estudio+Jur%C3%ADdico/@-34.6071757,-58.3752813,17z/data=!3m1!4b1!4m6!3m5!1s0x95bccba3e8bdb1fb:0x680786357004fb40!8m2!3d-34.6071757!4d-58.3752813!16s%2Fg%2F11v014vn49"
 }

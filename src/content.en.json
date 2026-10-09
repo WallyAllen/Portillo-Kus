@@ -85,9 +85,7 @@
     "ba2_alt": "The Obelisk seen from Diagonal Norte, Buenos Aires",
     "ba2_caption": "Diagonal Norte, Microcentro",
     "ba3_alt": "Domes of the Edificio Miguel Bencich, where the firm is located",
-    "ba3_caption": "Edificio Miguel Bencich, 4th floor",
-    "map_hl": "en",
-    "map_iframe_title": "Map showing the firm's location at Av. Roque Sáenz Peña 616, Buenos Aires"
+    "ba3_caption": "Edificio Miguel Bencich, 4th floor"
   },
   "areas": {
     "eyebrow": "PRACTICE AREAS",
@@ -199,7 +197,12 @@
     "wa_msg": "Hello, I would like to make a consultation with the firm.",
     "call": "Call",
     "email": "Email",
-    "directions": "Get directions"
+    "directions": "Get directions",
+    "map_title": "Office location on Google Maps",
+    "map_button": "View map",
+    "google_maps_cta": "Google listing",
+    "map_preview": "Schematic illustration of the Microcentro area",
+    "map_caption": "Microcentro · Buenos Aires. Illustrative view, not to scale and without precise street locations. Opening the map loads content from Google."
   },
   "footer": {
     "tagline": "\"The Law is our passion.\"",
@@ -237,5 +240,6 @@
   "seo": {
     "street_address": "Av. Pres. Roque Sáenz Peña 616, piso 4, oficina 403",
     "contact_languages": "[PENDIENTE] Confirm the languages offered for consultations."
-  }
+  },
+  "google_maps_url": "https://www.google.com/maps/place/Portillo+Kus+%26+Asociados.+Estudio+Jur%C3%ADdico/@-34.6071757,-58.3752813,17z/data=!3m1!4b1!4m6!3m5!1s0x95bccba3e8bdb1fb:0x680786357004fb40!8m2!3d-34.6071757!4d-58.3752813!16s%2Fg%2F11v014vn49"
 }
