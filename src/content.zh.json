@@ -1,9 +1,10 @@
 {
   "meta": {
-    "title": "Portillo Kus & Asociados — 布宜诺斯艾利斯律师事务所 · 国籍与移民",
-    "description": "在布宜诺斯艾利斯市中心（Microcentro）代理阿根廷国籍、居留和签证事务。Google 评分 5.0★，共 {reviews} 条评价。",
-    "og_title": "Portillo Kus & Asociados — 律师事务所",
-    "og_description": "阿根廷国籍、居留与签证。Google 评分 5.0★，共 {reviews} 条评价。"
+    "title": "阿根廷公民身份与移民事务 | Portillo Kus",
+    "description": "位于布宜诺斯艾利斯的私人律师事务所，提供阿根廷公民身份、居留、签证及其他法律领域的咨询服务。",
+    "og_title": "阿根廷公民身份与移民事务 | Portillo Kus",
+    "og_description": "位于布宜诺斯艾利斯的私人律师事务所，提供阿根廷公民身份、居留、签证及其他法律领域的咨询服务。",
+    "og_image_alt": "Portillo Kus & Asociados，位于布宜诺斯艾利斯的律师事务所"
   },
   "a11y": {
     "open_menu": "打开菜单",
@@ -232,5 +233,9 @@
     "rights_text": "阿根廷第 25.326 号法律规定，您有权访问、更正、更新个人数据，并在适用时要求删除。每六个月可免费访问一次；如有正当利益，可在此之前提出请求。该法律规定，访问请求应在十个自然日内答复，更正、更新或删除请求应在五个工作日内处理。",
     "resources_text": "提供网页内容需要与托管服务提供商交换技术信息。照片和字体均由本网站提供，不从 Google Fonts 下载字体。与 Umami Cloud 或 Google Maps 的可选连接已在上文说明。技术信息的处理范围与保存方式取决于所使用的服务。您可向事务所咨询当前配置。",
     "responsible_text": "本网站由 Portillo Kus & Asociados 负责，其地址为"
+  },
+  "seo": {
+    "street_address": "Av. Pres. Roque Sáenz Peña 616, piso 4, oficina 403",
+    "contact_languages": "[PENDIENTE] Confirmar los idiomas de atención del estudio."
   }
 }

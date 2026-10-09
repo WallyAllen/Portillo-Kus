@@ -42,7 +42,7 @@ class BuildTests(unittest.TestCase):
             html = (self.root / 'dist' / slug / 'index.html').read_text(encoding='utf-8')
             self.assertIn('https://example.pages.dev/portillo-images/og-', html)
             self.assertIn('data-pending="ciudadania.step1"', html)
-            self.assertIn('content="[PENDIENTE]', html)
+            self.assertNotIn('content="[PENDIENTE]', html)
             self.assertNotIn('{{', html)
             self.assertNotIn('vercel.app', html)
         self.assertEqual((self.root / 'dist/portillo-images/fixture.jpg').read_bytes(), b'fixture')
@@ -79,6 +79,8 @@ class BuildTests(unittest.TestCase):
             for key, value in data.items():
                 if isinstance(value, dict):
                     resolve(value)
+                elif key == 'contact_languages':
+                    data[key] = 'es,en,pt-BR'
                 elif isinstance(value, str) and value.startswith('[PENDIENTE]'):
                     data[key] = value.removeprefix('[PENDIENTE] ').strip()
         for code in ('es', 'en', 'pt', 'ru', 'zh'):

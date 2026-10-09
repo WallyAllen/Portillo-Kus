@@ -1,9 +1,10 @@
 {
   "meta": {
-    "title": "Portillo Kus & Asociados — Escritório de advocacia em Buenos Aires · Cidadania e imigração",
-    "description": "Assessoria em cidadania argentina, residência e visas no Microcentro, Buenos Aires. 5,0★ com {reviews} avaliações no Google.",
-    "og_title": "Portillo Kus & Asociados — Escritório de Advocacia",
-    "og_description": "Cidadania argentina, residência e visas. 5,0★ com {reviews} avaliações no Google."
+    "title": "Cidadania argentina e migração | Portillo Kus",
+    "description": "Escritório de advocacia privado em Buenos Aires. Assessoria em cidadania argentina, residência, vistos e outras áreas do direito.",
+    "og_title": "Cidadania argentina e migração | Portillo Kus",
+    "og_description": "Escritório de advocacia privado em Buenos Aires. Assessoria em cidadania argentina, residência, vistos e outras áreas do direito.",
+    "og_image_alt": "Portillo Kus & Asociados, escritório de advocacia em Buenos Aires"
   },
   "a11y": {
     "open_menu": "Abrir menu",
@@ -232,5 +233,9 @@
     "rights_text": "A Lei argentina 25.326 prevê os direitos de acesso, retificação, atualização e, quando aplicável, exclusão dos seus dados pessoais. O acesso é gratuito a cada seis meses, salvo interesse legítimo que justifique um pedido anterior. A lei estabelece dez dias corridos para responder ao acesso e cinco dias úteis para retificar, atualizar ou excluir.",
     "resources_text": "A entrega da página exige a troca de informações técnicas com o provedor de hospedagem. Recursos baixados de outros provedores, como fontes externas, também estabelecem uma conexão com eles. O alcance e a conservação desses dados dependem dos serviços utilizados. Você pode consultar o escritório sobre a configuração atual.",
     "responsible_text": "O responsável por este site é Portillo Kus & Asociados, com endereço em"
+  },
+  "seo": {
+    "street_address": "Av. Pres. Roque Sáenz Peña 616, piso 4, oficina 403",
+    "contact_languages": "[PENDIENTE] Confirmar os idiomas disponíveis para atendimento."
   }
 }

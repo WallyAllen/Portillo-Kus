@@ -13,11 +13,11 @@ JSON. No quitar el marcador para permitir publicar un dato sin evidencia.
 - Cantidad de ciudadanías y año de inicio: `clients` en `SIN_CONFIRMAR` de `src/build.py`, `hero.sub`, `stats.s1_label`, `ciudadania.text`.
 - Pasos reales del trámite: `ciudadania.step1` a `ciudadania.step4`.
 - Reseñas completas y autores tal como figuran en Google: `opiniones.r1_text`/`r1_name` a `r4_text`/`r4_name`.
-- Puntaje y cantidad de reseñas: `rating` y `reviews` en `SIN_CONFIRMAR` de `src/build.py`. Mientras sigan ahí, todo texto con `{reviews}` se marca pendiente (`meta.description`, `meta.og_description`, `hero.reviews_text`, `stats.s2_label`, `opiniones.cta`). Las imágenes `og-*.jpg` tienen el 417 escrito: regenerarlas si cambia.
+- Puntaje y cantidad de reseñas: `rating` y `reviews` en `SIN_CONFIRMAR` de `src/build.py`. Mientras sigan ahí, todo texto con `{reviews}` se marca pendiente (`hero.reviews_text`, `stats.s2_label`, `opiniones.cta`) y el JSON-LD sale sin `aggregateRating`. Las imágenes `og-*.jpg` tienen el 417 escrito: regenerarlas si cambia. Desde P03, las descripciones SEO usan sólo servicios confirmados y no publican cifras pendientes.
+- Idiomas de atención confirmados: `seo.contact_languages` (códigos separados por coma, por ejemplo `es,en,pt-BR`, únicamente cuando el estudio los confirme).
 
-El uso de la segunda línea y los idiomas de atención ya no bloquean: el
-rediseño v2.2 sacó de la página la tarjeta de la segunda línea y la franja
-"English". Siguen como preguntas para el estudio.
+El uso de la segunda línea ya no bloquea: el rediseño v2.2 sacó de la página
+su tarjeta. Sigue como pregunta para el estudio.
 
 ## Antecedentes del boceto v2.2
 

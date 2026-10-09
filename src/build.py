@@ -17,6 +17,7 @@ from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from functools import partial
 from urllib.parse import quote, urlsplit
 from analytics import analytics_fields, validate_analytics
+from seo import metadata, write_files as write_seo_files
 
 BASE = pathlib.Path(__file__).resolve().parent
 SITE_ROOT = BASE.parent
@@ -83,6 +84,11 @@ def page_slug(lang, page="home"):
     return PRIVACY_SLUGS[lang["code"]] if page == "privacy" else lang["slug"]
 
 
+def page_path(lang, page="home"):
+    slug = page_slug(lang, page)
+    return slug + "/" if slug else ""
+
+
 def out_path_for(lang, page="home"):
     return DIST / page_slug(lang, page) / "index.html"
 
@@ -126,6 +132,7 @@ def build(lang, template, base_url, flat, page="home"):
     flat["num.clients_raw"] = str(CLIENTS)
     flat["num.rating"] = dato("rating", fmt_number(RATING, lang, 1))
     flat["num.rating_raw"] = str(RATING)
+    flat["num.reviews"] = dato("reviews", str(REVIEWS))
     flat["html_lang"] = lang["html_lang"]
     flat.update(analytics_fields(lang["code"], os.environ.get("UMAMI_ID")))
     flat["img_prefix"] = rel_prefix_for(lang, page)
@@ -134,6 +141,7 @@ def build(lang, template, base_url, flat, page="home"):
     flat["og_image_url"] = f"{base_url}portillo-images/og-{lang['code']}.jpg"
     flat["hreflang_tags"] = build_hreflang_tags(lang, base_url, page)
     flat["lang_label"] = lang["label"]
+    flat["seo_tags"] = metadata(lang, flat, base_url, page_path(lang, page), page, LANGS)
 
     def lang_links(text_key):
         return "\n".join(
@@ -252,6 +260,7 @@ def main():
         out.parent.mkdir(parents=True, exist_ok=True)
         out.write_text(html, encoding="utf-8")
         print(f"  {out.relative_to(SITE_ROOT)}  ({len(html.encode('utf-8'))/1024:.1f} KB)")
+    write_seo_files(DIST, base_url, LANGS, page_path)
     if args.servir:
         handler = partial(SimpleHTTPRequestHandler, directory=str(DIST))
         with ThreadingHTTPServer(("127.0.0.1", 8532), handler) as server:
