@@ -644,6 +644,7 @@ section[id]{ scroll-margin-top: 60px; }
 .stat-value .pending-content{ font-family: var(--font-body); font-size: var(--text-base); }
 
 </style>
+{{analytics_script}}
 </head>
 <body>
 
@@ -668,7 +669,7 @@ section[id]{ scroll-margin-top: 60px; }
           {{lang_links_named}}
         </nav>
       </details>
-      <a class="btn btn-primary btn-pill-sm" href="https://wa.me/{{wa_number}}?text={{url:nav.consultar_msg}}" target="_blank" rel="noopener">{{nav.consultar}}</a>
+      <a data-event="whatsapp_click" data-button="cabecera" data-lang="{{analytics_lang}}" class="btn btn-primary btn-pill-sm" href="https://wa.me/{{wa_number}}?text={{url:nav.consultar_msg}}" target="_blank" rel="noopener">{{nav.consultar}}</a>
       <button class="menu-toggle" id="menuOpenBtn" aria-expanded="false" aria-controls="mobilePanel" aria-label="{{a11y.open_menu}}">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
       </button>
@@ -691,7 +692,7 @@ section[id]{ scroll-margin-top: 60px; }
     <a href="#contacto" class="mp-link">{{nav.contacto}}</a>
   </nav>
   <div class="mobile-panel-footer">
-    <a class="btn btn-primary btn-block" href="https://wa.me/{{wa_number}}?text={{url:nav.consultar_msg}}" target="_blank" rel="noopener">{{mobile.wa_cta}}</a>
+    <a data-event="whatsapp_click" data-button="menu-movil" data-lang="{{analytics_lang}}" class="btn btn-primary btn-block" href="https://wa.me/{{wa_number}}?text={{url:nav.consultar_msg}}" target="_blank" rel="noopener">{{mobile.wa_cta}}</a>
     <span class="contact-line">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
       {{mobile.hours}}
@@ -717,7 +718,7 @@ section[id]{ scroll-margin-top: 60px; }
         <h1 class="hero-title">{{hero.title}}</h1>
         <p class="hero-sub">{{hero.sub}}</p>
         <div class="hero-actions">
-          <a class="btn btn-primary" href="https://wa.me/{{wa_number}}?text={{url:hero.cta_primary_msg}}" target="_blank" rel="noopener">{{hero.cta_primary}}</a>
+          <a data-event="whatsapp_click" data-button="portada" data-lang="{{analytics_lang}}" class="btn btn-primary" href="https://wa.me/{{wa_number}}?text={{url:hero.cta_primary_msg}}" target="_blank" rel="noopener">{{hero.cta_primary}}</a>
           <a class="btn btn-secondary" href="#ciudadania">{{hero.cta_secondary}}</a>
         </div>
         <div class="hero-trust">
@@ -769,7 +770,7 @@ section[id]{ scroll-margin-top: 60px; }
           <div class="need-card-body">
             <h3>{{need.c1_title}}</h3>
             <p>{{need.c1_desc}}</p>
-            <a class="btn btn-outline" href="https://wa.me/{{wa_number}}?text={{url:need.c1_msg}}" target="_blank" rel="noopener">{{need.c1_cta}}</a>
+            <a data-event="whatsapp_click" data-button="necesidad-ciudadania" data-topic="ciudadania" data-lang="{{analytics_lang}}" class="btn btn-outline" href="https://wa.me/{{wa_number}}?text={{url:need.c1_msg}}" target="_blank" rel="noopener">{{need.c1_cta}}</a>
           </div>
         </article>
         <article class="need-card reveal" style="--i:1">
@@ -779,7 +780,7 @@ section[id]{ scroll-margin-top: 60px; }
           <div class="need-card-body">
             <h3>{{need.c2_title}}</h3>
             <p>{{need.c2_desc}}</p>
-            <a class="btn btn-outline" href="https://wa.me/{{wa_number}}?text={{url:need.c2_msg}}" target="_blank" rel="noopener">{{need.c2_cta}}</a>
+            <a data-event="whatsapp_click" data-button="necesidad-residencia" data-topic="residencia" data-lang="{{analytics_lang}}" class="btn btn-outline" href="https://wa.me/{{wa_number}}?text={{url:need.c2_msg}}" target="_blank" rel="noopener">{{need.c2_cta}}</a>
           </div>
         </article>
         <article class="need-card reveal" style="--i:2">
@@ -789,7 +790,7 @@ section[id]{ scroll-margin-top: 60px; }
           <div class="need-card-body">
             <h3>{{need.c3_title}}</h3>
             <p>{{need.c3_desc}}</p>
-            <a class="btn btn-outline" href="https://wa.me/{{wa_number}}?text={{url:need.c3_msg}}" target="_blank" rel="noopener">{{need.c3_cta}}</a>
+            <a data-event="whatsapp_click" data-button="necesidad-expulsion" data-topic="expulsion" data-lang="{{analytics_lang}}" class="btn btn-outline" href="https://wa.me/{{wa_number}}?text={{url:need.c3_msg}}" target="_blank" rel="noopener">{{need.c3_cta}}</a>
           </div>
         </article>
       </div>
@@ -815,7 +816,7 @@ section[id]{ scroll-margin-top: 60px; }
             <li>{{ciudadania.step3}}</li>
             <li>{{ciudadania.step4}}</li>
           </ul>
-          <a class="btn btn-primary" style="margin-top:var(--sp-6);" href="https://wa.me/{{wa_number}}?text={{url:ciudadania.cta_msg}}" target="_blank" rel="noopener">{{ciudadania.cta}}</a>
+          <a data-event="whatsapp_click" data-button="ciudadania" data-topic="ciudadania" data-lang="{{analytics_lang}}" class="btn btn-primary" style="margin-top:var(--sp-6);" href="https://wa.me/{{wa_number}}?text={{url:ciudadania.cta_msg}}" target="_blank" rel="noopener">{{ciudadania.cta}}</a>
         </div>
       </div>
     </div>
@@ -885,7 +886,7 @@ section[id]{ scroll-margin-top: 60px; }
             <div class="area-badge-row"><span class="area-type-badge">{{areas.a1_cat}}</span></div>
             <h3>{{areas.a1_title}}</h3>
             <p class="area-desc">{{areas.a1_desc}}</p>
-            <a class="btn btn-outline btn-block" href="https://wa.me/{{wa_number}}?text={{url:areas.a1_msg}}" target="_blank" rel="noopener">{{areas.cta}}</a>
+            <a data-event="whatsapp_click" data-button="area-laboral" data-topic="laboral" data-lang="{{analytics_lang}}" class="btn btn-outline btn-block" href="https://wa.me/{{wa_number}}?text={{url:areas.a1_msg}}" target="_blank" rel="noopener">{{areas.cta}}</a>
           </div>
         </div>
       </article>
@@ -899,7 +900,7 @@ section[id]{ scroll-margin-top: 60px; }
             <div class="area-badge-row"><span class="area-type-badge">{{areas.a2_cat}}</span></div>
             <h3>{{areas.a2_title}}</h3>
             <p class="area-desc">{{areas.a2_desc}}</p>
-            <a class="btn btn-outline btn-block" href="https://wa.me/{{wa_number}}?text={{url:areas.a2_msg}}" target="_blank" rel="noopener">{{areas.cta}}</a>
+            <a data-event="whatsapp_click" data-button="area-familia" data-topic="familia" data-lang="{{analytics_lang}}" class="btn btn-outline btn-block" href="https://wa.me/{{wa_number}}?text={{url:areas.a2_msg}}" target="_blank" rel="noopener">{{areas.cta}}</a>
           </div>
         </div>
       </article>
@@ -913,7 +914,7 @@ section[id]{ scroll-margin-top: 60px; }
             <div class="area-badge-row"><span class="area-type-badge">{{areas.a3_cat}}</span></div>
             <h3>{{areas.a3_title}}</h3>
             <p class="area-desc">{{areas.a3_desc}}</p>
-            <a class="btn btn-outline btn-block" href="https://wa.me/{{wa_number}}?text={{url:areas.a3_msg}}" target="_blank" rel="noopener">{{areas.cta}}</a>
+            <a data-event="whatsapp_click" data-button="area-penal" data-topic="penal" data-lang="{{analytics_lang}}" class="btn btn-outline btn-block" href="https://wa.me/{{wa_number}}?text={{url:areas.a3_msg}}" target="_blank" rel="noopener">{{areas.cta}}</a>
           </div>
         </div>
       </article>
@@ -927,7 +928,7 @@ section[id]{ scroll-margin-top: 60px; }
             <div class="area-badge-row"><span class="area-type-badge">{{areas.a4_cat}}</span></div>
             <h3>{{areas.a4_title}}</h3>
             <p class="area-desc">{{areas.a4_desc}}</p>
-            <a class="btn btn-outline btn-block" href="https://wa.me/{{wa_number}}?text={{url:areas.a4_msg}}" target="_blank" rel="noopener">{{areas.cta}}</a>
+            <a data-event="whatsapp_click" data-button="area-sucesiones" data-topic="sucesiones" data-lang="{{analytics_lang}}" class="btn btn-outline btn-block" href="https://wa.me/{{wa_number}}?text={{url:areas.a4_msg}}" target="_blank" rel="noopener">{{areas.cta}}</a>
           </div>
         </div>
       </article>
@@ -941,7 +942,7 @@ section[id]{ scroll-margin-top: 60px; }
             <div class="area-badge-row"><span class="area-type-badge">{{areas.a8_cat}}</span></div>
             <h3>{{areas.a8_title}}</h3>
             <p class="area-desc">{{areas.a8_desc}}</p>
-            <a class="btn btn-outline btn-block" href="https://wa.me/{{wa_number}}?text={{url:areas.a8_msg}}" target="_blank" rel="noopener">{{areas.cta}}</a>
+            <a data-event="whatsapp_click" data-button="area-ciudadania-europea" data-topic="ciudadania-europea" data-lang="{{analytics_lang}}" class="btn btn-outline btn-block" href="https://wa.me/{{wa_number}}?text={{url:areas.a8_msg}}" target="_blank" rel="noopener">{{areas.cta}}</a>
           </div>
         </div>
       </article>
@@ -955,7 +956,7 @@ section[id]{ scroll-margin-top: 60px; }
             <div class="area-badge-row"><span class="area-type-badge">{{areas.a5_cat}}</span></div>
             <h3>{{areas.a5_title}}</h3>
             <p class="area-desc">{{areas.a5_desc}}</p>
-            <a class="btn btn-outline btn-block" href="https://wa.me/{{wa_number}}?text={{url:areas.a5_msg}}" target="_blank" rel="noopener">{{areas.cta}}</a>
+            <a data-event="whatsapp_click" data-button="area-danos" data-topic="danos" data-lang="{{analytics_lang}}" class="btn btn-outline btn-block" href="https://wa.me/{{wa_number}}?text={{url:areas.a5_msg}}" target="_blank" rel="noopener">{{areas.cta}}</a>
           </div>
         </div>
       </article>
@@ -969,7 +970,7 @@ section[id]{ scroll-margin-top: 60px; }
             <div class="area-badge-row"><span class="area-type-badge">{{areas.a6_cat}}</span></div>
             <h3>{{areas.a6_title}}</h3>
             <p class="area-desc">{{areas.a6_desc}}</p>
-            <a class="btn btn-outline btn-block" href="https://wa.me/{{wa_number}}?text={{url:areas.a6_msg}}" target="_blank" rel="noopener">{{areas.cta}}</a>
+            <a data-event="whatsapp_click" data-button="area-consumidor" data-topic="consumidor" data-lang="{{analytics_lang}}" class="btn btn-outline btn-block" href="https://wa.me/{{wa_number}}?text={{url:areas.a6_msg}}" target="_blank" rel="noopener">{{areas.cta}}</a>
           </div>
         </div>
       </article>
@@ -983,7 +984,7 @@ section[id]{ scroll-margin-top: 60px; }
             <div class="area-badge-row"><span class="area-type-badge">{{areas.a7_cat}}</span></div>
             <h3>{{areas.a7_title}}</h3>
             <p class="area-desc">{{areas.a7_desc}}</p>
-            <a class="btn btn-outline btn-block" href="https://wa.me/{{wa_number}}?text={{url:areas.a7_msg}}" target="_blank" rel="noopener">{{areas.cta}}</a>
+            <a data-event="whatsapp_click" data-button="area-empresas" data-topic="empresas" data-lang="{{analytics_lang}}" class="btn btn-outline btn-block" href="https://wa.me/{{wa_number}}?text={{url:areas.a7_msg}}" target="_blank" rel="noopener">{{areas.cta}}</a>
           </div>
         </div>
       </article>
@@ -997,7 +998,7 @@ section[id]{ scroll-margin-top: 60px; }
             <div class="area-badge-row"><span class="area-type-badge">{{areas.a9_cat}}</span></div>
             <h3>{{areas.a9_title}}</h3>
             <p class="area-desc">{{areas.a9_desc}}</p>
-            <a class="btn btn-outline btn-block" href="https://wa.me/{{wa_number}}?text={{url:areas.a9_msg}}" target="_blank" rel="noopener">{{areas.cta}}</a>
+            <a data-event="whatsapp_click" data-button="area-escribania" data-topic="escribania" data-lang="{{analytics_lang}}" class="btn btn-outline btn-block" href="https://wa.me/{{wa_number}}?text={{url:areas.a9_msg}}" target="_blank" rel="noopener">{{areas.cta}}</a>
           </div>
         </div>
       </article>
@@ -1113,7 +1114,7 @@ section[id]{ scroll-margin-top: 60px; }
           <p class="abroad-title">{{trabajamos.abroad_title}}</p>
           <p class="abroad-text">{{trabajamos.abroad_text}}</p>
         </div>
-        <a class="btn btn-primary" href="https://wa.me/{{wa_number}}?text={{url:trabajamos.abroad_msg}}" target="_blank" rel="noopener">
+        <a data-event="whatsapp_click" data-button="exterior" data-lang="{{analytics_lang}}" class="btn btn-primary" href="https://wa.me/{{wa_number}}?text={{url:trabajamos.abroad_msg}}" target="_blank" rel="noopener">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.5 14.4c-.3-.1-1.6-.8-1.8-.9-.2-.1-.4-.1-.6.1-.2.3-.7.9-.8 1-.1.2-.3.2-.5.1-1.5-.7-2.5-1.3-3.5-3-.3-.5.3-.4.8-1.4.1-.2 0-.4 0-.5C11 9.6 10.5 8.3 10.3 7.8c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.7.7-1 1.5-1 2.5.1 1.2.9 2.4 1 2.6 1.3 2 2.8 3.7 4.9 4.5 1.8.7 2.4.6 2.8.5.6-.1 1.6-.7 1.9-1.3.2-.6.2-1.1.1-1.2-.1-.2-.3-.3-.6-.4z"/><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2z" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
           {{trabajamos.abroad_cta}}
         </a>
@@ -1142,9 +1143,9 @@ section[id]{ scroll-margin-top: 60px; }
           </div>
           <p class="contact-detail">{{contacto.card1_address}}<br>{{contacto.card1_hours}}</p>
           <div class="contact-actions">
-            <a class="btn btn-primary" href="https://wa.me/{{wa_number}}?text={{url:contacto.wa_msg}}" target="_blank" rel="noopener">{{contacto.wa}}</a>
-            <a class="btn btn-secondary" href="tel:{{tel}}">{{contacto.call}}</a>
-            <a class="btn btn-secondary" href="mailto:portillokusyasociados@gmail.com">{{contacto.email}}</a>
+            <a data-event="whatsapp_click" data-button="contacto-oficina-1" data-lang="{{analytics_lang}}" class="btn btn-primary" href="https://wa.me/{{wa_number}}?text={{url:contacto.wa_msg}}" target="_blank" rel="noopener">{{contacto.wa}}</a>
+            <a data-event="telefono_click" data-button="contacto-oficina-1" data-lang="{{analytics_lang}}" class="btn btn-secondary" href="tel:{{tel}}">{{contacto.call}}</a>
+            <a data-event="mail_click" data-button="contacto-oficina-1" data-lang="{{analytics_lang}}" class="btn btn-secondary" href="mailto:{{footer.email}}">{{contacto.email}}</a>
             <a class="btn btn-secondary" href="https://www.google.com/maps/dir/?api=1&amp;destination=Av.+Pres.+Roque+S%C3%A1enz+Pe%C3%B1a+616,+C1035+CABA,+Argentina" target="_blank" rel="noopener">{{contacto.directions}}</a>
           </div>
         </article>
@@ -1197,11 +1198,11 @@ section[id]{ scroll-margin-top: 60px; }
 </footer>
 
 <nav class="mobile-bar" id="mobileBar" aria-label="{{contacto.title}}">
-  <a class="btn btn-primary" href="https://wa.me/{{wa_number}}?text={{url:contacto.wa_msg}}" target="_blank" rel="noopener">
+  <a data-event="whatsapp_click" data-button="barra-movil" data-lang="{{analytics_lang}}" class="btn btn-primary" href="https://wa.me/{{wa_number}}?text={{url:contacto.wa_msg}}" target="_blank" rel="noopener">
     <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.1-1.6-.8-1.8-.9-.2-.1-.4-.1-.6.1-.2.3-.7.9-.8 1-.1.2-.3.2-.5.1-1.5-.7-2.5-1.3-3.5-3-.3-.5.3-.4.8-1.4.1-.2 0-.4 0-.5C11 9.6 10.5 8.3 10.3 7.8c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.7.7-1 1.5-1 2.5.1 1.2.9 2.4 1 2.6 1.3 2 2.8 3.7 4.9 4.5 1.8.7 2.4.6 2.8.5.6-.1 1.6-.7 1.9-1.3.2-.6.2-1.1.1-1.2-.1-.2-.3-.3-.6-.4z"/><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2z" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
     {{contacto.wa}}
   </a>
-  <a class="btn btn-secondary" href="tel:{{tel}}">
+  <a data-event="telefono_click" data-button="barra-movil" data-lang="{{analytics_lang}}" class="btn btn-secondary" href="tel:{{tel}}">
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
     {{contacto.call}}
   </a>
@@ -1468,5 +1469,6 @@ section[id]{ scroll-margin-top: 60px; }
 
 
 
+{{analytics_listener}}
 </body>
 </html>

@@ -16,6 +16,7 @@ import shutil
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from functools import partial
 from urllib.parse import quote, urlsplit
+from analytics import analytics_fields, validate_analytics
 
 BASE = pathlib.Path(__file__).resolve().parent
 SITE_ROOT = BASE.parent
@@ -126,10 +127,7 @@ def build(lang, template, base_url, flat, page="home"):
     flat["num.rating"] = dato("rating", fmt_number(RATING, lang, 1))
     flat["num.rating_raw"] = str(RATING)
     flat["html_lang"] = lang["html_lang"]
-    # P04 supplies these fields through its reusable analytics helper.
-    flat.setdefault("analytics_script", "")
-    flat.setdefault("analytics_listener", "")
-    flat.setdefault("analytics_lang", lang["code"])
+    flat.update(analytics_fields(lang["code"], os.environ.get("UMAMI_ID")))
     flat["img_prefix"] = rel_prefix_for(lang, page)
     flat["home_link"] = rel_prefix_for(lang, page) + (lang["slug"] + "/" if lang["slug"] else "") or "./"
     flat["privacy_link"] = posixpath.relpath(PRIVACY_SLUGS[lang["code"]], page_slug(lang, page) or ".") + "/"
@@ -170,6 +168,7 @@ def build(lang, template, base_url, flat, page="home"):
     leftover = re.findall(r"\{\{[\w.:\-]+\}\}|\{reviews\}", html)
     if leftover:
         raise ValueError(f"Marcadores sin reemplazar en {lang['code']}: {', '.join(sorted(set(leftover)))}")
+    validate_analytics(html, lang["code"])
     return html
 
 

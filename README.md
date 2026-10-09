@@ -132,6 +132,18 @@ También se mantiene `--base-url URL` como override opcional. Para agregar un
 idioma, crear `src/content.<idioma>.json` con todas las claves y añadirlo a
 `LANGS` en `src/build.py`; actualizar el selector de la plantilla en esa etapa.
 
+## Medición opcional (P04)
+
+`UMAMI_ID` vacío o ausente mantiene Umami desactivado: sin script, listener ni
+requests al servicio. Un UUID real habilita Umami Cloud al regenerar; un formato
+inválido bloquea el build. No hay un ID de cuenta configurado en el repositorio.
+Todos los botones de WhatsApp, teléfono y mail se validan en cada idioma;
+un contacto nuevo sin atributos completos bloquea el build antes de escribir.
+
+Los clicks usan un solo listener delegado y categorías estáticas, sin mensajes
+de WhatsApp ni datos personales. Ver [reporte de 30 días](docs/reporte-30-dias.md)
+para activación, verificación, límites y plantilla con números ficticios.
+
 ## Cuando se publique
 
 - **Hosting:** Cloudflare Pages, plan gratis, en una cuenta a nombre del
