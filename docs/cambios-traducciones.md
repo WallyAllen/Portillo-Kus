@@ -2,7 +2,9 @@
 
 Revisión editorial y jurídica: 09/10/2026.
 
-Se revisaron las 209 claves de cada idioma (627 valores), incluidas privacidad, accesibilidad, mensajes de WhatsApp, áreas y pasos. Cambios: ES: 12, EN: 78, PT: 17.
+Se revisaron las 209 claves de cada idioma (627 valores), incluidas privacidad, accesibilidad, mensajes de WhatsApp, áreas y pasos. Cambios: ES: 12, EN: 78, PT: 17 (107 en total).
+
+Al integrar P02 y P03 se revisaron además nueve claves nuevas por idioma: las cinco de mapa (`google_maps_cta`, `map_title`, `map_preview`, `map_button`, `map_caption`), `meta.og_image_alt`, `seo.street_address`, `seo.contact_languages` y `google_maps_url`. También se revalidaron los cuatro metadatos `meta.title`, `meta.description`, `meta.og_title` y `meta.og_description` redefinidos por P03. Cobertura total actual: **218 claves por idioma, 654 valores**, sin correcciones adicionales. URL y dirección iguales entre idiomas; idiomas de atención pendientes.
 
 La revisión verifica sentido y naturalidad. No confirma cifras, reseñas, matrículas, idiomas de atención ni prácticas internas del estudio. Las fuentes y decisiones terminológicas están en [glosario.md](glosario.md).
 

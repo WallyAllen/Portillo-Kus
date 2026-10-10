@@ -1,0 +1,2 @@
+# Wheel oficial con AVIF/WebP, compatible con CPython 3.13 en Cloudflare Pages.
+Pillow==12.3.0

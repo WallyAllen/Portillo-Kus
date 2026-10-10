@@ -30,7 +30,7 @@ El selector permanece dentro de privacidad. Salidas:
 ## Límites y revisión antes de publicar
 
 - Umami y Google Maps se describen de forma condicional. Esta etapa no configura
-  cuentas ni prueba servicios activos en producción. P04 integra Umami; P05 integra
+  cuentas ni prueba servicios activos en producción. P04 integra Umami; P02 integra
   el mapa con carga a pedido. Verificar que el iframe se cree al click; `loading=lazy`
   por sí solo no satisface la promesa de carga a pedido.
 - El responsable, domicilio y email provienen del contenido existente del estudio;

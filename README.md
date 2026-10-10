@@ -1,14 +1,17 @@
 # Portillo Kus & Asociados — sitio del estudio
 
 Estudio jurídico en CABA. Interlocutor: **Dr. Denis Portillo, Presidente
-Ejecutivo**. Trámites de ciudadanía, con atención en varios idiomas.
+Ejecutivo**. Sitio de trámites de ciudadanía y otras áreas; idiomas de atención
+pendientes de confirmar.
 
 ## Estado (10/10/2026)
 
 - **Comercial:** seña de $300.000 recibida, según el plan del 08/10/2026.
-- **Producto:** boceto v2.2 en cinco idiomas (ES / EN / PT / RU / 中文), paleta
-  clara, con mapa de ubicación en "Contacto"; generador preparado en P00.
-- **Publicado en:** sin publicación de producción verificada. P07 configura Cloudflare Pages.
+- **Producto:** boceto v2.2 en cinco idiomas (ES / EN / PT / RU / 中文), con
+  privacidad, mapa a pedido, SEO y medición opcional; revisión de traducciones
+  EN/PT con glosario, fotos AVIF/WebP y tipografías locales. Salida en `dist/`.
+- **Publicado en:** sin publicación de esta versión verificada. P07 está preparado;
+  el usuario confirmó que todavía no existe la cuenta del estudio en Cloudflare.
 - **Publicación bloqueada:** faltan datos confirmados del estudio y reseñas de Google; ver `PENDIENTES.md`.
 
 ### Orden de la página (v2.2)
@@ -84,17 +87,26 @@ src/
   content.pt.json
   content.ru.json
   content.zh.json
-  build.py           combina molde + contenido y escribe una salida por idioma
+  build.py           genera las cinco portadas y las cinco páginas de privacidad
+  privacy-template.html  privacidad; reutiliza los estilos y componentes del molde
+  seo.py             metadatos, JSON-LD, sitemap.xml y robots.txt
+  analytics.py       medición opcional y validación de contactos
+  headers.py         genera _headers para Cloudflare Pages
+  _headers           reglas base de seguridad y caché
+  images.py          variantes responsivas AVIF/WebP de las fotos originales
 ```
 
 ```bash
+python -m pip install -r requirements.txt
 python src/build.py
 ```
 
-Genera `dist/index.html` (español) y `dist/<idioma>/index.html` (`en`, `pt`,
-`ru`, `zh`), y copia `portillo-images/` dentro de `dist/`. La salida se regenera
-por completo y está ignorada por Git. **El texto se edita en los JSON, nunca en
-los HTML generados**: el próximo build los pisa.
+Genera las portadas `/`, `/en/`, `/pt/`, `/ru/` y `/zh/`, y privacidad en
+`/privacidad/`, `/en/privacy/`, `/pt/privacidade/`, `/ru/privacy/` y
+`/zh/privacy/`, además de sitemap, robots y encabezados de Pages. Copia los
+recursos dentro de `dist/`. La salida se regenera por completo y está ignorada
+por Git. **El texto se edita en los JSON, nunca en los HTML generados**: el
+próximo build los pisa.
 
 `_referencia/portillo-portada.html` y `_referencia/portillo-portada-v1.html` son
 el boceto original de una sola página, anterior al sistema multilingüe. Quedan
@@ -120,7 +132,7 @@ copias temporales y no modifican el contenido del estudio.
 - Un valor que empiece con `[PENDIENTE]` aparece resaltado en el build local.
 - `python src/build.py --produccion` falla mientras exista cualquier pendiente;
   lista idioma y clave sin regenerar `dist/`.
-- `SITE_URL` define la URL base de los hreflang y de la imagen Open Graph.
+- `SITE_URL` define canonical, hreflang, sitemap, JSON-LD e imágenes Open Graph.
   Por defecto: `https://portillokusestudio.com/`. En PowerShell:
 
 ```powershell
@@ -130,7 +142,22 @@ python src/build.py
 
 También se mantiene `--base-url URL` como override opcional. Para agregar un
 idioma, crear `src/content.<idioma>.json` con todas las claves y añadirlo a
-`LANGS` en `src/build.py`; actualizar el selector de la plantilla en esa etapa.
+`LANGS` y `PRIVACY_SLUGS` en `src/build.py`; actualizar el selector en esa etapa.
+
+`INDEXAR` vacío mantiene noindex y `Disallow: /`. Sólo `INDEXAR=1` con el dominio
+final HTTPS permite indexación; `.pages.dev` sigue bloqueado aun con ese flag.
+Ver [SEO](docs/seo.md), [privacidad](docs/privacidad.md), [mapa](docs/mapa.md),
+[glosario](docs/glosario.md) y [correcciones de traducción](docs/cambios-traducciones.md).
+
+## Recursos y velocidad (P05)
+
+Pillow está fijado en `requirements.txt`; debe instalarse antes de generar fotos
+AVIF/WebP. Los originales se conservan como fallback. `site-fonts/` contiene las
+fuentes WOFF2 locales con sus licencias y procedencia; el build las copia a
+`dist/fonts/`. No descarga recursos de Google Fonts durante la visita ni el build.
+La descarga manual de fuentes y los runners de QA están en `scripts/`; estos
+runners no son dependencias de producción. Ver mediciones, capturas y límites
+de la revisión en [velocidad y accesibilidad](docs/velocidad.md).
 
 ## Medición opcional (P04)
 
@@ -148,11 +175,13 @@ para activación, verificación, límites y plantilla con números ficticios.
 
 - **Hosting:** Cloudflare Pages, plan gratis, en una cuenta a nombre del
   estudio administrada por Felipe. **No Vercel Hobby** — no permite uso
-  comercial. Comando de build: `python src/build.py`; salida: `dist`.
+  comercial. Cuenta del estudio todavía pendiente de crear. Salida: `dist`.
+  Configuración y pasos de GitHub en [Cloudflare Pages](docs/cloudflare-pages.md).
+  Build con dependencias: `python -m pip install -r requirements.txt && python src/build.py`.
   Para una salida final sin pendientes: `python src/build.py --produccion`.
 - **DNS:** para servir el dominio sin `www`, los nameservers tienen que estar
   en Cloudflare.
-- **Autogestión:** Pages CMS (pagescms.org). El contenido vive en el repo y
+- **Autogestión, sólo si se contrata:** Pages CMS (pagescms.org). El contenido vive en el repo y
   Cloudflare republica en cada cambio. Editable: fotos, reseñas, áreas, equipo,
   contacto. Fijo: diseño, colores, estructura.
 - Lo que se cargue en español hay que cargarlo también en los otros cuatro idiomas.

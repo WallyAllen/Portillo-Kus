@@ -47,10 +47,23 @@ class BuildTests(unittest.TestCase):
             self.assertNotIn('vercel.app', html)
         self.assertEqual((self.root / 'dist/portillo-images/fixture.jpg').read_bytes(), b'fixture')
         self.assertFalse((self.root / 'index.html').exists())
+        headers = (self.root / 'dist/_headers').read_text(encoding='utf-8')
+        self.assertIn('/en/privacy/\n  Cache-Control: public, max-age=0, must-revalidate', headers)
+        self.assertIn('/portillo-images/*\n  Cache-Control: public, max-age=604800', headers)
+        self.assertNotIn('/*\n  Cache-Control:', headers.split('/portillo-images/*')[0])
         # A rebuild removes stale output, including obsolete language directories.
         (self.root / 'dist/obsolete.html').write_text('old', encoding='utf-8')
         self.assertEqual(self.run_build().returncode, 0)
         self.assertFalse((self.root / 'dist/obsolete.html').exists())
+
+    def test_missing_headers_preserves_existing_output(self):
+        self.assertEqual(self.run_build().returncode, 0)
+        before = (self.root / 'dist/index.html').read_bytes()
+        (self.root / 'src/_headers').unlink()
+        result = self.run_build()
+        self.assertEqual(result.returncode, 1)
+        self.assertIn('_headers', result.stderr)
+        self.assertEqual((self.root / 'dist/index.html').read_bytes(), before)
 
     def test_missing_and_extra_keys_are_reported_before_writing(self):
         self.change('pt', lambda d: d['nav'].pop('contacto'))

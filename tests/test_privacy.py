@@ -8,6 +8,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[1]
 ROUTES = {'es': 'privacidad', 'en': 'en/privacy', 'pt': 'pt/privacidade',
@@ -31,8 +32,9 @@ class PrivacyTests(unittest.TestCase):
         cls.temp = tempfile.TemporaryDirectory()
         cls.root = Path(cls.temp.name)
         shutil.copytree(ROOT / 'src', cls.root / 'src')
+        shutil.copytree(ROOT / 'site-fonts', cls.root / 'site-fonts')
         (cls.root / 'portillo-images').mkdir()
-        (cls.root / 'portillo-images/logo.jpg').write_bytes(b'fixture')
+        Image.new('RGB', (150, 80), 'white').save(cls.root / 'portillo-images/logo.jpg')
         result = subprocess.run([sys.executable, str(cls.root / 'src/build.py'),
                                  '--base-url', 'https://example.com/site/'],
                                 capture_output=True, text=True, encoding='utf-8')

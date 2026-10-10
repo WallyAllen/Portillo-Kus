@@ -18,6 +18,8 @@ from functools import partial
 from urllib.parse import quote, urlsplit
 from analytics import analytics_fields, validate_analytics
 from seo import metadata, write_files as write_seo_files
+from headers import write_files as write_headers
+from images import prepare_images, render_images
 
 BASE = pathlib.Path(__file__).resolve().parent
 SITE_ROOT = BASE.parent
@@ -139,7 +141,7 @@ def google_maps_link_attrs(value):
     return 'role="link" aria-disabled="true"'
 
 
-def build(lang, template, base_url, flat, page="home"):
+def build(lang, template, base_url, flat, page="home", image_assets=None):
     flat = dict(flat)
 
     flat["wa_number"] = WA_NUMBER
@@ -193,6 +195,7 @@ def build(lang, template, base_url, flat, page="home"):
     leftover = re.findall(r"\{\{[\w.:\-]+\}\}|\{reviews\}", html)
     if leftover:
         raise ValueError(f"Marcadores sin reemplazar en {lang['code']}: {', '.join(sorted(set(leftover)))}")
+    html = render_images(html, image_assets or {})
     validate_analytics(html, lang["code"])
     return html
 
@@ -256,9 +259,12 @@ def main():
         parser.exit(1, "Producción bloqueada por pendientes:\n" + "\n".join(pending) + "\n")
 
     template = (BASE / "template.html").read_text(encoding="utf-8")
+    images = SITE_ROOT / "portillo-images"
     try:
+        headers_source = (BASE / "_headers").read_text(encoding="utf-8")
+        image_assets, image_files = prepare_images(images, template)
         privacy = privacy_template(template)
-        pages = [(lang, page, build(lang, source, base_url, contents[lang["code"]], page))
+        pages = [(lang, page, build(lang, source, base_url, contents[lang["code"]], page, image_assets))
                  for page, source in (("home", template), ("privacy", privacy)) for lang in LANGS]
     except (OSError, KeyError, ValueError) as error:
         parser.exit(1, f"No se pudo generar el sitio: {error}\n")
@@ -271,6 +277,11 @@ def main():
     if DIST.exists():
         shutil.rmtree(DIST)
     shutil.copytree(images, DIST / "portillo-images")
+    for filename, data in image_files.items():
+        (DIST / "portillo-images" / filename).write_bytes(data)
+    fonts = SITE_ROOT / "site-fonts"
+    if fonts.is_dir():
+        shutil.copytree(fonts, DIST / "fonts")
     print(f"Base URL: {base_url}")
     for lang, page, html in pages:
         out = out_path_for(lang, page)
@@ -278,6 +289,7 @@ def main():
         out.write_text(html, encoding="utf-8")
         print(f"  {out.relative_to(SITE_ROOT)}  ({len(html.encode('utf-8'))/1024:.1f} KB)")
     write_seo_files(DIST, base_url, LANGS, page_path)
+    write_headers(DIST, headers_source, LANGS, page_path)
     if args.servir:
         handler = partial(SimpleHTTPRequestHandler, directory=str(DIST))
         with ThreadingHTTPServer(("127.0.0.1", 8532), handler) as server:
