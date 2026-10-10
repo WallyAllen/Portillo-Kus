@@ -43,6 +43,9 @@ class BuildTests(unittest.TestCase):
             self.assertIn('https://example.pages.dev/portillo-images/og-', html)
             self.assertIn('data-pending="ciudadania.step1"', html)
             self.assertNotIn('content="[PENDIENTE]', html)
+            # La vista previa muestra el texto base con una aclaración, sin el marcador.
+            self.assertNotIn('[PENDIENTE]', html)
+            self.assertIn('<span class="pending-flag">pendiente</span>', html)
             self.assertNotIn('{{', html)
             self.assertNotIn('vercel.app', html)
         self.assertEqual((self.root / 'dist/portillo-images/fixture.jpg').read_bytes(), b'fixture')

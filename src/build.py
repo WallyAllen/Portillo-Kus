@@ -173,21 +173,38 @@ def build(lang, template, base_url, flat, page="home", image_assets=None):
     flat["lang_links"] = lang_links("label")
     flat["lang_links_named"] = lang_links("name")
 
+    flagged_cards = set()
+
     # {{clave}} inserta el texto tal cual; {{url:clave}} lo codifica para usarlo en una URL
     def repl(m):
         as_url, key = m.group(1), m.group(2)
         if key not in flat:
             raise KeyError(f"Falta la clave {{{{{key}}}}} en content.{lang['code']}.json")
         value = str(flat[key])
+        pending = value.startswith(PENDING)
+        # La vista previa muestra el texto base; el marcador sólo frena --produccion.
+        base = value.removeprefix(PENDING).lstrip() if pending else value
         if as_url:
-            return quote(value, safe="")
-        if value.startswith(PENDING):
-            # Attributes and <title> accept plain text, never highlighting markup.
-            in_tag = template.rfind("<", 0, m.start()) > template.rfind(">", 0, m.start())
-            in_title = template.rfind("<title>", 0, m.start()) > template.rfind("</title>", 0, m.start())
+            return quote(base, safe="")
+        if pending:
+            before = template[:m.start()]
+            # Atributos y <title> aceptan texto plano, nunca marcado.
+            in_tag = before.rfind("<") > before.rfind(">")
+            in_title = before.rfind("<title>") > before.rfind("</title>")
             if in_tag or in_title:
-                return html_tools.escape(value, quote=True)
-            return f'<span class="pending-content" data-pending="{key}">{value}</span>'
+                return html_tools.escape(base, quote=True)
+            # Sin etiqueta dentro de un botón o enlace (lo deformaría), dentro de un
+            # aviso que ya dice "a completar", ni repetida en la misma tarjeta o
+            # lista: una aclaración por bloque alcanza.
+            opened = lambda tag: max(before.rfind(f"<{tag} "), before.rfind(f"<{tag}>")) > before.rfind(f"</{tag}>")
+            in_notice = before.rfind('class="tag-pending') > before.rfind("</span>")
+            blocks = [before.rfind(f"<{tag}") for tag in ("article", "ol", "ul") if opened(tag)]
+            block = max(blocks, default=-1)
+            flag = ""
+            if not (opened("a") or opened("button") or in_notice or (block >= 0 and block in flagged_cards)):
+                flagged_cards.add(block)
+                flag = '<span class="pending-flag">pendiente</span>'
+            return f'<span class="pending-content" data-pending="{key}">{base}</span>{flag}'
         return value
 
     html = re.sub(r"\{\{(url:)?([\w.\-]+)\}\}", repl, template)

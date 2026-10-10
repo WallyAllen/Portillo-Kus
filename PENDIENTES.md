@@ -2,8 +2,11 @@
 
 Actualizado: 10/10/2026 · P00 a P06 reconciliados con el rediseño v2.2 y P07 preparado; P10 local parcial y P11 de solo lectura. P09 omitido por falta de reseñas adjuntas.
 
-Los valores de contenido que empiezan con `[PENDIENTE]` se resaltan en la vista
-local. `python src/build.py --produccion` falla y lista idioma y clave. Para
+Los valores de contenido que empiezan con `[PENDIENTE]` se muestran en la vista
+previa con su texto base y una etiqueta discreta "pendiente" (una por tarjeta o
+lista; ninguna dentro de botones o enlaces), así las preentregas no pierden la
+visual. El marcador nunca aparece en la página. `python src/build.py --produccion`
+falla y lista idioma y clave. Para
 resolverlos, reemplazar el valor completo con el dato confirmado en los cinco
 JSON. No quitar el marcador para permitir publicar un dato sin evidencia.
 
