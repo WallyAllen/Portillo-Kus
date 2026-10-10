@@ -615,7 +615,8 @@ section[id]{ scroll-margin-top: 60px; }
 .office-map-preview .map-road{ stroke: var(--celeste); stroke-width: 22; }
 .office-map-preview .map-pin{ fill: var(--brand); }
 .office-map-preview .map-pin-dot{ fill: var(--surface); }
-.office-map-load{ position: absolute; bottom: var(--sp-4); left: 50%; transform: translateX(-50%); white-space: nowrap; }
+/* Centrado sin transform: el hover de .btn usa transform y lo pisaría. */
+.office-map-load{ position: absolute; bottom: var(--sp-4); left: 0; right: 0; width: max-content; margin-inline: auto; white-space: nowrap; }
 .office-map figcaption{ color: var(--ink-on-dark-muted); font-size: var(--text-xs); margin-top: var(--sp-2); }
 a[aria-disabled="true"]{ opacity: 0.65; cursor: default; }
 

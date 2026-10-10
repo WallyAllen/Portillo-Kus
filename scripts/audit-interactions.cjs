@@ -28,9 +28,14 @@ async function serve(){
 async function focusState(page){return page.evaluate(()=>{
   const el=document.activeElement;return {tag:el.tagName,id:el.id,text:el.textContent.trim().slice(0,65),inside:!!el.closest('#mobilePanel')};
 });}
-async function clickLanguage(page,code){
-  const link=page.locator('.header-actions .lang-switch a').filter({hasText:new RegExp('^'+code+'$')});
-  await Promise.all([page.waitForURL(url=>url.pathname===(code==='EN'?'/en/':'/pt/')),link.click()]);
+// El selector de escritorio es un <details>: se abre y se elige el idioma por hreflang.
+async function openLanguages(page){
+  if(!await page.locator('#langMenu').evaluate(el=>el.open))await page.locator('#langMenu summary').click();
+}
+async function clickLanguage(page,hreflang,pathname){
+  await openLanguages(page);
+  const link=page.locator('#langMenu .lang-switch a[hreflang="'+hreflang+'"]');
+  await Promise.all([page.waitForURL(url=>url.pathname===pathname),link.click()]);
   await page.waitForLoadState('load');
 }
 (async()=>{
@@ -39,16 +44,16 @@ async function clickLanguage(page,code){
   if(args['--screenshots-only']!=='true'){
   const desktop=await browser.newContext({viewport:{width:1440,height:950},reducedMotion:'reduce'});
   const meta=await desktop.newPage();meta.on('pageerror',e=>result.errors.push(e.message));
-  for(const route of ['', 'en/', 'pt/', 'privacidad/', 'en/privacy/', 'pt/privacidade/']){
+  for(const route of ['', 'en/', 'pt/', 'ru/', 'zh/', 'privacidad/', 'en/privacy/', 'pt/privacidade/', 'ru/privacy/', 'zh/privacy/']){
     await meta.goto(new URL(route,base).href,{waitUntil:'load'});
-    const record=await meta.evaluate(()=>({url:location.href,language:document.documentElement.lang,navs:Array.from(document.querySelectorAll('nav')).map(el=>({label:el.getAttribute('aria-label'),text:el.textContent.trim().replace(/\s+/g,' ').slice(0,150)})),languageLabel:document.querySelector('.lang-switch')?.getAttribute('aria-label'),sectionNavLabels:Array.from(document.querySelectorAll('.main-nav,.mobile-panel nav')).map(el=>el.getAttribute('aria-label')),selectors:Array.from(document.querySelectorAll('.lang-switch')).map(el=>Array.from(el.querySelectorAll('a')).map(a=>({text:a.textContent,href:a.getAttribute('href'),current:a.getAttribute('aria-current'),class:a.className}))),disclaimer:document.querySelector('.footer-disclaimer')?.textContent.trim()}));
+    const record=await meta.evaluate(()=>({url:location.href,language:document.documentElement.lang,navs:Array.from(document.querySelectorAll('nav')).map(el=>({label:el.getAttribute('aria-label'),text:el.textContent.trim().replace(/\s+/g,' ').slice(0,150)})),languageLabel:document.querySelector('.lang-switch')?.getAttribute('aria-label'),sectionNavLabels:Array.from(document.querySelectorAll('.main-nav,.mobile-panel nav:not(.lang-switch)')).map(el=>el.getAttribute('aria-label')),selectors:Array.from(document.querySelectorAll('.lang-switch')).map(el=>Array.from(el.querySelectorAll('a')).map(a=>({text:a.textContent,href:a.getAttribute('href'),current:a.getAttribute('aria-current'),class:a.className}))),disclaimer:document.querySelector('.footer-disclaimer')?.textContent.trim()}));
     result.metadata.push(record);
     check('idioma activo anunciado '+route,record.selectors.every(sel=>sel.filter(a=>a.class.includes('is-current')).every(a=>a.current==='page'||a.current==='true')),record.selectors);
     if(record.sectionNavLabels.length)check('navegacion de secciones rotulada '+route,record.sectionNavLabels.every(label=>label&&label!==record.languageLabel),record.sectionNavLabels);
     if(route.includes('privacy')||route.includes('privaci'))check('selector permanece en privacidad '+route,record.selectors.every(sel=>sel.every(a=>a.href==='#top'||/privacy|privaci/.test(a.href))),record.selectors);
   }
   await desktop.close();
-  for(const route of ['', 'en/', 'pt/']){
+  for(const route of ['', 'en/', 'pt/', 'ru/', 'zh/']){
     const ctx=await browser.newContext({viewport:{width:390,height:844},reducedMotion:'reduce'});const page=await ctx.newPage();
     await page.goto(new URL(route,base).href,{waitUntil:'load'});await page.locator('#menuOpenBtn').click();
     await page.waitForFunction(()=>document.activeElement?.id==='menuCloseBtn',null,{timeout:1000}).catch(()=>{});
@@ -63,13 +68,31 @@ async function clickLanguage(page,code){
   for(const reducedMotion of ['reduce','no-preference']){
     const ctx=await browser.newContext({viewport:{width:1440,height:950},reducedMotion});const page=await ctx.newPage();
     await page.goto(new URL('#contacto',base).href,{waitUntil:'load'});
-    await clickLanguage(page,'EN');check('hash contacto ES a EN '+reducedMotion,new URL(page.url()).hash==='#contacto',page.url());
-    await clickLanguage(page,'PT');check('hash contacto EN a PT '+reducedMotion,new URL(page.url()).hash==='#contacto',page.url());
+    await clickLanguage(page,'en','/en/');check('hash contacto ES a EN '+reducedMotion,new URL(page.url()).hash==='#contacto',page.url());
+    await clickLanguage(page,'pt-BR','/pt/');check('hash contacto EN a PT '+reducedMotion,new URL(page.url()).hash==='#contacto',page.url());
+    await clickLanguage(page,'ru','/ru/');check('hash contacto PT a RU '+reducedMotion,new URL(page.url()).hash==='#contacto',page.url());
+    await clickLanguage(page,'zh-Hans','/zh/');check('hash contacto RU a ZH '+reducedMotion,new URL(page.url()).hash==='#contacto',page.url());
     await page.goto(base,{waitUntil:'load'});
     await page.evaluate(()=>{window.__languageClick=null;document.addEventListener('click',e=>{if(e.target.closest('.lang-switch a'))window.__languageClick={ctrl:e.ctrlKey,defaultPrevented:e.defaultPrevented};});});
-    await page.locator('.header-actions .lang-switch a[hreflang="en"]').click({modifiers:['Control']});
+    await openLanguages(page);
+    await page.locator('#langMenu .lang-switch a[hreflang="en"]').click({modifiers:['Control']});
     const click=await page.evaluate(()=>window.__languageClick);
     check('Ctrl+click selector preservado '+reducedMotion,!!click?.ctrl&&!click.defaultPrevented,click);
+    await ctx.close();
+  }
+  // Mapa a pedido: ningún pedido a Google antes del clic; después, iframe con foco.
+  for(const route of ['', 'ru/']){
+    const ctx=await browser.newContext({viewport:{width:390,height:844},reducedMotion:'reduce'});const page=await ctx.newPage();
+    const google=[];page.on('request',r=>{if(/google\./.test(new URL(r.url()).hostname))google.push(r.url());});
+    await page.route(/https:\/\/www\.google\.com\/maps\/embed.*/,r=>r.fulfill({status:200,contentType:'text/html',body:'<!doctype html><title>mapa</title>'}));
+    await page.goto(new URL(route+'#contacto',base).href,{waitUntil:'load'});
+    check('mapa sin pedidos antes del clic '+route,google.length===0,google);
+    // Centrado: abajo lo tapa la barra fija de contacto.
+    await page.locator('[data-map-load]').evaluate(el=>el.scrollIntoView({block:'center'}));await page.waitForTimeout(300);
+    await page.locator('[data-map-load]').click();
+    await page.waitForSelector('#officeMap iframe',{timeout:2000}).catch(()=>{});
+    const map=await page.evaluate(()=>{const f=document.querySelector('#officeMap iframe');return f&&{title:f.title,focused:document.activeElement===f,height:f.getBoundingClientRect().height};});
+    check('mapa carga al pedirlo '+route,!!map&&map.focused&&map.height>=240&&!!map.title,map);
     await ctx.close();
   }
   }

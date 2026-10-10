@@ -25,7 +25,7 @@ fs.mkdirSync(output,{recursive:true});
         page.on('pageerror',error=>consoleErrors.push(error.message));
         page.on('requestfailed',request=>requestFailures.push({url:request.url(),failure:request.failure()}));
         page.on('request',request=>requests.push(request.url()));
-        const privacy={es:'privacidad/',en:'en/privacy/',pt:'pt/privacidade/'};
+        const privacy={es:'privacidad/',en:'en/privacy/',pt:'pt/privacidade/',ru:'ru/privacy/',zh:'zh/privacy/'};
         const route=args['--privacy']==='true'?privacy[lang]:(lang==='es'?'':`${lang}/`);
         const url=new URL(route,base).href;
         const response=await page.goto(url,{waitUntil:'networkidle'});
