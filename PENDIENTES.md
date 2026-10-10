@@ -1,6 +1,6 @@
 # Pendientes antes de publicar
 
-Actualizado: 10/10/2026 · P00 a P06 reconciliados con el rediseño v2.2; preparación de P07.
+Actualizado: 10/10/2026 · P00 a P06 reconciliados con el rediseño v2.2 y P07 preparado; P10 local parcial y P11 de solo lectura. P09 omitido por falta de reseñas adjuntas.
 
 Los valores de contenido que empiezan con `[PENDIENTE]` se resaltan en la vista
 local. `python src/build.py --produccion` falla y lista idioma y clave. Para

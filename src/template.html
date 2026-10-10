@@ -79,7 +79,7 @@
   *, *::before, *::after{
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+    transition: none !important;
     scroll-behavior: auto !important;
   }
 }
@@ -1265,6 +1265,7 @@ a[aria-disabled="true"]{ opacity: 0.65; cursor: default; }
   var header = document.getElementById('siteHeader');
   var onScroll = function(){
     header.classList.toggle('is-scrolled', window.scrollY > 12);
+    updateLanguageLinks();
   };
   onScroll();
   window.addEventListener('scroll', onScroll, { passive: true });
@@ -1273,14 +1274,20 @@ a[aria-disabled="true"]{ opacity: 0.65; cursor: default; }
   var panel = document.getElementById('mobilePanel');
   var openBtn = document.getElementById('menuOpenBtn');
   var closeBtn = document.getElementById('menuCloseBtn');
+  var menuBackground = [header, document.querySelector('main'), document.querySelector('.site-footer'), document.getElementById('mobileBar')].filter(Boolean);
+  panel.inert = true;
   function openMenu(){
+    panel.inert = false;
     panel.classList.add('is-open');
     openBtn.setAttribute('aria-expanded', 'true');
     document.body.style.overflow = 'hidden';
     closeBtn.focus();
+    menuBackground.forEach(function(el){ el.inert = true; });
   }
   function closeMenu(){
     panel.classList.remove('is-open');
+    panel.inert = true;
+    menuBackground.forEach(function(el){ el.inert = false; });
     openBtn.setAttribute('aria-expanded', 'false');
     document.body.style.overflow = '';
     openBtn.focus();
@@ -1289,7 +1296,15 @@ a[aria-disabled="true"]{ opacity: 0.65; cursor: default; }
   closeBtn.addEventListener('click', closeMenu);
   panel.querySelectorAll('a').forEach(function(a){ a.addEventListener('click', closeMenu); });
   document.addEventListener('keydown', function(e){
-    if (e.key === 'Escape' && panel.classList.contains('is-open')) closeMenu();
+    if (!panel.classList.contains('is-open')) return;
+    if (e.key === 'Escape') { closeMenu(); return; }
+    if (e.key !== 'Tab') return;
+    var controls = Array.from(panel.querySelectorAll('a[href], button')).filter(function(el){ return el.getClientRects().length && !el.disabled; });
+    var first = controls[0], last = controls[controls.length - 1];
+    if ((e.shiftKey && document.activeElement === first) || (!e.shiftKey && document.activeElement === last) || !panel.contains(document.activeElement)){
+      e.preventDefault();
+      (e.shiftKey ? last : first).focus();
+    }
   });
 
   // Barra fija mobile: aparece después de pasar la portada, con un pulso único
@@ -1498,10 +1513,21 @@ a[aria-disabled="true"]{ opacity: 0.65; cursor: default; }
     });
   }
 
-  // Cambio de idioma: fundido de salida antes de navegar
+  // El selector conserva la sección visible y el comportamiento nativo de abrir otra pestaña.
+  function updateLanguageLinks(){
+    var section = '';
+    var headerBottom = header.getBoundingClientRect().bottom + 32;
+    document.querySelectorAll('main [id]').forEach(function(el){
+      if (['ciudadania','opiniones','areas','estudio','contacto'].includes(el.id) && el.getBoundingClientRect().top <= headerBottom) section = el.id;
+    });
+    document.querySelectorAll('.lang-switch a').forEach(function(a){
+      a.href = a.href.split('#')[0] + (section ? '#' + section : '');
+    });
+  }
   document.querySelectorAll('.lang-switch a:not(.is-current)').forEach(function(a){
     a.addEventListener('click', function(e){
-      if (prefersReducedMotion) return;
+      updateLanguageLinks();
+      if (e.defaultPrevented || e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey || prefersReducedMotion) return;
       e.preventDefault();
       var href = a.getAttribute('href');
       document.body.classList.add('is-navigating');

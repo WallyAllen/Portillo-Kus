@@ -171,6 +171,17 @@ Los clicks usan un solo listener delegado y categorías estáticas, sin mensajes
 de WhatsApp ni datos personales. Ver [reporte de 30 días](docs/reporte-30-dias.md)
 para activación, verificación, límites y plantilla con números ficticios.
 
+## Preverificación local (P10 parcial)
+
+Resultados y límites en [preverificación de etapa 1](docs/preverificacion-etapa-1.md).
+El [inventario de contactos](docs/contactos-etapa-1.md) se regenera con
+
+    python -X utf8 scripts/inventario_contactos.py --format markdown --output docs/contactos-etapa-1.md
+
+El [inventario del dominio](docs/dominio.md) es de solo lectura; la operación sigue
+pendiente del estudio/proveedor. El [mensaje para Denis](docs/mensaje-denis-2026-10-10.md)
+es un borrador no enviado.
+
 ## Cuando se publique
 
 - **Hosting:** Cloudflare Pages, plan gratis, en una cuenta a nombre del
