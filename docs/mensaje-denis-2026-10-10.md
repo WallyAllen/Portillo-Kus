@@ -2,7 +2,7 @@
 
 Borrador para copiar a WhatsApp. **No enviado.**
 
-Hola, Denis. ¿Me das el OK para crear el Gmail del estudio? Con eso puedo abrir la cuenta donde vamos a publicar la web. También me faltan tu matrícula CPACF y los nombres, cargos y matrículas de los demás socios; para qué usan la segunda línea (+54 9 11 3511-1987), o si preferís que no la publiquemos; la cantidad de ciudadanías resueltas y el año de inicio; los pasos reales del trámite; y en qué idiomas atienden. ¿Podés mandarle al proveedor del dominio el mensaje que te dejo abajo? Por último, confirmame si suman el panel ($80.000) y el mantenimiento ($50.000 por mes, hasta 4 cambios). Gracias.
+Hola, Denis. ¿Me das el OK para crear el Gmail del estudio? Con eso puedo abrir la cuenta donde vamos a publicar la web. También me faltan tu matrícula CPACF y los nombres, cargos y matrículas de los demás socios; para qué usan la segunda línea (+54 9 11 3511-1987), o si preferís que no la publiquemos; la cantidad de ciudadanías resueltas y el año de inicio; los pasos reales del trámite; y en qué idiomas atienden, incluido qué hacen si alguien escribe en ruso o en chino. ¿Podés mandarle al proveedor del dominio el mensaje que te dejo abajo? Por último, confirmame si suman el panel ($80.000) y el mantenimiento ($50.000 por mes, hasta 4 cambios). Gracias.
 
 ## Texto para que Denis envíe al proveedor
 
