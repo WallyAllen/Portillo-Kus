@@ -1,114 +1,123 @@
 # P10 parcial — preverificación local de la etapa 1
 
-Fecha: 10/10/2026. Sitio servido desde dist/, sin publicación ni cambios remotos.
-P09 se omitió porque el bloque de reseñas del adjunto estaba vacío. Las reseñas pendientes no se ampliaron, tradujeron ni reemplazaron por textos sin fuente.
+Fecha: 10/10/2026, rehecha sobre la rama `reconciliacion` (rediseño v2.2 de
+GitHub + P00–P06 y las tareas del 10/10). Sitio servido desde `dist/` en
+http://localhost:8532/, sin publicación ni cambios remotos. P09 sigue sin hacer:
+no hay reseñas reales adjuntas.
 
-## Pendientes, ordenados por gravedad
+## Por qué se rehizo
+
+El main local y GitHub se habían separado el 18/09. El 25/09 se subieron a
+GitHub seis commits (rediseño v2.2, ruso, chino, mapa, carrusel) que el main
+local nunca bajó, y P00–P06 se hicieron sobre la base vieja. La reconciliación
+toma GitHub como base y reaplica encima cada commit local. Los resultados de la
+primera pasada (18 vistas, 32 checks, LCP 2,63 s) correspondían al template
+viejo y quedan reemplazados por los de abajo.
+
+Decisiones de la reconciliación:
+
+- **Cinco idiomas en la etapa 1.** RU y 中文 los pidió el Dr. Portillo y ya
+  estaban en el rediseño. Las claves nuevas de P01–P06 salen del borrador de
+  etapa 2. La rama `etapa2-borrador` queda superada.
+- **Datos únicos en `build.py`** (WhatsApp, reseñas, puntaje, expedientes),
+  como en el rediseño. Los que el estudio no confirmó están en `SIN_CONFIRMAR`
+  y bloquean `--produccion` igual que un `[PENDIENTE]` del JSON.
+- **Mapa a pedido** en la columna de Contacto del rediseño: el iframe de Google
+  se pide recién al tocar "Ver mapa" (el rediseño lo cargaba solo).
+- **Tipografías locales** sin Playfair (el rediseño la sacó), con el subset
+  cirílico de Cormorant para los títulos en ruso. Karla no tiene cirílico: /ru
+  usa fuentes del sistema en el texto, como en el rediseño.
+- **Pendientes discretos:** la vista previa muestra el texto base con una
+  etiqueta chica "pendiente"; el marcador `[PENDIENTE]` ya no aparece en la
+  página.
+
+## Pendientes, por gravedad
 
 ### Bloquean la salida final
 
-1. **Material del estudio y reseñas:** 26 claves por idioma, 78 valores. El build --produccion sigue fallando deliberadamente; no se eliminó ningún marcador.
-2. **Cuenta del estudio / P07:** falta el OK de Denis para crear Gmail y la cuenta del estudio en Cloudflare. Sin URL Pages no se puede validar producción.
-3. **Dominio / P11 operativo:** inventario de solo lectura terminado; titular, desbloqueos y continuidad del correo requieren proveedor y estudio. Vence el 13/12/2026; decidir el plan hasta el 13/11/2026. Ver [dominio.md](dominio.md).
+1. **Material del estudio y reseñas:** 21 claves por idioma (105 valores) más
+   `clients` y `rating` en `SIN_CONFIRMAR`. Lista abajo.
+2. **Cuenta del estudio / P07:** falta el OK de Denis para el Gmail y la cuenta
+   de Cloudflare.
+3. **Dominio / P11:** decidir el plan antes del 13/11/2026; vence el 13/12/2026.
+   Ver [dominio.md](dominio.md).
 
-### Rendimiento — objetivo todavía no cumplido
+### Rendimiento: objetivo todavía no cumplido
 
-La pasada móvil local dio LCP superior a 2,5 s en los tres idiomas. No se cambia el diseño en P10 para perseguir el puntaje. La variación ya observada en [velocidad.md](velocidad.md) exige medir el futuro despliegue y aislar el aporte de entrega, caché y cadena de fuentes antes de elegir otro ajuste.
+| Idioma | Performance | Accessibility | Best practices | LCP | CLS | TBT |
+|---|---:|---:|---:|---:|---:|---:|
+| ES | 95 | 100 | 100 | 2,71 s | 0 | 26 ms |
+| EN | 95 | 100 | 100 | 2,70 s | 0 | 0 ms |
+| PT | 95 | 100 | 100 | 2,71 s | 0 | 17 ms |
+| RU | 94 | 100 | 100 | 2,85 s | 0 | 0 ms |
+| 中文 | 97 | 100 | 100 | 2,41 s | 0 | 0 ms |
 
-| Idioma | Performance | Accessibility | LCP | CLS | TBT |
-|---|---:|---:|---:|---:|---:|
-| ES | 96 | 100 | 2,640 s | 0 | 0 ms |
-| EN | 97 | 100 | 2,627 s | 0,02537 | 0 ms |
-| PT | 97 | 100 | 2,627 s | 0 | 0 ms |
+Lighthouse 12.8.2, perfil móvil predeterminado, una ejecución por idioma contra
+el servidor local. El LCP es el título del hero: casi todo es demora de
+render esperando la tipografía (2,25 s en ES). RU suma el subset cirílico.
+SEO da 69 sólo por `noindex`, que es intencional en la vista previa. Las
+mediciones locales no reemplazan las del despliegue real.
 
-Lighthouse 13.5.0, Chromium 1234, perfil móvil predeterminado (red y CPU simuladas), una ejecución por idioma en http://127.0.0.1:8554/. No son medianas ni mediciones desde el exterior. La pasada se hizo antes de la corrección final de transiciones con movimiento reducido. Ese ajuste no cambia las fotos, las fuentes ni los estilos con movimiento normal que mide el perfil Lighthouse; no se atribuye a esta corrección una mejora de rendimiento.
+### Menores
 
-El servidor local no aplica _headers; el aviso de caché de Lighthouse no prueba un error en la configuración preparada de Cloudflare. Los avisos de CSS/JS sin minificar, imágenes y cadena de dependencias quedan como diagnósticos de rendimiento, sin introducir un pipeline nuevo en esta fase.
+- Las tarjetas laterales del carrusel coverflow quedan achicadas (botones de
+  29 px de alto) y los puntos miden 28 px. Superan el mínimo de 24 px de
+  WCAG 2.2 AA; la tarjeta central tiene el tamaño completo.
+- `docs/velocidad.md` y `docs/privacidad.md` describen la medición y las rutas
+  de P05/P01 en tres idiomas; son históricos, no se reescribieron.
 
-### Verificaciones pendientes de producción / externas
+### Verificaciones externas pendientes
 
-- TLS, caché y encabezados reales de Pages; duración de publicación y rendimiento exterior.
-- Disponibilidad de WhatsApp, llamada y entrega de correo: se revisaron URLs, números y mensajes, sin iniciar llamadas ni mandar consultas.
-- Iframe real de Google Maps: el recorrido local intercepta el iframe con una respuesta controlada para probar activación, tamaño y foco. No acredita disponibilidad del servicio remoto.
-- Umami y reporte de 30 días: sin cuenta ni UMAMI_ID, no se validó el dashboard.
-- Vista previa real al compartir por WhatsApp y Search Console.
-- Revisión con tecnologías de asistencia reales: los checks automáticos no certifican conformidad WCAG integral.
+TLS, caché y `_headers` reales de Pages; el iframe real de Google Maps (en el
+recorrido se intercepta); Umami sin UMAMI_ID; la vista previa al compartir por
+WhatsApp; revisión con tecnologías de asistencia reales.
 
-## Errores claros corregidos
+## Errores claros corregidos en esta pasada
 
-- Menú móvil: fondo inerte, foco inicial en Cerrar, ciclo de Tab/Shift+Tab dentro del diálogo y retorno al botón de apertura con Escape.
-- Selector de idioma: conserva la sección visible (incluido #contacto) con movimiento normal o reducido; respeta Ctrl/Cmd/Shift/Alt y el abrir otra pestaña.
-- Idioma activo anunciado por aria-current; las navegaciones de secciones dejan de anunciarse como selector de idioma. Etiquetas agregadas en ES/EN/PT.
-- Foto de Casa Rosada sustituida por calle Florida, sin edificio gubernamental; alt, leyenda y atribución visible en los tres idiomas. Optimización AVIF/WebP P05. Fuente y licencia en PENDIENTES.md.
+- **"Ver mapa" no abría el mapa con el mouse.** El botón se centraba con
+  `transform`, y `.btn:active` lo reemplazaba al apretar: el botón se corría
+  antes de soltar y el clic caía sobre el dibujo. Ahora se centra con márgenes.
+- Las correcciones de teclado de la primera pasada (foco atrapado en el menú
+  móvil, idioma que conserva la sección, movimiento reducido) se reaplicaron
+  sobre el rediseño.
 
 ## Resultados verificados
 
-- Build normal: seis páginas generadas, sin advertencias ni marcadores del template sin resolver.
+- Build: 10 páginas (5 portadas + 5 de privacidad), sitemap, robots y `_headers`.
 - Suite del generador: 28 pruebas aprobadas.
-- Recorrido: seis rutas × 390/768/1440 = **18 vistas**, HTTP 200, sin overflow, errores JavaScript/consola, recursos HTTP fallidos ni enlaces internos rotos.
-- Privacidad: nueve vistas sin violaciones de axe ni fallos informativos de contraste.
-- Aviso de estudio privado: presente en las seis páginas ES/EN/PT.
-- Interacciones y créditos: **32 checks aprobados**, incluidos foco inicial, Tab, Shift+Tab, Escape, idiomas y licencia.
-- Antes de activar el mapa, cero requests a Google; sin UMAMI_ID, cero requests a Umami.
-- El selector de privacidad lleva a la página de privacidad correspondiente.
-
-## Contactos
-
-[inventario_contactos.py](../scripts/inventario_contactos.py) extrae wa.me, tel:, mailto: y materializa los contactos data-wa del HTML generado con la misma codificación de encodeURIComponent. No ejecuta código del sitio ni envía mensajes. El navegador verifica además las URLs resultantes.
-
-**81 contactos:** por idioma 20 WhatsApp, 3 teléfonos y 4 emails, sumando portada y privacidad. WhatsApp: 5491127111987; teléfono: +5491127111987; email: portillokusyasociados@gmail.com. Los 60 mensajes WA están completos; cero atributos de medición faltantes/inconsistentes y cero mensajes vacíos. La segunda tarjeta sigue derivando a la línea principal hasta confirmar su uso.
-
-Cada botón, número, mensaje y URL queda en [contactos-etapa-1.md](contactos-etapa-1.md).
-
-    python -X utf8 scripts/inventario_contactos.py --format markdown --output docs/contactos-etapa-1.md
-    python -X utf8 scripts/inventario_contactos.py --format json --output contactos.json
-    python src/build.py --produccion
+- Recorrido: 10 rutas × 390/768/1440 = **30 vistas**, HTTP 200, sin violaciones
+  de axe (WCAG 2.2 AA), sin desborde horizontal, sin errores de consola ni
+  recursos fallidos.
+- Interacciones: **56 checks aprobados**: idioma activo anunciado, rótulos de
+  navegación, menú móvil (foco inicial, Tab, Shift+Tab, Escape) en los cinco
+  idiomas, cambio de idioma ES→EN→PT→RU→ZH conservando `#contacto` con y sin
+  movimiento reducido, Ctrl+clic, mapa sin pedidos a Google antes del clic y
+  con foco después, y el foco del crédito de la foto.
+- Aviso de estudio privado al pie en las 10 páginas.
+- Antes de activar el mapa, cero pedidos a Google; sin UMAMI_ID, cero a Umami.
+- Contactos: 120 en 10 HTML, cero filas con problemas. Ver
+  [contactos-etapa-1.md](contactos-etapa-1.md).
 
 ## Claves que bloquean --produccion
 
-Son las mismas en ES, EN y PT:
+Las mismas en ES, EN, PT, RU y ZH:
 
-- ciudadania.step1
-- ciudadania.step2
-- ciudadania.step3
-- ciudadania.step4
-- ciudadania.text
-- contacto.card2_pending
-- estudio.tag_matricula
-- estudio.team_note
-- hero.rating
-- hero.reviews_text
-- hero.sub
-- opiniones.cta
-- opiniones.r1_name
-- opiniones.r1_text
-- opiniones.r2_name
-- opiniones.r2_text
-- opiniones.r3_name
-- opiniones.r3_text
-- opiniones.r4_name
-- opiniones.r4_text
-- seo.contact_languages
-- stats.s1_label
-- stats.s1_value
-- stats.s2_label
-- stats.s2_value
-- trabajamos.g4_text
+- `ciudadania.step1` a `ciudadania.step4`, `ciudadania.text`
+- `estudio.tag_matricula`, `estudio.team_note`
+- `hero.reviews_text`, `hero.sub`
+- `opiniones.cta`, `opiniones.r1_name` a `opiniones.r4_name`, `opiniones.r1_text` a `opiniones.r4_text`
+- `seo.contact_languages`
+- `stats.s1_label`, `stats.s2_label`
 
-## Evidencia y repetición
+Y en `src/build.py`, `SIN_CONFIRMAR`: `clients` (cifra de ciudadanías) y
+`rating` (puntaje). `reviews` (cantidad de reseñas) también está ahí y es la
+que marca los textos con `{reviews}`.
 
-Artefactos de Codex del 10/10/2026:
-C:/Users/fjbor/.codex/visualizations/2026/10/10/01a1268b-3625-7b30-b498-b1a9338a190f.
+## Cómo repetirlo
 
-- photo-qa/report.json: primer recorrido de 18 vistas tras reemplazar la foto.
-- focused-baseline/focused.json: reproducción de defectos de teclado e idioma.
-- focused-complete/focused.json: interacciones definitivas, sin fallos.
-- complete-qa/report.json: recorrido general del build final.
-- lighthouse-release/: JSON/HTML y resumen de las métricas de la tabla.
-- focused-complete/: capturas de la franja Buenos Aires y tarjetas a 390/1440.
-- Evidencias DNS/RDAP y borrador de mensaje para Denis, **no enviado**.
-
-Los runners requieren Playwright, axe y Lighthouse como herramientas separadas; no se incorporan dependencias al sitio. El nuevo [audit-interactions.cjs](../scripts/audit-interactions.cjs) acepta --playwright=<directorio de paquetes Node>, --chrome=<ejecutable>, --dist=<carpeta>, --output=<evidencias> y --port=8553. Devuelve exit 1 si hay checks fallidos.
-
-El recorrido general reutiliza el runner local de la sesión P01–P06, actualizado a tres anchos; para auditorías de página completa se mantienen los comandos de scripts/audit-browser.cjs de [velocidad.md](velocidad.md).
-
+    python src/build.py --servir
+    node scripts/audit-browser.cjs --tools=<axe-core> --playwright=<playwright> --url=http://localhost:8532/ --langs=es,en,pt,ru,zh --widths=390,768,1440 --chrome=<chrome> --output=<carpeta>
+    node scripts/audit-browser.cjs ... --privacy=true
+    node scripts/audit-interactions.cjs --playwright=<playwright> --chrome=<chrome> --url=http://localhost:8532/ --output=<carpeta>
+    python -X utf8 scripts/inventario_contactos.py --format markdown --output docs/contactos-etapa-1.md
+    python src/build.py --produccion
