@@ -80,12 +80,13 @@
     "eyebrow": "BUENOS AIRES",
     "title": "A pasos de donde pasa todo",
     "sub": "El estudio está en pleno Microcentro, sobre Diagonal Norte, a un paso de Plaza de Mayo.",
-    "ba1_alt": "Fachada de la Casa Rosada, con la bandera argentina, en Plaza de Mayo",
-    "ba1_caption": "A pasos de Plaza de Mayo",
+    "ba1_alt": "Calle Florida y sus edificios comerciales en el Microcentro de Buenos Aires",
+    "ba1_caption": "Calle Florida, Microcentro",
     "ba2_alt": "El Obelisco visto desde Diagonal Norte, Buenos Aires",
     "ba2_caption": "Diagonal Norte, Microcentro",
     "ba3_alt": "Cúpulas del Edificio Miguel Bencich, donde está el estudio",
-    "ba3_caption": "Edificio Miguel Bencich, piso 4"
+    "ba3_caption": "Edificio Miguel Bencich, piso 4",
+    "ba1_credit": "Foto ilustrativa de calle Florida: Horacio Cambeiro (Tubby3). Imagen redimensionada y comprimida."
   },
   "areas": {
     "eyebrow": "ÁREAS DE PRÁCTICA",

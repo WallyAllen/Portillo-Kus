@@ -423,6 +423,7 @@ section[id]{ scroll-margin-top: 60px; }
 .ba-card .media{ position: absolute; inset: 0; border-radius: 0; height: 112%; top: -6%; }
 .ba-card .media img{ transition: transform 600ms var(--ease-out); }
 .ba-card::before{ content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgba(8,14,19,0.85), rgba(8,14,19,0.05) 55%); z-index: 1; }
+.ba-credit a{ display: inline-flex; align-items: center; min-height: 44px; }
 .ba-caption{ position: absolute; left: var(--sp-4); bottom: var(--sp-4); right: var(--sp-4); z-index: 2; color: #fff; font-family: var(--font-display); font-weight: 600; font-size: var(--text-md); }
 
 /* Carrusel de áreas de práctica */
@@ -1057,7 +1058,7 @@ a[aria-disabled="true"]{ opacity: 0.65; cursor: default; }
       </div>
       <div class="ba-grid stagger">
         <div class="ba-card reveal-scale" style="--i:0">
-          <div class="media"><img src="{{img_prefix}}portillo-images/ba-casarosada.jpg" alt="{{buenosaires.ba1_alt}}" loading="lazy"></div>
+          <div class="media"><img src="{{img_prefix}}portillo-images/ba-florida.jpg" alt="{{buenosaires.ba1_alt}}" loading="lazy"></div>
           <span class="ba-caption">{{buenosaires.ba1_caption}}</span>
         </div>
         <div class="ba-card reveal-scale" style="--i:1">
@@ -1069,6 +1070,7 @@ a[aria-disabled="true"]{ opacity: 0.65; cursor: default; }
           <span class="ba-caption">{{buenosaires.ba3_caption}}</span>
         </div>
       </div>
+      <p class="team-note ba-credit">{{buenosaires.ba1_credit}} <a href="https://commons.wikimedia.org/wiki/File:Calle_Florida,_Buenos_Aires_(Argentina).jpg" target="_blank" rel="noopener noreferrer">Wikimedia Commons</a> · <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 4.0</a></p>
     </div>
   </section>
 

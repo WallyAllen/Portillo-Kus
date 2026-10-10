@@ -59,8 +59,14 @@ PENDIENTE / CONFIRMAR con el estudio antes de pasar esto a producción (boceto v
     - hero-diagonal.jpg / ba-obelisco.jpg: "Avenida Roque Sáenz Peña (Diagonal
       Norte)..." y "Vista del Obelisco desde la Plaza de Mayo...", Roberto
       Fiadone y Mr. Tickle, CC BY-SA / CC BY.
-    - ba-casarosada.jpg: "2019 Buenos Aires - Fachada de la Casa Rosada.jpg",
-      CC BY-SA 4.0.
+    - ba-florida.jpg (reemplazo del 10/10/2026): "Calle Florida, Buenos Aires
+      (Argentina).jpg", Horacio Cambeiro (Tubby3), CC BY-SA 4.0.
+      Fuente: https://commons.wikimedia.org/wiki/File:Calle_Florida,_Buenos_Aires_(Argentina).jpg
+      Licencia: https://creativecommons.org/licenses/by-sa/4.0/
+      Original 4000×3000; JPEG local 1200×900, redimensionado y comprimido.
+      AVIF/WebP responsivos generados con el proceso P05. La atribución y la
+      licencia se enlazan también en las tres portadas. Derivados bajo CC BY-SA 4.0.
+      Se retiró la foto de Casa Rosada para evitar apariencia oficial.
     - ba-bencich.jpg: "Edificio Miguel Bencich 616.jpg", Avalosinteriorismo,
       CC BY-SA 4.0. Es el edificio real del estudio (Av. Roque Sáenz Peña 616).
   Las fotos ya no llevan la etiqueta visible "Foto real del estudio" / "Foto

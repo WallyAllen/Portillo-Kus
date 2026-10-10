@@ -205,6 +205,6 @@ para activación, verificación, límites y plantilla con números ficticios.
 ## Nota de diseño
 
 El estudio tramita ciudadanías: la página **no puede parecer oficial**. Van
-Obelisco, Plaza de Mayo, Diagonal Norte y el Edificio Bencich, celeste y blanco
+Obelisco, calle Florida, Diagonal Norte y el Edificio Bencich, celeste y blanco
 como acento, y un sol de mayo estilizado propio. **No** van el Escudo Nacional,
 la bandera oficial ni nada que se parezca a `argentina.gob.ar`.
