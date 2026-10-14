@@ -141,6 +141,36 @@ def google_maps_link_attrs(value):
     return 'role="link" aria-disabled="true"'
 
 
+# Fuentes del hero en cada idioma, pedidas antes de que el CSS las descubra: la del
+# título (el LCP) primero, después la itálica de la etiqueta de arriba y la del
+# texto. En ruso el título es cirílico (más espacios y raya, del subset latino) y el
+# cuerpo usa la fuente del sistema: Karla no se usa. En chino la etiqueta no va en
+# itálica.
+FONT_PRELOADS = {
+    "ru": ("cormorant-garamond-normal-cyrillic", "cormorant-garamond-normal-latin",
+           "cormorant-garamond-italic-cyrillic", "cormorant-garamond-italic-latin"),
+    "zh": ("cormorant-garamond-normal-latin", "karla-normal-latin"),
+}
+FONT_PRELOADS_DEFAULT = ("cormorant-garamond-normal-latin", "cormorant-garamond-italic-latin",
+                         "karla-normal-latin")
+
+
+def font_preloads(code, prefix, page="home"):
+    fonts = SITE_ROOT / "site-fonts"
+    if not fonts.is_dir():
+        return ""  # igual que la copia a dist/: sin site-fonts no hay fuentes locales
+    tags = []
+    for stem in FONT_PRELOADS.get(code, FONT_PRELOADS_DEFAULT):
+        if page != "home" and "-italic-" in stem:
+            continue  # privacidad no tiene la etiqueta en itálica: sería una descarga sin uso
+        found = sorted(fonts.glob(f"{stem}-*.woff2"))
+        if len(found) != 1:
+            raise ValueError(f"Se esperaba un solo site-fonts/{stem}-*.woff2 y hay {len(found)}")
+        tags.append(f'<link rel="preload" href="{prefix}fonts/{found[0].name}" '
+                    'as="font" type="font/woff2" crossorigin>')
+    return "\n".join(tags)
+
+
 def build(lang, template, base_url, flat, page="home", image_assets=None):
     flat = dict(flat)
 
@@ -160,6 +190,7 @@ def build(lang, template, base_url, flat, page="home", image_assets=None):
     flat["og_image_url"] = f"{base_url}portillo-images/og-{lang['code']}.jpg"
     flat["hreflang_tags"] = build_hreflang_tags(lang, base_url, page)
     flat["lang_label"] = lang["label"]
+    flat["font_preloads"] = font_preloads(lang["code"], flat["img_prefix"], page)
     flat["seo_tags"] = metadata(lang, flat, base_url, page_path(lang, page), page, LANGS)
 
     def lang_links(text_key):
@@ -214,7 +245,26 @@ def build(lang, template, base_url, flat, page="home", image_assets=None):
         raise ValueError(f"Marcadores sin reemplazar en {lang['code']}: {', '.join(sorted(set(leftover)))}")
     html = render_images(html, image_assets or {})
     validate_analytics(html, lang["code"])
-    return html
+    return compactar(html)
+
+
+def compactar(html):
+    """Saca sangrías, líneas vacías y comentarios del CSS y el JS en línea.
+
+    El HTML va entero antes del título del hero (el LCP): cada ~30 KB es un viaje
+    de ida y vuelta más en móvil. No toca el texto: un salto de línea sigue
+    separando palabras igual que la sangría que se quita.
+    """
+    def css(m):
+        s = re.sub(r"/\*.*?\*/", "", m.group(1), flags=re.S)
+        s = re.sub(r"[ \t\r\n]+", " ", s).replace(": ", ":")
+        return "<style>" + re.sub(r" ?([{};,>]) ?", r"\1", s).strip() + "</style>"
+
+    def js(m):  # sólo comentarios de línea entera: en medio de una línea podrían ser una URL
+        return "<script>" + re.sub(r"(?m)^[ \t]*//[^\n]*\n", "", m.group(1)) + "</script>"
+    html = re.sub(r"<style>(.*?)</style>", css, html, flags=re.S)
+    html = re.sub(r"<script>(.*?)</script>", js, html, flags=re.S)
+    return re.sub(r"\n[ \t\r\n]+", "\n", html)
 
 
 def privacy_template(home_template):
@@ -223,8 +273,8 @@ def privacy_template(home_template):
     style = re.search(r"<style>.*?</style>", home_template, re.S).group(0)
     # Keep the same font/resource declarations, including future local-font changes.
     head = home_template.split("<style>", 1)[0]
-    resources = "\n".join(tag for tag in re.findall(r"<link\b[^>]*>", head)
-                          if re.search(r'rel="(?:stylesheet|preload|preconnect|dns-prefetch)"', tag))
+    resources = "\n".join(tag for tag in re.findall(r"<link\b[^>]*>|\{\{font_preloads\}\}", head)
+                          if tag == "{{font_preloads}}" or re.search(r'rel="(?:stylesheet|preload|preconnect|dns-prefetch)"', tag))
     header = re.search(r'<header class="site-header".*?</header>', home_template, re.S).group(0)
     logo = re.search(r'<a [^>]*class="logo".*?</a>', header, re.S).group(0)
     logo = logo.replace('href="#top"', 'href="{{home_link}}"')

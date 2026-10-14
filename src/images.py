@@ -43,18 +43,31 @@ def prepare_images(source, template):
 
 
 def render_images(markup, assets):
+    """<picture> con AVIF/WebP para cada foto con variantes.
+
+    data-preload-media="(consulta)" suma antes un preload AVIF de prioridad alta
+    que sólo vale con esa consulta. Lo usa el hero: en móvil cubre la pantalla
+    entera, Chrome lo toma como fondo y el LCP es el título, así que va con
+    prioridad baja para no quitarle red a las fuentes; en escritorio la foto sí
+    es el LCP y el preload le devuelve la prioridad alta.
+    """
     def replace(match):
         tag, prefix, name = match.group(0), match.group(1), match.group(2)
+        media = re.search(r'\sdata-preload-media="([^"]*)"', tag)
+        tag = re.sub(r'\sdata-preload-media="[^"]*"', '', tag)
         asset = assets.get(name)
         if asset is None:
             return tag
         tag = re.sub(r'\s+(?:width|height)="[^"]*"', '', tag)
         tag = tag[:-1] + f' width="{asset["width"]}" height="{asset["height"]}" decoding="async">'
-        sources = []
+        sources, preload = [], ''
         for fmt, variants in asset['variants'].items():
             if not variants:
                 continue
             srcset = ', '.join(f'{prefix}{filename} {width}w' for filename, width in variants)
             sources.append(f'<source type="image/{fmt}" srcset="{srcset}" sizes="{asset["sizes"]}">')
-        return '<picture>' + ''.join(sources) + tag + '</picture>' if sources else tag
+            if media and fmt == 'avif':
+                preload = (f'<link rel="preload" as="image" type="image/avif" imagesrcset="{srcset}" '
+                           f'imagesizes="{asset["sizes"]}" media="{media.group(1)}" fetchpriority="high">')
+        return preload + '<picture>' + ''.join(sources) + tag + '</picture>' if sources else tag
     return re.sub(r'<img\b[^>]*\bsrc="([^" ]*portillo-images/)([^"/]+)"[^>]*>', replace, markup)

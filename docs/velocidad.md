@@ -84,3 +84,38 @@ Los cuatro tests de `tests/test_images.py` verifican que los formatos generados 
 La suite completa de esta copia terminó con **27 tests aprobados en 6,354 s**. La ejecución se realizó fuera del sandbox de Windows porque los directorios temporales eran bloqueados con `WinError5`; no se cambiaron permisos del sistema. Ambos runners de Node pasaron `node --check`. El agente integrador confirmó la suite final de P01–P06 más la preparación de P07: **28 tests aprobados en 8,396 s**, incluida la comprobación de cabeceras de P07.
 
 La cuenta de Cloudflare del estudio todavía no existe. Quedan pendientes la medición exterior tras desplegar, la comprobación de cabeceras/caché en la entrega real y, cuando exista tráfico suficiente, los datos de experiencia de usuarios. No hay métricas públicas de producción en este informe.
+
+## LCP del título del hero en cinco idiomas — 14/10/2026
+
+Rama `lcp-hero`. Objetivo: LCP < 2,5 s en Lighthouse móvil (perfil predeterminado) en `/`, `/en/`, `/pt/`, `/ru/` y `/zh/`, sin bajar Accessibility ni cambiar el aspecto.
+
+Método: Lighthouse 12.8.2 (instalado aparte, no es dependencia del sitio) con `scripts/audit-lighthouse.mjs`, Chromium 1243 de ms-playwright, `python src/build.py --servir` en `http://localhost:8532/`, tres corridas por idioma con perfil de Chrome nuevo. La tabla da la **mediana de 3**. El antes es `main` (054b244) medido el mismo día con el mismo método.
+
+| Idioma | LCP antes | LCP después | FCP antes | FCP después | Performance antes → después | Accessibility |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| ES | 2,70 s | 2,10 s | 1,50 s | 1,35 s | 96 → 99 | 100 |
+| EN | 2,70 s | 2,10 s | 1,50 s | 1,28 s | 96 → 99 | 100 |
+| PT | 2,70 s | 2,10 s | 1,50 s | 1,31 s | 96 → 99 | 100 |
+| RU | 2,85 s | 2,33 s | 1,95 s | 1,46 s | 94 → 98 | 100 |
+| 中文 | 2,46 s | 1,80 s | 1,49 s | 1,36 s | 97 → 99 | 100 |
+
+Las tres corridas de cada idioma quedaron a menos de 60 ms entre sí.
+
+### Por qué tardaba
+
+El elemento LCP es el `h1`, pintado con la fuente de respaldo al mismo tiempo que el FCP. Lighthouse no mide ese momento: lo simula, y en la simulación el LCP termina cuando termina de bajar todo lo que el navegador pidió antes de ese pintado (salvo las imágenes de prioridad baja) sobre una red de 1,6 Mbps y 150 ms de ida y vuelta. Eso era el HTML entero (106 KB sin comprimir), las tres fuentes del hero, la foto del hero (48 KB, prioridad alta) y el favicon. La "demora de render" del informe es ese tiempo de red, no CSS bloqueante ni animaciones: el CSS ya va en línea y el `h1` ya se pintaba sin animación en móvil.
+
+### Qué cambió
+
+1. **Fuentes recortadas** (`site-fonts/`, `scripts/fetch-fonts.py`). El subset latino de Google suma flechas, signos matemáticos y diacríticos sueltos que el sitio no usa, y funciones OpenType que el navegador no aplica sin pedirlas. Recortado a `U+0020-007E, U+00A0-00FF, U+0131, U+0152-0153, U+2000-206F, U+20AC, U+2122` con las funciones por defecto de fontTools: Cormorant normal 37,6 → 29,4 KB, itálica 39,3 → 30,8 KB, Karla 24,3 → 20,0 KB; el cirílico, con su rango original, baja ~1 KB cada uno. Se verificó que todo carácter de los cinco JSON y las plantillas sigue cubierto. Los glifos que se ven son los mismos. fontTools sólo hace falta para volver a bajar las fuentes, no para el build.
+2. **HTML compactado** (`compactar()` en `src/build.py`): sin sangrías ni líneas vacías, CSS en línea sin comentarios ni espacios sobrantes, JS sin comentarios de línea entera. ES pasa de 106 a 92 KB. El texto no cambia: el salto de línea que queda separa las palabras igual que la sangría.
+3. **Precarga por idioma** (`FONT_PRELOADS` en `src/build.py`, marcador `{{font_preloads}}` en la plantilla). Primero la fuente del título, después la itálica de la etiqueta del hero y la del texto. En ruso: cirílico normal (el título) y latino normal (espacios y raya), las dos itálicas, y **sin Karla**, que en ruso no se usa (el cuerpo va con la fuente del sistema) pero se precargaba igual: 24 KB tirados. En chino, sin la itálica, que no se usa. Privacidad no precarga la itálica.
+4. **Foto del hero con prioridad baja en móvil y alta en escritorio** (`src/template.html`, `render_images()` en `src/images.py`). En móvil la foto cubre la pantalla entera; Chrome la trata como fondo y el LCP es el título, así que con `fetchpriority="high"` le quitaba red a las fuentes del título. Ahora el `<img>` va con `fetchpriority="low"`. En escritorio la foto sí es el LCP: un `<link rel="preload" as="image" media="(min-width: 900px)" fetchpriority="high">` con el mismo `imagesrcset` le devuelve la prioridad alta sólo ahí. El navegador baja un único archivo (verificado en 390 y 1.440 px). Lighthouse escritorio en ES: LCP 0,62 → 0,60 s, el elemento sigue siendo la foto.
+
+Aporte aproximado en ES, de a un cambio (una corrida cada uno): fuentes 2,70 → 2,63 s; compactar 2,63 → 2,48 s (el HTML pasa a necesitar un viaje de ida y vuelta menos); foto con prioridad baja 2,48 → 2,03 s. La precarga de la itálica le baja a RU 2,43 → 2,33 s de LCP y unos 0,45 s de FCP; en ES/EN/PT mejora el FCP ~0,08 s y le cuesta ~0,07 s al LCP, que queda igual en 2,10 s.
+
+### Límites, dicho sin vueltas
+
+- El mayor salto (punto 4) es real para quien entra desde el teléfono, porque las fuentes del título ya no compiten con la foto, pero en el número de Lighthouse pesa más todavía: la simulación no espera a las imágenes de prioridad baja, así que el informe móvil ya no registra cuándo termina de llegar la foto del hero. En una red lenta la foto puede aparecer un poco después que antes; el título, antes.
+- El servidor local no comprime ni reutiliza conexiones (HTTP/1.0). Cloudflare Pages entrega el HTML comprimido (unos 23 KB en vez de 92) por HTTP/2, así que en producción el compactado del punto 2 rinde mucho menos y el LCP debería salir más bajo que esta tabla. Hasta medir el despliegue, es una estimación.
+- Comprobado después de los cambios: build sin advertencias, `python -m pytest -q tests` con 28 pruebas aprobadas; `scripts/audit-browser.cjs` en las cinco portadas y las cinco páginas de privacidad a 390 y 1.440 px, sin violaciones de axe, sin desborde, sin errores de consola ni pedidos fallidos y con los mismos 17 objetivos chicos del carrusel que en `main`; `scripts/audit-interactions.cjs` con 56 checks aprobados. Capturas de página completa de `main` y de la rama, con movimiento reducido, idénticas en texto y maquetación en las diez vistas; las únicas diferencias de píxeles son fotos diferidas que todavía no habían cargado en una de las dos capturas.

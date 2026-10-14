@@ -1,7 +1,13 @@
 """Descarga manual reproducible desde Google Fonts; el build no usa la red.
 
-Ejecutar sólo al actualizar los assets de fuentes. Conserva los WOFF2 oficiales
-sin modificar y copia las licencias SIL OFL originales de google/fonts.
+Ejecutar sólo al actualizar los assets de fuentes. Recorta cada WOFF2 oficial
+con fontTools (sólo herramienta de mantenimiento, no del build) y copia las
+licencias SIL OFL originales de google/fonts.
+
+El recorte baja ~10 KB por archivo latino, que van antes del título del hero
+(el LCP): el subset latino queda en lo que escriben ES/EN/PT, con todos los
+signos de puntuación, y se descartan las funciones OpenType que el navegador no
+aplica por defecto (versalitas, alternativas). Ver docs/velocidad.md.
 """
 import argparse
 import hashlib
@@ -17,6 +23,9 @@ FAMILIES = {
                            'cormorantgaramond', ('latin', 'cyrillic')),
     'karla': ('Karla:wght@400;600;700', 'karla', ('latin',)),
 }
+# Rango latino que se conserva; reemplaza al de Google (que suma diacríticos sueltos,
+# flechas y signos matemáticos que el sitio no usa). El cirílico queda como viene.
+LATIN_RANGE = 'U+0020-007E, U+00A0-00FF, U+0131, U+0152-0153, U+2000-206F, U+20AC, U+2122'
 USER_AGENT = ('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
               '(KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36')
 
@@ -24,6 +33,22 @@ USER_AGENT = ('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
 def fetch(url):
     with urlopen(Request(url, headers={'User-Agent': USER_AGENT}), timeout=30) as response:
         return response.read()
+
+
+def recortar(data, unicode_range):
+    """WOFF2 recortado al rango dado, con las funciones OpenType por defecto."""
+    from io import BytesIO
+    from fontTools import subset as ft_subset
+    from fontTools.ttLib import TTFont
+    font = TTFont(BytesIO(data))
+    options = ft_subset.Options()
+    options.flavor = 'woff2'
+    subsetter = ft_subset.Subsetter(options)
+    subsetter.populate(unicodes=ft_subset.parse_unicodes(unicode_range.replace(' ', '')))
+    subsetter.subset(font)
+    out = BytesIO()
+    font.save(out)
+    return out.getvalue()
 
 
 def main():
@@ -45,13 +70,15 @@ def main():
                 weight = re.search(r'font-weight:\s*([^;]+)', block).group(1)
                 url = re.search(r'url\((https://fonts.gstatic.com/[^)]+\.woff2)\)', block).group(1)
                 # Google sirve WOFF2 variable idéntico para varios pesos: un asset.
+                unicode_range = re.search(r'unicode-range:\s*([^;]+)', block).group(1)
+                if subset == 'latin':
+                    unicode_range = LATIN_RANGE
                 if url not in downloaded:
-                    data = fetch(url)
+                    data = recortar(fetch(url), unicode_range)
                     name = f'{slug}-{style}-{subset}-{hashlib.sha256(data).hexdigest()[:8]}.woff2'
                     (args.output / name).write_bytes(data)
                     downloaded[url] = (name, data)
                 name, data = downloaded[url]
-                unicode_range = re.search(r'unicode-range:\s*([^;]+)', block).group(1)
                 manifest.append({'file': name, 'family': slug, 'style': style, 'weight': weight,
                                  'subset': subset, 'unicode_range': unicode_range,
                                  'source': url, 'css_source': css_url,

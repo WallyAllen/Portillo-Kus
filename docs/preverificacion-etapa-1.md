@@ -44,6 +44,8 @@ Decisiones de la reconciliación:
 
 ### Rendimiento: objetivo todavía no cumplido
 
+> Actualización 14/10/2026: cumplido en local en los cinco idiomas (LCP 1,80–2,33 s, mediana de 3). Ver [velocidad](velocidad.md#lcp-del-título-del-hero-en-cinco-idiomas--14102026). La tabla de abajo queda como estaba al 10/10.
+
 | Idioma | Performance | Accessibility | Best practices | LCP | CLS | TBT |
 |---|---:|---:|---:|---:|---:|---:|
 | ES | 95 | 100 | 100 | 2,71 s | 0 | 26 ms |

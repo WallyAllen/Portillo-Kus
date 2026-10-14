@@ -84,10 +84,14 @@ class ImagesTests(unittest.TestCase):
             for font_path in paths:
                 self.assertTrue((output.parent / font_path).resolve().is_file(), font_path)
                 self.assertRegex(font_path, r'(?:^|/)fonts/[^/]+-[a-f0-9]{8}\.woff2$')
+            preloads = re.findall(r'<link rel="preload" href="[^"]*fonts/([a-z-]+)-[a-f0-9]{8}\.woff2"', markup)
+            title_font = 'cormorant-garamond-normal-' + ('cyrillic' if route.startswith('ru') else 'latin')
+            self.assertEqual(preloads[0], title_font)  # la del título (LCP) primero
+            self.assertEqual('karla-normal-latin' in preloads, not route.startswith('ru'))
             if route in ('', 'en', 'pt', 'ru', 'zh'):
                 logos = sum(name.startswith('logo.') for name in names)  # 150 px: sin variantes
-                self.assertEqual(markup.count('type="image/avif"'), len(names)-logos)
-                self.assertEqual(markup.count('type="image/webp"'), len(names)-logos)
+                self.assertEqual(markup.count('<source type="image/avif"'), len(names)-logos)
+                self.assertEqual(markup.count('<source type="image/webp"'), len(names)-logos)
                 parser = ImageTags()
                 parser.feed(markup)
                 for tag in parser.images:
@@ -96,7 +100,16 @@ class ImagesTests(unittest.TestCase):
                     self.assertIn('alt', tag)
                 hero = next(tag for tag in parser.images if 'hero-diagonal.jpg' in tag['src'])
                 self.assertEqual(hero['loading'], 'eager')
-                self.assertEqual(hero['fetchpriority'], 'high')
+                # En móvil el hero es fondo y el LCP es el título: prioridad baja para
+                # no competir con sus fuentes. En escritorio la foto es el LCP: un
+                # preload AVIF con media le da prioridad alta sólo ahí.
+                self.assertEqual(hero['fetchpriority'], 'low')
+                self.assertNotIn('data-preload-media', markup)
+                preload = re.search(r'<link rel="preload" as="image"[^>]*>', markup).group(0)
+                self.assertIn('media="(min-width: 900px)"', preload)
+                self.assertIn('fetchpriority="high"', preload)
+                self.assertIn('hero-diagonal-', preload)
+                self.assertLess(markup.index(preload), markup.index('hero-diagonal.jpg'))
         manifest = json.loads((self.root/'dist/fonts/sources.json').read_text(encoding='utf-8'))
         self.assertEqual(len({item['file'] for item in manifest}), 5)
 
