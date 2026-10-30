@@ -21,9 +21,12 @@
 .nf-actions{ display: flex; flex-wrap: wrap; gap: var(--sp-3); margin-top: var(--sp-5); }
 .site-header .lang-switch a{ min-height: 44px; display: inline-flex; align-items: center; }
 @media(max-width: 360px){ .site-header .header-inner{ gap: var(--sp-2); } }
+.skip-link{ position: absolute; left: 12px; top: -64px; z-index: 1000; padding: 10px 16px; background: #fff; color: #1a1a1a; font-weight: 700; border-radius: 6px; box-shadow: 0 2px 10px rgba(0,0,0,.3); }
+.skip-link:focus{ top: 12px; }
 </style>
 </head>
 <body>
+<a class="skip-link" href="#top">{{a11y.skip}}</a>
 {{site_header}}
 <main id="top" class="nf-main">
   <div class="container">

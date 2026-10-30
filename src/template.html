@@ -324,7 +324,7 @@ svg{ display: block; flex-shrink: 0; }
   .hero::after{
     background:
       linear-gradient(to bottom, rgba(247,245,241,0.65) 0, rgba(247,245,241,0) 150px),
-      linear-gradient(to right, rgba(10,18,26,0.8) 0%, rgba(10,18,26,0.64) 38%, rgba(10,18,26,0.3) 62%, rgba(10,18,26,0) 82%),
+      linear-gradient(to right, rgba(10,18,26,0.84) 0%, rgba(10,18,26,0.74) 45%, rgba(10,18,26,0.4) 68%, rgba(10,18,26,0) 88%),
       linear-gradient(to top, rgba(10,18,26,0.6) 0%, rgba(10,18,26,0.2) 45%, rgba(10,18,26,0) 70%);
   }
 }
@@ -342,7 +342,8 @@ svg{ display: block; flex-shrink: 0; }
   margin-top: var(--sp-5); display: flex; align-items: center; flex-wrap: wrap; gap: var(--sp-2) var(--sp-3);
   font-size: var(--text-xs); color: #fff;
 }
-.hero-trust .stars, .reviews-summary .stars{ color: var(--gold); font-weight: 700; letter-spacing: 0.05em; }
+.hero-trust .stars{ color: #E2C089; font-weight: 700; letter-spacing: 0.05em; }
+.reviews-summary .stars{ color: #86693F; font-weight: 700; letter-spacing: 0.05em; }
 .hero-trust .sep{ opacity: 0.6; }
 .hero-trust a{ display: inline-block; min-height: 44px; padding-block: var(--sp-2); }
 .hero-content > *{
@@ -650,10 +651,13 @@ a[aria-disabled="true"]{ opacity: 0.65; cursor: default; }
 }
 .section--dark .pending-flag, .hero .pending-flag{ color: rgba(255,255,255,0.75); border-color: rgba(255,255,255,0.35); }
 
+.skip-link{ position: absolute; left: 12px; top: -64px; z-index: 1000; padding: 10px 16px; background: #fff; color: #1a1a1a; font-weight: 700; border-radius: 6px; box-shadow: 0 2px 10px rgba(0,0,0,.3); }
+.skip-link:focus{ top: 12px; }
 </style>
 {{analytics_script}}
 </head>
 <body>
+<a class="skip-link" href="#top">{{a11y.skip}}</a>
 
 <header class="site-header" id="siteHeader">
   <div class="container header-inner">
@@ -1459,7 +1463,7 @@ a[aria-disabled="true"]{ opacity: 0.65; cursor: default; }
         var d = Math.min(Math.abs(delta), MAX_DIST);
         card.style.setProperty('--s', (1 - SCALE_STEP * d).toFixed(3));
         card.style.setProperty('--x', ((delta > 0 ? -1 : 1) * (w / 2) * SCALE_STEP * d * d).toFixed(1) + 'px');
-        card.style.setProperty('--o', (1 - 0.18 * Math.min(d, 3)).toFixed(3));
+        card.style.setProperty('--o', (1 - 0.05 * Math.min(d, 2)).toFixed(3));
         card.style.zIndex = String(10 - Math.round(d));
         if (Math.abs(delta) < best){ best = Math.abs(delta); nearest = i; }
       });

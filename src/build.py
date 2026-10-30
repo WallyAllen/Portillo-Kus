@@ -253,6 +253,7 @@ def build(lang, template, base_url, flat, page="home", image_assets=None, pendie
     def lang_links(text_key):
         return "\n".join(
             f'<a href="{link_to(l, lang, page)}" hreflang="{l["hreflang"]}" lang="{l["html_lang"]}"'
+            + f' aria-label="{l["name"]}"'
             + (' class="is-current" aria-current="page"' if l["code"] == lang["code"] else "")
             + f'>{l[text_key]}</a>'
             for l in LANGS

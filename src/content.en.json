@@ -7,6 +7,7 @@
     "og_image_alt": "Portillo Kus & Asociados, law firm in Buenos Aires"
   },
   "a11y": {
+    "skip": "Skip to content",
     "open_menu": "Open menu",
     "close_menu": "Close menu",
     "lang_switch": "Change language",

@@ -24,11 +24,11 @@ def prepare_images(source, template):
                  '(min-width: 900px) 300px, (min-width: 640px) 320px, 78vw' if name.startswith('area-') else
                  '(min-width: 900px) 540px, calc(100vw - 48px)' if name in ('ciudadania.jpg', 'estudio.jpg') else
                  '(min-width: 760px) 360px, calc(100vw - 48px)')
-        widths = sorted(set(min(width, target) for target in
-                            ((480, 960, width) if name.startswith('hero-') else (320, 640, width))))
+        # Escalera 480/800/1200/1600, nunca por encima del original (que entra como último escalón).
+        widths = sorted({target for target in (480, 800, 1200, 1600) if target < width} | {width})
         variants = {'avif': [], 'webp': []}
         # El logo original mide 150px y 5 KB: no ampliar ni generar variantes inútiles.
-        if width >= 320:
+        if width >= 480:
             for target in widths:
                 resized = image.resize((target, round(height * target / width)), Image.Resampling.LANCZOS)
                 for fmt in variants:
