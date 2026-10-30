@@ -11,9 +11,8 @@ import unittest
 from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[1]
-ROUTES = {'es': 'privacidad', 'en': 'en/privacy', 'pt': 'pt/privacidade',
-          'ru': 'ru/privacy', 'zh': 'zh/privacy'}
-HREFLANG_CODE = {'pt-BR': 'pt', 'zh-Hans': 'zh'}
+ROUTES = {'es': 'privacidad', 'en': 'en/privacy', 'pt': 'pt/privacidade'}
+HREFLANG_CODE = {'pt-BR': 'pt'}
 
 
 class Links(HTMLParser):
@@ -75,7 +74,7 @@ class PrivacyTests(unittest.TestCase):
 
     def test_privacy_hreflang_and_default_use_privacy_routes(self):
         expected = {'es': 'privacidad/', 'en': 'en/privacy/', 'pt-BR': 'pt/privacidade/',
-                    'ru': 'ru/privacy/', 'zh-Hans': 'zh/privacy/', 'x-default': 'privacidad/'}
+                    'x-default': 'privacidad/'}
         for slug in ROUTES.values():
             actual = {attrs['hreflang']: attrs['href'] for tag, attrs in Links(self.page(slug)).tags
                       if tag == 'link' and attrs.get('rel') == 'alternate'}

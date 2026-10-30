@@ -1,6 +1,7 @@
 """Pruebas del generador, con copias temporales: nunca modifican src/ real."""
 import json
 import os
+import re
 from pathlib import Path
 import shutil
 import subprocess
@@ -38,9 +39,11 @@ class BuildTests(unittest.TestCase):
         result = self.run_build(site_url='https://example.pages.dev')
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertNotIn('ADVERTENCIA', result.stdout)
-        for slug in ('', 'en', 'pt', 'ru', 'zh'):
+        for slug in ('', 'en', 'pt'):
             html = (self.root / 'dist' / slug / 'index.html').read_text(encoding='utf-8')
             self.assertIn('https://example.pages.dev/portillo-images/og-', html)
+            # Una URL que no es la de producción nunca se indexa.
+            self.assertIn('<meta name="robots" content="noindex, nofollow">', html)
             self.assertIn('data-pending="ciudadania.step1"', html)
             self.assertNotIn('content="[PENDIENTE]', html)
             # La vista previa muestra el texto base con una aclaración, sin el marcador.
@@ -82,7 +85,7 @@ class BuildTests(unittest.TestCase):
         before = (self.root / 'dist/index.html').read_bytes()
         result = self.run_build('--produccion')
         self.assertEqual(result.returncode, 1)
-        for code in ('es', 'en', 'pt', 'ru', 'zh'):
+        for code in ('es', 'en', 'pt'):
             self.assertIn(f'{code}: estudio.tag_matricula', result.stderr)
             self.assertIn(f'{code}: hero.reviews_text', result.stderr)
             self.assertIn(f'{code}: opiniones.r4_text', result.stderr)
@@ -111,6 +114,52 @@ class BuildTests(unittest.TestCase):
         html = (self.root / 'dist/index.html').read_text(encoding='utf-8')
         self.assertNotIn('data-pending=', html)
         self.assertNotIn('[PENDIENTE]', html)
+
+    def test_production_head_is_indexable_with_canonical_and_alternates(self):
+        result = self.run_build()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        dist = self.root / 'dist'
+        site = 'https://portillokusestudio.com/'
+        pages = {'': ('es', 'es_AR', ''), 'en': ('en', 'en_US', 'en/'), 'pt': ('pt-BR', 'pt_BR', 'pt/'),
+                 'privacidad': ('es', 'es_AR', 'privacidad/'), 'en/privacy': ('en', 'en_US', 'en/privacy/'),
+                 'pt/privacidade': ('pt-BR', 'pt_BR', 'pt/privacidade/')}
+        titles = set()
+        for slug, (html_lang, locale, path) in pages.items():
+            html = (dist / slug / 'index.html').read_text(encoding='utf-8')
+            self.assertIn(f'<html lang="{html_lang}">', html)
+            self.assertNotIn('name="robots"', html)
+            self.assertIn(f'<link rel="canonical" href="{site}{path}">', html)
+            self.assertIn(f'<meta property="og:url" content="{site}{path}">', html)
+            self.assertIn(f'<meta property="og:locale" content="{locale}">', html)
+            self.assertEqual(html.count('og:locale:alternate'), 2)
+            self.assertIn(f'<meta property="og:image" content="{site}portillo-images/og-{html_lang[:2]}.jpg">', html)
+            privacy = slug not in ('', 'en', 'pt')
+            alternates = re.findall(r'<link rel="alternate" hreflang="([^"]+)" href="([^"]+)">', html)
+            expected = ({'es': 'privacidad/', 'en': 'en/privacy/', 'pt-BR': 'pt/privacidade/', 'x-default': 'privacidad/'}
+                        if privacy else {'es': '', 'en': 'en/', 'pt-BR': 'pt/', 'x-default': ''})
+            self.assertEqual(dict(alternates), {k: site + v for k, v in expected.items()})
+            titles.add(re.search(r'<title>(.*?)</title>', html).group(1))
+        self.assertEqual(len(titles), len(pages))
+        robots = (dist / 'robots.txt').read_text(encoding='utf-8')
+        self.assertIn('Allow: /', robots)
+        self.assertNotIn('Disallow', robots)
+        self.assertIn(f'Sitemap: {site}sitemap.xml', robots)
+
+    def test_hidden_languages_are_not_published(self):
+        self.assertEqual(self.run_build().returncode, 0)
+        dist = self.root / 'dist'
+        for slug in ('ru', 'zh'):
+            self.assertFalse((dist / slug).exists())
+        sitemap = (dist / 'sitemap.xml').read_text(encoding='utf-8')
+        self.assertNotIn('/ru/', sitemap)
+        self.assertNotIn('/zh/', sitemap)
+        for slug in ('', 'en', 'pt', 'privacidad'):
+            html = (dist / slug / 'index.html').read_text(encoding='utf-8')
+            for hidden in ('hreflang="ru"', 'hreflang="zh-Hans"', 'ru_RU', 'zh_CN', '/ru/', '/zh/'):
+                self.assertNotIn(hidden, html)
+        # Su contenido sigue en el repo, listo para la etapa 2.
+        for code in ('ru', 'zh'):
+            self.assertTrue((self.root / 'src' / f'content.{code}.json').exists())
 
     def test_unknown_template_key_and_invalid_url_fail(self):
         path = self.root / 'src/template.html'

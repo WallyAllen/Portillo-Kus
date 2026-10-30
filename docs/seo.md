@@ -1,7 +1,17 @@
 # Datos para buscadores y para compartir — P03
 
-Se generan seis URL: portada y privacidad en ES/EN/PT. Cada página tendrá canonical,
-alternativas hreflang (incluido x-default), Open Graph, Twitter y JSON-LD.
+Se generan seis URL: portada y privacidad en ES/EN/PT. Cada página tiene canonical
+a su propia URL (con barra final), alternativas hreflang de los idiomas publicados
+más x-default a la versión en español, Open Graph (con `og:locale` y un
+`og:locale:alternate` por cada otro idioma publicado), Twitter y JSON-LD.
+
+Todas las URL absolutas salen de `SITE_URL` en `src/seo.py`
+(`https://portillokusestudio.com`, sin barra final). Ruso y chino quedan para la
+etapa 2: sus JSON e imágenes siguen en el repo, pero no están en
+`IDIOMAS_PUBLICADOS` (`src/build.py`), así que no se generan ni aparecen en el
+selector, hreflang, `og:locale:alternate` ni el sitemap. Publicarlos es sumarlos
+a esa lista.
+
 Las tres imágenes `og-es/en/pt.jpg` existentes son 1200 × 630 px y pesan
 menos de 104 KB; se conservan.
 
@@ -22,11 +32,11 @@ al cargar las reseñas reales, manteniendo el mismo criterio de publicación.
 
 ## Indexación
 
-Sin `INDEXAR=1`, `robots.txt` bloquea todo y cada página lleva `noindex, nofollow`.
-Aunque se defina `INDEXAR=1`, una URL `.pages.dev` u otro dominio de pruebas
-sigue bloqueada. Sólo se habilita en `https://portillokusestudio.com/` con la
-variable explícita. Definir esa variable no sustituye la resolución de pendientes
-ni la aprobación y la verificación del lanzamiento.
+Producción es indexable por defecto: con la URL de `SITE_URL`, `robots.txt`
+dice `Allow: /` y las páginas no llevan meta robots. Cualquier otra URL (una
+`.pages.dev`, un dominio de pruebas, una subcarpeta) sale con `noindex, nofollow`
+y `Disallow: /`, igual que un build con `NOINDEX=1`, que sirve para una vista de
+prueba en el dominio final.
 
 `sitemap.xml` incluye las seis páginas y cuatro alternativas por página.
 
@@ -42,4 +52,5 @@ ni la aprobación y la verificación del lanzamiento.
   seis JSON-LD se comprueba además en la verificación local.
 
 Pruebas de JSON, omisión de datos pendientes, límite de metadatos, bloqueo de
-indexación en pruebas y estructura del sitemap: `tests/test_seo.py`.
+indexación en pruebas y estructura del sitemap: `tests/test_seo.py`. El head de
+las seis páginas y la ausencia de ruso y chino: `tests/test_build.py`.

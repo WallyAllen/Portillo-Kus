@@ -6,14 +6,16 @@ import re
 from urllib.parse import urlsplit
 from xml.etree import ElementTree as ET
 
-FINAL_HOST = 'portillokusestudio.com'
+# La URL pública del sitio, sin barra final. Todas las URLs absolutas salen de acá.
+SITE_URL = 'https://portillokusestudio.com'
 PENDING = '[PENDIENTE]'
 
 
 def can_index(base_url):
-    url = urlsplit(base_url)
-    return (os.environ.get('INDEXAR') == '1' and url.scheme == 'https'
-            and url.hostname == FINAL_HOST and url.path in ('', '/'))
+    """Producción se indexa por defecto; NOINDEX=1 o cualquier otra URL lo bloquea."""
+    url, final = urlsplit(base_url), urlsplit(SITE_URL)
+    return (os.environ.get('NOINDEX') != '1' and url.scheme == final.scheme
+            and url.hostname == final.hostname and url.path in ('', '/'))
 
 
 def plain(value):
@@ -29,14 +31,17 @@ def metadata(lang, flat, base_url, path, page='home', langs=()):
         raise ValueError(f'{lang["code"]}: los metadatos deben describir servicios confirmados, sin reseñas pendientes.')
     if len(title) > 60 or len(description) > 155:
         raise ValueError(f'{lang["code"]}/{page}: título ({len(title)}) o descripción ({len(description)}) demasiado largos.')
-    robots = 'index, follow' if can_index(base_url) else 'noindex, nofollow'
     image = f'{base_url}portillo-images/og-{lang["code"]}.jpg'
     esc = lambda value: html.escape(str(value), quote=True)
-    tags = [f'<link rel="canonical" href="{esc(canonical)}">',
-            f'<meta name="robots" content="{robots}">',
-            '<meta property="og:type" content="website">',
+    tags = [f'<link rel="canonical" href="{esc(canonical)}">']
+    # Sólo las vistas de prueba llevan robots: sin la etiqueta, producción se indexa.
+    if not can_index(base_url):
+        tags.append('<meta name="robots" content="noindex, nofollow">')
+    tags += ['<meta property="og:type" content="website">',
             '<meta property="og:site_name" content="Portillo Kus &amp; Asociados">',
-            f'<meta property="og:locale" content="{dict(es="es_AR", en="en_US", pt="pt_BR", ru="ru_RU", zh="zh_CN").get(lang["code"], lang["html_lang"].replace("-", "_"))}">',
+            f'<meta property="og:locale" content="{lang["og_locale"]}">',
+            *(f'<meta property="og:locale:alternate" content="{l["og_locale"]}">'
+              for l in langs if l['code'] != lang['code']),
             f'<meta property="og:title" content="{esc(title)}">',
             f'<meta property="og:description" content="{esc(description)}">',
             f'<meta property="og:url" content="{esc(canonical)}">',

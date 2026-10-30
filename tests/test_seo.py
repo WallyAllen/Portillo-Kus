@@ -26,20 +26,33 @@ class SeoTests(unittest.TestCase):
         self.flat=flatten(json.loads((ROOT/'src/content.es.json').read_text(encoding='utf-8')))
         # Los arma build.py; sin confirmar llevan el marcador.
         self.flat.update({'num.rating':'[PENDIENTE] 5,0','num.rating_raw':'5.0','num.reviews':'[PENDIENTE] 417'})
-        self.lang={'code':'es','html_lang':'es','hreflang':'es','slug':''}
-        self.langs=[self.lang,{'code':'en','html_lang':'en','hreflang':'en','slug':'en'},
-                    {'code':'pt','html_lang':'pt-BR','hreflang':'pt-BR','slug':'pt'}]
+        self.lang={'code':'es','html_lang':'es','hreflang':'es','slug':'','og_locale':'es_AR'}
+        self.langs=[self.lang,{'code':'en','html_lang':'en','hreflang':'en','slug':'en','og_locale':'en_US'},
+                    {'code':'pt','html_lang':'pt-BR','hreflang':'pt-BR','slug':'pt','og_locale':'pt_BR'}]
 
     def rendered(self):
         return seo.metadata(self.lang,self.flat,'https://portillokusestudio.com/','',langs=self.langs)
 
-    def test_preview_cannot_be_indexed_even_with_flag(self):
-        with patch.dict(os.environ,{'INDEXAR':'1'}):
+    def test_production_is_indexable_by_default_and_previews_are_not(self):
+        with patch.dict(os.environ,{'NOINDEX':''}):
+            self.assertTrue(seo.can_index(seo.SITE_URL))
+            self.assertTrue(seo.can_index('https://portillokusestudio.com/'))
             self.assertFalse(seo.can_index('https://example.pages.dev/'))
             self.assertFalse(seo.can_index('https://portillokusestudio.com/preview/'))
-            self.assertTrue(seo.can_index('https://portillokusestudio.com/'))
-        with patch.dict(os.environ,{'INDEXAR':''}):
+            self.assertNotIn('name="robots"',self.rendered())
+        with patch.dict(os.environ,{'NOINDEX':'1'}):
             self.assertFalse(seo.can_index('https://portillokusestudio.com/'))
+            self.assertIn('<meta name="robots" content="noindex, nofollow">',self.rendered())
+
+    def test_site_url_has_no_trailing_slash(self):
+        self.assertEqual(seo.SITE_URL,'https://portillokusestudio.com')
+
+    def test_og_locale_alternates_list_the_other_languages(self):
+        html=self.rendered()
+        self.assertIn('<meta property="og:locale" content="es_AR">',html)
+        self.assertIn('<meta property="og:locale:alternate" content="en_US">',html)
+        self.assertIn('<meta property="og:locale:alternate" content="pt_BR">',html)
+        self.assertNotIn('og:locale:alternate" content="es_AR"',html)
 
     def test_pending_rating_and_contact_languages_are_omitted(self):
         html=self.rendered()

@@ -73,8 +73,7 @@ class ImagesTests(unittest.TestCase):
         result = subprocess.run([sys.executable, str(self.root / 'src/build.py')],
                                 capture_output=True, text=True, encoding='utf-8', env=env)
         self.assertEqual(result.returncode, 0, result.stderr)
-        for route in ('', 'en', 'pt', 'ru', 'zh', 'privacidad', 'en/privacy', 'pt/privacidade',
-                      'ru/privacy', 'zh/privacy'):
+        for route in ('', 'en', 'pt', 'privacidad', 'en/privacy', 'pt/privacidade'):
             output = self.root / 'dist' / route / 'index.html'
             markup = output.read_text(encoding='utf-8')
             self.assertNotIn('fonts.googleapis.com', markup)
@@ -88,7 +87,7 @@ class ImagesTests(unittest.TestCase):
             title_font = 'cormorant-garamond-normal-' + ('cyrillic' if route.startswith('ru') else 'latin')
             self.assertEqual(preloads[0], title_font)  # la del título (LCP) primero
             self.assertEqual('karla-normal-latin' in preloads, not route.startswith('ru'))
-            if route in ('', 'en', 'pt', 'ru', 'zh'):
+            if route in ('', 'en', 'pt'):
                 logos = sum(name.startswith('logo.') for name in names)  # 150 px: sin variantes
                 self.assertEqual(markup.count('<source type="image/avif"'), len(names)-logos)
                 self.assertEqual(markup.count('<source type="image/webp"'), len(names)-logos)

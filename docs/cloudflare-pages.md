@@ -27,7 +27,8 @@ tiempo de publicación medido. Este documento describe la configuración prepara
   Pages admite este archivo para elegir la versión del entorno de build.
 - `SITE_URL`: copiar la URL `.pages.dev` que Cloudflare devuelva, con `/` al final.
   No inventar el nombre del proyecto ni usar una URL de otro deploy.
-- `INDEXAR`: vacío en la vista de prueba.
+- `NOINDEX`: no hace falta en `.pages.dev` (cualquier URL distinta de la final ya
+  sale con noindex). Usar `NOINDEX=1` sólo para una prueba en el dominio final.
 - `UMAMI_ID`: vacío hasta que exista el sitio real en Umami Cloud.
 - Verificar en el log de Pages que Pillow se instaló desde `requirements.txt`.
 
@@ -50,7 +51,7 @@ encabezados en respuestas reales de Pages después de publicar.
 - [ ] Primer deploy en la cuenta del estudio; copiar su URL real.
 - [ ] Revisar `/`, `/en/`, `/pt/`, `/privacidad/`, `/en/privacy/`, `/pt/privacidade/`.
 - [ ] Comprobar imágenes/fuentes, selector de idioma, contactos y mapa a pedido.
-- [ ] Comprobar `robots.txt` con `Disallow: /` y `noindex` en los seis HTML.
+- [ ] En `.pages.dev`: comprobar `robots.txt` con `Disallow: /` y `noindex` en los seis HTML.
 - [ ] Comprobar canonical/hreflang con la URL real `.pages.dev` y `sitemap.xml`.
 - [ ] Comprobar Cache-Control y encabezados de seguridad en las respuestas.
 - [ ] Hacer un push autorizado a `main`: anotar hora UTC del push, SHA remoto,

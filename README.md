@@ -7,7 +7,8 @@ pendientes de confirmar.
 ## Estado (10/10/2026)
 
 - **Comercial:** seña de $300.000 recibida, según el plan del 08/10/2026.
-- **Producto:** boceto v2.2 en cinco idiomas (ES / EN / PT / RU / 中文), con
+- **Producto:** boceto v2.2 en tres idiomas publicados (ES / EN / PT; RU y 中文
+  preparados para la etapa 2), con
   privacidad, mapa a pedido, SEO y medición opcional; revisión de traducciones
   EN/PT con glosario, fotos AVIF/WebP y tipografías locales. Salida en `dist/`.
 - **Publicado en:** sin publicación de esta versión verificada. P07 está preparado;
@@ -87,7 +88,7 @@ src/
   content.pt.json
   content.ru.json
   content.zh.json
-  build.py           genera las cinco portadas y las cinco páginas de privacidad
+  build.py           genera portada y privacidad de cada idioma publicado
   privacy-template.html  privacidad; reutiliza los estilos y componentes del molde
   seo.py             metadatos, JSON-LD, sitemap.xml y robots.txt
   analytics.py       medición opcional y validación de contactos
@@ -101,9 +102,10 @@ python -m pip install -r requirements.txt
 python src/build.py
 ```
 
-Genera las portadas `/`, `/en/`, `/pt/`, `/ru/` y `/zh/`, y privacidad en
-`/privacidad/`, `/en/privacy/`, `/pt/privacidade/`, `/ru/privacy/` y
-`/zh/privacy/`, además de sitemap, robots y encabezados de Pages. Copia los
+Genera las portadas `/`, `/en/` y `/pt/`, y privacidad en `/privacidad/`,
+`/en/privacy/` y `/pt/privacidade/`, además de sitemap, robots y encabezados de
+Pages. Ruso y chino (`/ru/`, `/zh/`) quedan para la etapa 2: sus textos e imágenes
+siguen en el repo y se publican sumándolos a `IDIOMAS_PUBLICADOS` en `src/build.py`. Copia los
 recursos dentro de `dist/`. La salida se regenera por completo y está ignorada
 por Git. **El texto se edita en los JSON, nunca en los HTML generados**: el
 próximo build los pisa.
@@ -132,8 +134,9 @@ copias temporales y no modifican el contenido del estudio.
 - Un valor que empiece con `[PENDIENTE]` aparece resaltado en el build local.
 - `python src/build.py --produccion` falla mientras exista cualquier pendiente;
   lista idioma y clave sin regenerar `dist/`.
-- `SITE_URL` define canonical, hreflang, sitemap, JSON-LD e imágenes Open Graph.
-  Por defecto: `https://portillokusestudio.com/`. En PowerShell:
+- `SITE_URL` (constante en `src/seo.py`, `https://portillokusestudio.com`) define
+  canonical, hreflang, sitemap, JSON-LD e imágenes Open Graph. Para una vista de
+  prueba se cambia con la variable de entorno. En PowerShell:
 
 ```powershell
 $env:SITE_URL = 'https://nombre-del-proyecto.pages.dev/'
@@ -141,11 +144,12 @@ python src/build.py
 ```
 
 También se mantiene `--base-url URL` como override opcional. Para agregar un
-idioma, crear `src/content.<idioma>.json` con todas las claves y añadirlo a
-`LANGS` y `PRIVACY_SLUGS` en `src/build.py`; actualizar el selector en esa etapa.
+idioma, crear `src/content.<idioma>.json` con todas las claves, añadirlo a
+`TODOS_LOS_IDIOMAS`, `PRIVACY_SLUGS` e `IDIOMAS_PUBLICADOS` en `src/build.py`; el
+selector, hreflang y sitemap salen de esa lista.
 
-`INDEXAR` vacío mantiene noindex y `Disallow: /`. Sólo `INDEXAR=1` con el dominio
-final HTTPS permite indexación; `.pages.dev` sigue bloqueado aun con ese flag.
+Con `SITE_URL` de producción el sitio es indexable (sin meta robots y
+`Allow: /`). Cualquier otra URL, o `NOINDEX=1`, genera noindex y `Disallow: /`.
 Ver [SEO](docs/seo.md), [privacidad](docs/privacidad.md), [mapa](docs/mapa.md),
 [glosario](docs/glosario.md) y [correcciones de traducción](docs/cambios-traducciones.md).
 

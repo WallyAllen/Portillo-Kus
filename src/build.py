@@ -1,9 +1,11 @@
 """Genera dist/ desde template.html + content.<lang>.json.
 
 Uso: python src/build.py [--produccion] [--servir]
-SITE_URL define la URL pública (por defecto https://portillokusestudio.com/).
+La URL pública es seo.SITE_URL; la variable de entorno SITE_URL la cambia para
+una vista de prueba (que entonces sale con noindex).
 Para sumar un idioma nuevo: crear content.<lang>.json con las mismas claves que
-content.es.json, agregar una entrada a LANGS y una imagen og-<lang>.jpg.
+content.es.json, agregar una entrada a TODOS_LOS_IDIOMAS y una imagen og-<lang>.jpg,
+y nombrarlo en IDIOMAS_PUBLICADOS.
 """
 import json
 import re
@@ -17,7 +19,7 @@ from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from functools import partial
 from urllib.parse import quote, urlsplit
 from analytics import analytics_fields, validate_analytics
-from seo import metadata, write_files as write_seo_files
+from seo import SITE_URL, metadata, write_files as write_seo_files
 from headers import write_files as write_headers
 from images import prepare_images, render_images
 
@@ -38,14 +40,18 @@ CLIENTS = 1200
 SIN_CONFIRMAR = {"reviews", "rating", "clients"}
 
 # slug: carpeta de salida ("" = raíz) · html_lang: atributo lang · hreflang: código hreflang
-# thousands / decimal: separadores numéricos de cada idioma
-LANGS = [
-    {"code": "es", "slug": "", "html_lang": "es", "hreflang": "es", "label": "ES", "name": "Español", "thousands": ".", "decimal": ","},
-    {"code": "en", "slug": "en", "html_lang": "en", "hreflang": "en", "label": "EN", "name": "English", "thousands": ",", "decimal": "."},
-    {"code": "pt", "slug": "pt", "html_lang": "pt-BR", "hreflang": "pt-BR", "label": "PT", "name": "Português", "thousands": ".", "decimal": ","},
-    {"code": "ru", "slug": "ru", "html_lang": "ru", "hreflang": "ru", "label": "RU", "name": "Русский", "thousands": " ", "decimal": ","},
-    {"code": "zh", "slug": "zh", "html_lang": "zh-Hans", "hreflang": "zh-Hans", "label": "中文", "name": "中文", "thousands": ",", "decimal": "."},
+# og_locale: og:locale · thousands / decimal: separadores numéricos de cada idioma
+TODOS_LOS_IDIOMAS = [
+    {"code": "es", "slug": "", "html_lang": "es", "hreflang": "es", "og_locale": "es_AR", "label": "ES", "name": "Español", "thousands": ".", "decimal": ","},
+    {"code": "en", "slug": "en", "html_lang": "en", "hreflang": "en", "og_locale": "en_US", "label": "EN", "name": "English", "thousands": ",", "decimal": "."},
+    {"code": "pt", "slug": "pt", "html_lang": "pt-BR", "hreflang": "pt-BR", "og_locale": "pt_BR", "label": "PT", "name": "Português", "thousands": ".", "decimal": ","},
+    {"code": "ru", "slug": "ru", "html_lang": "ru", "hreflang": "ru", "og_locale": "ru_RU", "label": "RU", "name": "Русский", "thousands": " ", "decimal": ","},
+    {"code": "zh", "slug": "zh", "html_lang": "zh-Hans", "hreflang": "zh-Hans", "og_locale": "zh_CN", "label": "中文", "name": "中文", "thousands": ",", "decimal": "."},
 ]
+# Idiomas que se generan, se ofrecen en el selector y van a hreflang y sitemap.
+# Ruso y chino quedan para la etapa 2: para publicarlos, sumarlos acá.
+IDIOMAS_PUBLICADOS = ("es", "en", "pt")
+LANGS = [l for l in TODOS_LOS_IDIOMAS if l["code"] in IDIOMAS_PUBLICADOS]
 DEFAULT_LANG = "es"
 PRIVACY_SLUGS = {"es": "privacidad", "en": "en/privacy", "pt": "pt/privacidade",
                  "ru": "ru/privacy", "zh": "zh/privacy"}
@@ -294,7 +300,7 @@ def main():
     parser.add_argument("--servir", action="store_true", help="Genera y sirve dist/ en http://localhost:8532/.")
     parser.add_argument("--base-url", help="Override opcional de SITE_URL, por compatibilidad.")
     args = parser.parse_args()
-    base_url = (args.base_url or os.environ.get("SITE_URL") or "https://portillokusestudio.com/").strip().rstrip("/") + "/"
+    base_url = (args.base_url or os.environ.get("SITE_URL") or SITE_URL).strip().rstrip("/") + "/"
     url = urlsplit(base_url)
     if url.scheme not in ("http", "https") or not url.netloc or url.query or url.fragment:
         parser.exit(1, "SITE_URL debe ser una URL http(s) sin query ni fragmento.\n")
