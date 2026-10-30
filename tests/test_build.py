@@ -35,6 +35,26 @@ class BuildTests(unittest.TestCase):
         edit(data)
         path.write_text(json.dumps(data, ensure_ascii=False), encoding='utf-8')
 
+    def test_home_pages_carry_valid_json_ld(self):
+        self.assertEqual(self.run_build().returncode, 0)
+        for slug, lang in (('', 'es'), ('en', 'en'), ('pt', 'pt-BR')):
+            html = (self.root / 'dist' / slug / 'index.html').read_text(encoding='utf-8')
+            blocks = re.findall(r'<script type="application/ld\+json">(.*?)</script>', html, re.S)
+            self.assertEqual(len(blocks), 1, slug)
+            graph = {node['@type']: node for node in json.loads(blocks[0])['@graph']}
+            self.assertEqual(graph['WebSite']['url'], 'https://portillokusestudio.com/')
+            self.assertEqual(graph['WebSite']['inLanguage'], ['es', 'en', 'pt-BR'])
+            self.assertEqual(graph['WebPage']['inLanguage'], lang)
+            business = graph['LegalService']
+            self.assertEqual(business['name'], 'Portillo Kus & Asociados')
+            self.assertEqual(business['address']['postalCode'], 'C1035')
+            self.assertEqual(len(business['sameAs']), 4)
+            self.assertNotIn('aggregateRating', business)
+            # Pie y JSON-LD leen la misma config: cada red del JSON-LD está enlazada en el pie.
+            footer = html[html.index('<footer'):]
+            self.assertTrue(all(f'href="{url}"' in footer for url in business['sameAs']))
+            self.assertIn(business['email'], footer)
+
     def test_normal_output_and_site_url(self):
         result = self.run_build(site_url='https://example.pages.dev')
         self.assertEqual(result.returncode, 0, result.stderr)

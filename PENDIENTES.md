@@ -45,6 +45,9 @@ PENDIENTE / CONFIRMAR con el estudio antes de pasar esto a producción (boceto v
 [CONFIRMAR] En qué idiomas atiende el estudio además de español. La franja de
   idiomas de "Cómo trabajamos" se sacó (con el selector de 5 idiomas era
   redundante); si el estudio confirma idiomas de atención, sumarlo como ítem.
+  Ojo: el JSON-LD de la portada ya declara `knowsLanguage` con los idiomas
+  publicados (es, en, pt-BR, sale de `IDIOMAS_PUBLICADOS`). Si el estudio no
+  atiende en alguno, sacar `knowsLanguage` de `business()` en `src/seo.py`.
 [CONFIRMAR] Expedientes de ciudadanía resueltos: se usó "+1.200" (dato propio del
   estudio); un directorio externo menciona "más de 1.000".
 [CONFIRMAR] Los 4 pasos del proceso de ciudadanía son una reconstrucción razonable

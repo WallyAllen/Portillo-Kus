@@ -1161,7 +1161,7 @@ a[aria-disabled="true"]{ opacity: 0.65; cursor: default; }
           <div class="contact-actions">
             <a data-event="whatsapp_click" data-button="contacto-oficina-1" data-lang="{{analytics_lang}}" class="btn btn-primary" href="https://wa.me/{{wa_number}}?text={{url:contacto.wa_msg}}" target="_blank" rel="noopener">{{contacto.wa}}</a>
             <a data-event="telefono_click" data-button="contacto-oficina-1" data-lang="{{analytics_lang}}" class="btn btn-secondary" href="tel:{{tel}}">{{contacto.call}}</a>
-            <a data-event="mail_click" data-button="contacto-oficina-1" data-lang="{{analytics_lang}}" class="btn btn-secondary" href="mailto:{{footer.email}}">{{contacto.email}}</a>
+            <a data-event="mail_click" data-button="contacto-oficina-1" data-lang="{{analytics_lang}}" class="btn btn-secondary" href="mailto:{{email}}">{{contacto.email}}</a>
             <a data-event="como_llegar_click" data-button="contacto-como-llegar" data-context="contacto" data-lang="{{analytics_lang}}" class="btn btn-secondary" href="https://www.google.com/maps/dir/?api=1&amp;destination=Av.%20Pres.%20Roque%20S%C3%A1enz%20Pe%C3%B1a%20616%2C%20C1035%20CABA" target="_blank" rel="noopener">{{contacto.directions}}</a>
             <a class="btn btn-secondary" {{google_maps_link_attrs}} data-button="google_profile" data-context="contacto" data-lang="{{analytics_lang}}">{{contacto.google_maps_cta}}</a>
           </div>
@@ -1197,23 +1197,23 @@ a[aria-disabled="true"]{ opacity: 0.65; cursor: default; }
       <div>
         <div class="footer-logo"><strong>Portillo Kus</strong> &amp; Asociados</div>
         <div class="footer-social">
-          <a href="https://instagram.com/abogadoenargentina" target="_blank" rel="noopener" aria-label="Instagram de Portillo Kus & Asociados">
+          <a href="{{redes.instagram}}" target="_blank" rel="noopener" aria-label="Instagram de Portillo Kus & Asociados">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.5" fill="currentColor"/></svg>
           </a>
-          <a href="https://instagram.com/soyabogadoenargentina" target="_blank" rel="noopener" aria-label="Segunda cuenta de Instagram de Portillo Kus & Asociados">
+          <a href="{{redes.instagram_2}}" target="_blank" rel="noopener" aria-label="Segunda cuenta de Instagram de Portillo Kus & Asociados">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.5" fill="currentColor"/></svg>
           </a>
-          <a href="https://tiktok.com/@abogadoenargentina" target="_blank" rel="noopener" aria-label="TikTok de Portillo Kus & Asociados">
+          <a href="{{redes.tiktok}}" target="_blank" rel="noopener" aria-label="TikTok de Portillo Kus & Asociados">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 4v10.5a3.5 3.5 0 1 1-3-3.46"/><path d="M14 4c.4 2 1.9 3.5 4 3.8"/></svg>
           </a>
-          <a href="https://youtube.com/@portillokusestudio" target="_blank" rel="noopener" aria-label="YouTube de Portillo Kus & Asociados">
+          <a href="{{redes.youtube}}" target="_blank" rel="noopener" aria-label="YouTube de Portillo Kus & Asociados">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="4"/><path d="M10 9.5l5 2.5-5 2.5z" fill="currentColor" stroke="none"/></svg>
           </a>
         </div>
       </div>
       <div class="footer-meta">
         {{footer.address}}<br>
-        +54 9 11 2711-1987 · {{footer.email}}<br>
+        {{tel_visible}} · {{email}}<br>
         {{footer.hours}}
       </div>
     </div>

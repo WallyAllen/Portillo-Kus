@@ -23,7 +23,40 @@ def plain(value):
     return re.sub(r'<[^>]*>', '', str(value)).strip()
 
 
-def metadata(lang, flat, base_url, path, page='home', langs=()):
+def business(flat, base_url, image, langs, estudio):
+    """LegalService con los datos de ESTUDIO (build.py), los mismos que muestra el pie."""
+    horario = estudio['horario']
+    data = {
+        '@type': 'LegalService', '@id': base_url + '#estudio',
+        'name': estudio['nombre'], 'url': base_url,
+        'logo': base_url + 'portillo-images/logo.png', 'image': image,
+        'telephone': estudio['telefono'], 'email': estudio['email'],
+        'address': {'@type': 'PostalAddress', **estudio['direccion']},
+        'openingHoursSpecification': [{'@type': 'OpeningHoursSpecification',
+                    'dayOfWeek': horario['dias'], 'opens': horario['abre'], 'closes': horario['cierra']}],
+        'areaServed': {'@type': 'Country', 'name': 'Argentina'},
+        'knowsLanguage': [l['html_lang'] for l in langs],
+        'sameAs': list(estudio['redes'].values()),
+        'employee': {'@type': 'Person', 'name': plain(flat['estudio.name']),
+                     'jobTitle': plain(flat['estudio.role'])},
+        'hasOfferCatalog': {'@type': 'OfferCatalog', 'name': plain(flat['areas.eyebrow']),
+                    'itemListElement': [{'@type': 'Offer', 'itemOffered': {
+                        '@type': 'Service', 'name': plain(flat[f'areas.a{i}_title'])}}
+                        for i in range(1, 10)]},
+    }
+    # Traducciones del sitio no acreditan los idiomas de atención del estudio.
+    contact_languages = flat.get('seo.contact_languages', '')
+    if contact_languages and not str(contact_languages).startswith(PENDING):
+        codes = [s.strip() for s in str(contact_languages).split(',') if s.strip()]
+        if not codes or any(not re.fullmatch(r'[a-z]{2,3}(?:-[A-Za-z0-9]{2,8})*', code) for code in codes):
+            raise ValueError('seo.contact_languages debe contener códigos de idioma separados por coma.')
+        data['contactPoint'] = {'@type': 'ContactPoint',
+            'telephone': estudio['telefono'], 'contactType': 'customer service',
+            'availableLanguage': codes}
+    return data
+
+
+def metadata(lang, flat, base_url, path, page='home', langs=(), estudio=None):
     canonical = base_url + path
     title = flat['meta.title'] if page == 'home' else flat['privacy.meta_title']
     description = flat['meta.description'] if page == 'home' else flat['privacy.description']
@@ -39,7 +72,7 @@ def metadata(lang, flat, base_url, path, page='home', langs=()):
     if not can_index(base_url):
         tags.append('<meta name="robots" content="noindex, nofollow">')
     tags += ['<meta property="og:type" content="website">',
-            '<meta property="og:site_name" content="Portillo Kus &amp; Asociados">',
+            f'<meta property="og:site_name" content="{esc(estudio["nombre"])}">',
             f'<meta property="og:locale" content="{lang["og_locale"]}">',
             *(f'<meta property="og:locale:alternate" content="{l["og_locale"]}">'
               for l in langs if l['code'] != lang['code']),
@@ -62,46 +95,13 @@ def metadata(lang, flat, base_url, path, page='home', langs=()):
         'about': {'@id': base_url + '#estudio'},
     }, {
         '@type': 'WebSite', '@id': base_url + '#website', 'url': base_url,
-        'name': flat['contacto.card1_title'],
-        'inLanguage': [l['html_lang'] for l in langs],
+        'name': estudio['nombre'], 'inLanguage': [l['html_lang'] for l in langs],
         'publisher': {'@id': base_url + '#estudio'},
     }]
-    business = {
-        '@type': 'LegalService', '@id': base_url + '#estudio',
-        'name': flat['contacto.card1_title'], 'url': base_url,
-        'telephone': '+54 9 11 2711-1987', 'email': 'portillokusyasociados@gmail.com',
-        'address': {'@type': 'PostalAddress', 'streetAddress': flat['seo.street_address'],
-                    'addressLocality': 'Ciudad Autónoma de Buenos Aires',
-                    'addressRegion': 'CABA', 'postalCode': 'C1035', 'addressCountry': 'AR'},
-        'openingHoursSpecification': {'@type': 'OpeningHoursSpecification',
-                    'dayOfWeek': ['Monday','Tuesday','Wednesday','Thursday','Friday'],
-                    'opens': '10:30', 'closes': '18:00'},
-        'hasOfferCatalog': {'@type': 'OfferCatalog', 'name': plain(flat['areas.eyebrow']),
-                    'itemListElement': [{'@type': 'Offer', 'itemOffered': {
-                        '@type': 'Service', 'name': plain(flat[f'areas.a{i}_title'])}}
-                        for i in range(1, 10)]},
-    }
-    # Traducciones del sitio no acreditan los idiomas de atención del estudio.
-    contact_languages = flat.get('seo.contact_languages', '')
-    if contact_languages and not str(contact_languages).startswith(PENDING):
-        codes = [s.strip() for s in str(contact_languages).split(',') if s.strip()]
-        if not codes or any(not re.fullmatch(r'[a-z]{2,3}(?:-[A-Za-z0-9]{2,8})*', code) for code in codes):
-            raise ValueError('seo.contact_languages debe contener códigos de idioma separados por coma.')
-        business['contactPoint'] = {'@type': 'ContactPoint',
-            'telephone': business['telephone'], 'contactType': 'customer service',
-            'availableLanguage': codes}
-    rating, count_text = str(flat['num.rating']), str(flat['num.reviews'])
-    if not rating.startswith(PENDING) and not count_text.startswith(PENDING):
-        try:
-            value = float(flat['num.rating_raw'])
-            count = int(count_text)
-        except ValueError:
-            raise ValueError('Puntaje o cantidad de reseñas inválidos para JSON-LD.')
-        if not (1 <= value <= 5 and count > 0):
-            raise ValueError('Puntaje o cantidad de reseñas fuera de rango.')
-        business['aggregateRating'] = {'@type':'AggregateRating', 'ratingValue':value,
-                                      'reviewCount':count, 'bestRating':5, 'worstRating':1}
-    graph.append(business)
+    # El negocio va sólo en la portada. Sin aggregateRating ni review a propósito:
+    # Google no las acepta sobre el propio negocio.
+    if page == 'home':
+        graph.append(business(flat, base_url, image, langs, estudio))
     payload = json.dumps({'@context':'https://schema.org', '@graph':graph}, ensure_ascii=False)
     # Un JSON con </script> jamás puede cerrar el elemento que lo contiene.
     tags.append('<script type="application/ld+json">' + payload.replace('<', '\\u003c') + '</script>')

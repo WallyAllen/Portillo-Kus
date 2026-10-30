@@ -1,6 +1,7 @@
 import importlib.util
 import json
 import os
+import sys
 from pathlib import Path
 import tempfile
 import unittest
@@ -10,6 +11,8 @@ ROOT = Path(__file__).resolve().parents[1]
 spec = importlib.util.spec_from_file_location('seo',ROOT/'src/seo.py')
 seo = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(seo)
+sys.path.insert(0,str(ROOT/'src'))
+import build  # noqa: E402
 
 
 def flatten(data,prefix=''):
@@ -31,7 +34,7 @@ class SeoTests(unittest.TestCase):
                     {'code':'pt','html_lang':'pt-BR','hreflang':'pt-BR','slug':'pt','og_locale':'pt_BR'}]
 
     def rendered(self):
-        return seo.metadata(self.lang,self.flat,'https://portillokusestudio.com/','',langs=self.langs)
+        return seo.metadata(self.lang,self.flat,'https://portillokusestudio.com/','',langs=self.langs,estudio=build.ESTUDIO)
 
     def test_production_is_indexable_by_default_and_previews_are_not(self):
         with patch.dict(os.environ,{'NOINDEX':''}):
@@ -54,21 +57,39 @@ class SeoTests(unittest.TestCase):
         self.assertIn('<meta property="og:locale:alternate" content="pt_BR">',html)
         self.assertNotIn('og:locale:alternate" content="es_AR"',html)
 
-    def test_pending_rating_and_contact_languages_are_omitted(self):
-        html=self.rendered()
-        payload=json.loads(html.split('<script type="application/ld+json">')[1].split('</script>')[0])
-        business=payload['@graph'][-1]
-        self.assertNotIn('aggregateRating',business)
-        self.assertNotIn('contactPoint',business)
-        self.assertEqual(business['@type'],'LegalService')
-        self.assertIn('twitter:card',html)
-        self.assertIn('rel="canonical"',html)
+    def graph(self,page='home'):
+        html=seo.metadata(self.lang,self.flat,'https://portillokusestudio.com/','',page,self.langs,build.ESTUDIO)
+        return {node['@type']:node for node in json.loads(
+            html.split('<script type="application/ld+json">')[1].split('</script>')[0])['@graph']}
 
-    def test_confirmed_rating_is_included_and_invalid_rating_fails(self):
+    def test_pending_contact_languages_are_omitted(self):
+        business=self.graph()['LegalService']
+        self.assertNotIn('contactPoint',business)
+        self.assertIn('twitter:card',self.rendered())
+        self.assertIn('rel="canonical"',self.rendered())
+
+    def test_ratings_and_reviews_are_never_emitted(self):
+        # Ni con reseñas confirmadas: Google no admite las del propio negocio.
         self.flat.update({'num.rating':'5,0','num.reviews':'417'})
-        self.assertIn('aggregateRating',self.rendered())
-        self.flat['num.rating_raw']='6'
-        with self.assertRaises(ValueError): self.rendered()
+        html=self.rendered()
+        self.assertNotIn('aggregateRating',html)
+        self.assertNotIn('"review',html)
+
+    def test_business_reads_the_footer_config(self):
+        business=self.graph()['LegalService']
+        estudio=build.ESTUDIO
+        self.assertEqual(business['telephone'],'+5491127111987')
+        self.assertEqual(business['email'],estudio['email'])
+        self.assertEqual(business['sameAs'],list(estudio['redes'].values()))
+        self.assertEqual(business['address']['streetAddress'],estudio['direccion']['streetAddress'])
+        self.assertEqual(business['knowsLanguage'],['es','en','pt-BR'])
+        self.assertEqual(business['employee'],{'@type':'Person','name':'Dr. Denis Portillo','jobTitle':'Presidente Ejecutivo'})
+        self.assertTrue(business['logo'].startswith('https://') and business['image'].startswith('https://'))
+
+    def test_business_is_only_on_the_home_page(self):
+        self.flat.update({'privacy.meta_title':'Privacidad','privacy.description':'Política de privacidad.'})
+        self.assertNotIn('LegalService',self.graph('privacy'))
+        self.assertIn('WebSite',self.graph('privacy'))
 
     def test_metadata_limits_and_script_escaping(self):
         self.flat['meta.title']='x'*61

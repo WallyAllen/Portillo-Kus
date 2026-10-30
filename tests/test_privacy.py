@@ -13,6 +13,8 @@ from PIL import Image
 ROOT = Path(__file__).resolve().parents[1]
 ROUTES = {'es': 'privacidad', 'en': 'en/privacy', 'pt': 'pt/privacidade'}
 HREFLANG_CODE = {'pt-BR': 'pt'}
+sys.path.insert(0, str(ROOT / 'src'))
+import build  # noqa: E402
 
 
 class Links(HTMLParser):
@@ -91,7 +93,7 @@ class PrivacyTests(unittest.TestCase):
             mails = [attrs for tag, attrs in Links(self.page(ROUTES[code])).tags
                      if tag == 'a' and attrs.get('href', '').startswith('mailto:')]
             self.assertEqual(len(mails), 2)
-            self.assertTrue(all(a['href'] == 'mailto:' + content['footer']['email'] for a in mails))
+            self.assertTrue(all(a['href'] == 'mailto:' + build.ESTUDIO['email'] for a in mails))
             self.assertTrue(all(a['data-lang'] == code and a['data-button'] == 'privacidad'
                                 and a['data-event'] == 'mail_click' for a in mails))
 

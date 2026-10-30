@@ -34,6 +34,23 @@ IMAGE_SUFFIXES = {".jpg", ".jpeg", ".png", ".webp", ".avif", ".svg"}
 # En los textos de los JSON, "{reviews}" se reemplaza por la cantidad de reseñas.
 WA_NUMBER = "5491127111987"
 TEL = "+5491127111987"
+# Los mismos datos los leen el pie y el JSON-LD (seo.py): cambiarlos acá cambia los dos.
+ESTUDIO = {
+    "nombre": "Portillo Kus & Asociados",
+    "telefono": TEL,
+    "telefono_visible": "+54 9 11 2711-1987",
+    "email": "portillokusyasociados@gmail.com",
+    "direccion": {"streetAddress": "Av. Pte. Roque Sáenz Peña 616, piso 4, oficina 403",
+                  "addressLocality": "Ciudad Autónoma de Buenos Aires", "addressRegion": "CABA",
+                  "postalCode": "C1035", "addressCountry": "AR"},
+    "horario": {"dias": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+                "abre": "10:30", "cierra": "18:00"},
+    # Orden del pie; en el JSON-LD van como sameAs.
+    "redes": {"instagram": "https://instagram.com/abogadoenargentina",
+              "instagram_2": "https://instagram.com/soyabogadoenargentina",
+              "tiktok": "https://tiktok.com/@abogadoenargentina",
+              "youtube": "https://youtube.com/@portillokusestudio"},
+}
 REVIEWS = 417
 RATING = 5.0
 CLIENTS = 1200
@@ -190,6 +207,9 @@ def build(lang, template, base_url, flat, page="home", image_assets=None):
 
     flat["wa_number"] = WA_NUMBER
     flat["tel"] = TEL
+    flat["tel_visible"] = ESTUDIO["telefono_visible"]
+    flat["email"] = ESTUDIO["email"]
+    flat.update({f"redes.{red}": url for red, url in ESTUDIO["redes"].items()})
     flat["num.clients"] = dato("clients", fmt_number(CLIENTS, lang))
     flat["num.clients_raw"] = str(CLIENTS)
     flat["num.rating"] = dato("rating", fmt_number(RATING, lang, 1))
@@ -208,7 +228,7 @@ def build(lang, template, base_url, flat, page="home", image_assets=None):
     flat["font_preloads"] = font_preloads(lang["code"], flat["img_prefix"], page)
     # La 404 no es una página del sitio: sin canonical ni hreflang, y siempre noindex.
     flat["seo_tags"] = ('<meta name="robots" content="noindex">' if page == "404" else
-                        metadata(lang, flat, base_url, page_path(lang, page), page, LANGS))
+                        metadata(lang, flat, base_url, page_path(lang, page), page, LANGS, ESTUDIO))
 
     def lang_links(text_key):
         return "\n".join(
