@@ -87,7 +87,7 @@ class SeoTests(unittest.TestCase):
             seo.write_files(dist,'https://example.pages.dev/',self.langs,path_for)
             root=seo.ET.parse(dist/'sitemap.xml').getroot()
             self.assertEqual(len(root),6)
-            self.assertTrue(all(len(entry)==5 for entry in root))
+            self.assertTrue(all(len(entry)==6 for entry in root))
             self.assertIn('Disallow: /',(dist/'robots.txt').read_text())
 
 

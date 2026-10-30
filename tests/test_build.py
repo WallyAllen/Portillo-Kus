@@ -145,6 +145,37 @@ class BuildTests(unittest.TestCase):
         self.assertNotIn('Disallow', robots)
         self.assertIn(f'Sitemap: {site}sitemap.xml', robots)
 
+    def test_edge_files_404_icons_and_redirects(self):
+        (self.root / 'portillo-images' / 'notas.md').write_text('interno', encoding='utf-8')
+        self.assertEqual(self.run_build().returncode, 0)
+        dist = self.root / 'dist'
+        page = (dist / '404.html').read_text(encoding='utf-8')
+        self.assertIn('<meta name="robots" content="noindex">', page)
+        self.assertNotIn('rel="canonical"', page)
+        self.assertNotIn('hreflang="x-default"', page)
+        self.assertIn('Esta página no existe', page)
+        self.assertIn('href="/"', page)  # enlaces absolutos: la 404 se sirve desde cualquier ruta
+        self.assertIn('href="https://wa.me/', page)
+        for name in ('favicon.ico', 'favicon.svg', 'apple-touch-icon.png', 'site.webmanifest'):
+            self.assertTrue((dist / name).is_file(), name)
+        for html in ('index.html', 'en/index.html', 'privacidad/index.html', '404.html'):
+            head = (dist / html).read_text(encoding='utf-8')
+            for rel in ('rel="icon"', 'rel="apple-touch-icon"', 'rel="manifest"'):
+                self.assertIn(rel, head)
+        manifest = json.loads((dist / 'site.webmanifest').read_text(encoding='utf-8'))
+        self.assertEqual(manifest['theme_color'], '#F7F5F1')
+        redirects = (dist / '_redirects').read_text(encoding='utf-8')
+        for line in ('/index.html / 301', '/contacto /#contacto 301', '/servicios/ /#areas 301'):
+            self.assertIn(line, redirects)
+        self.assertFalse((dist / 'portillo-images' / 'notas.md').exists())
+        sitemap = (dist / 'sitemap.xml').read_text(encoding='utf-8')
+        self.assertEqual(sitemap.count('<lastmod>'), 6)
+        self.assertEqual((dist / 'robots.txt').read_text(encoding='utf-8'),
+                         'User-agent: *\nAllow: /\nSitemap: https://portillokusestudio.com/sitemap.xml\n')
+        config = (ROOT / 'wrangler.jsonc').read_text(encoding='utf-8')
+        self.assertIn('"not_found_handling": "404-page"', config)
+        self.assertIn('"directory": "./dist"', config)
+
     def test_hidden_languages_are_not_published(self):
         self.assertEqual(self.run_build().returncode, 0)
         dist = self.root / 'dist'

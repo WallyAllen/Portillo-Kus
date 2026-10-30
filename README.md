@@ -92,7 +92,10 @@ src/
   privacy-template.html  privacidad; reutiliza los estilos y componentes del molde
   seo.py             metadatos, JSON-LD, sitemap.xml y robots.txt
   analytics.py       medición opcional y validación de contactos
-  headers.py         genera _headers para Cloudflare Pages
+  headers.py         genera _headers para el Worker de Cloudflare
+  edge.py            íconos, site.webmanifest y _redirects del sitio viejo
+  404-template.html  página 404 (noindex)
+  icons/             favicon, apple-touch-icon e íconos del manifest
   _headers           reglas base de seguridad y caché
   images.py          variantes responsivas AVIF/WebP de las fotos originales
 ```
@@ -103,8 +106,8 @@ python src/build.py
 ```
 
 Genera las portadas `/`, `/en/` y `/pt/`, y privacidad en `/privacidad/`,
-`/en/privacy/` y `/pt/privacidade/`, además de sitemap, robots y encabezados de
-Pages. Ruso y chino (`/ru/`, `/zh/`) quedan para la etapa 2: sus textos e imágenes
+`/en/privacy/` y `/pt/privacidade/`, además de 404, sitemap, robots, íconos, redirecciones y encabezados
+del Worker. Ruso y chino (`/ru/`, `/zh/`) quedan para la etapa 2: sus textos e imágenes
 siguen en el repo y se publican sumándolos a `IDIOMAS_PUBLICADOS` en `src/build.py`. Copia los
 recursos dentro de `dist/`. La salida se regenera por completo y está ignorada
 por Git. **El texto se edita en los JSON, nunca en los HTML generados**: el
@@ -188,12 +191,12 @@ es un borrador no enviado.
 
 ## Cuando se publique
 
-- **Hosting:** Cloudflare Pages, plan gratis, en una cuenta a nombre del
-  estudio administrada por Felipe. **No Vercel Hobby** — no permite uso
-  comercial. Cuenta del estudio todavía pendiente de crear. Salida: `dist`.
-  Configuración y pasos de GitHub en [Cloudflare Pages](docs/cloudflare-pages.md).
-  Build con dependencias: `python -m pip install -r requirements.txt && python src/build.py`.
-  Para una salida final sin pendientes: `python src/build.py --produccion`.
+- **Hosting:** Worker de Cloudflare con Static Assets (`wrangler.jsonc` publica
+  solo `dist/`), en una cuenta a nombre del estudio administrada por Felipe.
+  **No Vercel Hobby** — no permite uso comercial. Pasos y comandos en
+  [Cloudflare Worker](docs/cloudflare-worker.md).
+  Build command: `python -m pip install -r requirements.txt && python src/build.py --produccion`;
+  deploy command: `npx wrangler deploy`.
 - **DNS:** para servir el dominio sin `www`, los nameservers tienen que estar
   en Cloudflare.
 - **Autogestión, sólo si se contrata:** Pages CMS (pagescms.org). El contenido vive en el repo y

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="{{html_lang}}">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Página no encontrada · Portillo Kus &amp; Asociados</title>
+<meta name="description" content="Esta página no existe.">
+<meta name="theme-color" content="#F7F5F1">
+{{seo_tags}}
+<link rel="icon" href="{{img_prefix}}favicon.ico" sizes="32x32">
+<link rel="icon" href="{{img_prefix}}favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="{{img_prefix}}apple-touch-icon.png">
+<link rel="manifest" href="{{img_prefix}}site.webmanifest">
+{{analytics_script}}
+{{site_resources}}
+{{site_styles}}
+<style>
+.nf-main{ padding-top: calc(var(--header-h-desktop) + var(--sp-8)); padding-bottom: var(--sp-8); min-height: 60vh; }
+.nf-main h1{ font-size: var(--text-3xl); }
+.nf-main p{ margin-top: var(--sp-3); color: var(--ink-muted); max-width: 52ch; }
+.nf-actions{ display: flex; flex-wrap: wrap; gap: var(--sp-3); margin-top: var(--sp-5); }
+.site-header .lang-switch a{ min-height: 44px; display: inline-flex; align-items: center; }
+@media(max-width: 360px){ .site-header .header-inner{ gap: var(--sp-2); } }
+</style>
+</head>
+<body>
+{{site_header}}
+<main id="top" class="nf-main">
+  <div class="container">
+    <h1>Esta página no existe</h1>
+    <p>Puede que el enlace esté desactualizado o que la dirección tenga un error. Volvé al inicio o escribinos por WhatsApp.</p>
+    <div class="nf-actions">
+      <a class="btn btn-primary" href="{{home_link}}">Ir al inicio</a>
+      <a class="btn btn-secondary" data-event="whatsapp_click" data-button="pagina-404" data-lang="{{analytics_lang}}" href="https://wa.me/{{wa_number}}?text={{url:nav.consultar_msg}}" target="_blank" rel="noopener">Escribinos por WhatsApp</a>
+    </div>
+  </div>
+</main>
+{{site_footer}}
+{{analytics_listener}}
+</body>
+</html>

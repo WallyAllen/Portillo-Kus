@@ -11,7 +11,7 @@ BUTTONS = (
     "area-laboral", "area-familia", "area-penal", "area-sucesiones",
     "area-danos", "area-consumidor", "area-empresas", "area-ciudadania-europea",
     "area-escribania", "proceso", "exterior", "contacto", "contacto-oficina-1",
-    "contacto-oficina-2", "contacto-mapa", "contacto-como-llegar", "barra-movil", "privacidad",
+    "contacto-oficina-2", "contacto-mapa", "contacto-como-llegar", "barra-movil", "privacidad", "pagina-404",
 )
 TOPICS = (
     "ciudadania", "residencia", "expulsion", "escribania", "laboral", "familia", "penal",

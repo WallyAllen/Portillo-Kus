@@ -1,0 +1,11 @@
+{
+  // Sólo assets estáticos: el Worker publica dist/, que genera `python src/build.py`.
+  // "name" es provisorio: debe coincidir con el nombre del Worker en Cloudflare.
+  "name": "portillo-kus",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "directory": "./dist",
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "404-page"
+  }
+}

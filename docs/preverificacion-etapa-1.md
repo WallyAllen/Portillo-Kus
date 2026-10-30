@@ -70,7 +70,7 @@ mediciones locales no reemplazan las del despliegue real.
 
 ### Verificaciones externas pendientes
 
-TLS, caché y `_headers` reales de Pages; el iframe real de Google Maps (en el
+TLS, caché y `_headers` reales del Worker; el iframe real de Google Maps (en el
 recorrido se intercepta); Umami sin UMAMI_ID; la vista previa al compartir por
 WhatsApp; revisión con tecnologías de asistencia reales.
 

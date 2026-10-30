@@ -78,6 +78,8 @@ Fuente: [transferencia a Cloudflare Registrar](https://developers.cloudflare.com
 
 ## Plan B — www con CNAME en el DNS actual
 
+> **Nota (30/10/2026):** el sitio se publica como Worker con Static Assets, no como Pages; el dominio se agrega en Worker → Settings → Domains & Routes y el destino del CNAME de www lo indica Cloudflare ahí (no un `.pages.dev`). Ver [Cloudflare Worker](cloudflare-worker.md).
+
 Después de crear Pages en la cuenta del estudio, agregar **primero** `www.portillokusestudio.com` en Custom domains. Luego pedir al proveedor que cambie el CNAME de www a la URL real `<proyecto>.pages.dev` entregada por Cloudflare. No inventar ese destino ni hacer el cambio ahora.
 
 Conserva registrador, NS y correo. El dominio raíz seguirá en `66.45.232.93` hasta una acción separada; acordar una redirección HTTPS del raíz a www con el proveedor y verificarla. No asumir que editar www arregla el raíz. Actualizar `SITE_URL` al nombre elegido en la publicación y verificar SSL y todos los idiomas.

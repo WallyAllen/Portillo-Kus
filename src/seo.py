@@ -3,6 +3,7 @@ import html
 import json
 import os
 import re
+from datetime import datetime, timezone
 from urllib.parse import urlsplit
 from xml.etree import ElementTree as ET
 
@@ -113,10 +114,12 @@ def write_files(dist, base_url, langs, path_for):
     ns = '{http://www.sitemaps.org/schemas/sitemap/0.9}'
     xhtml = '{http://www.w3.org/1999/xhtml}'
     root = ET.Element(ns + 'urlset')
+    built = datetime.now(timezone.utc).strftime('%Y-%m-%d')
     for page in ('home','privacy'):
         for lang in langs:
             entry = ET.SubElement(root, ns + 'url')
             ET.SubElement(entry, ns + 'loc').text = base_url + path_for(lang, page)
+            ET.SubElement(entry, ns + 'lastmod').text = built
             for alternate in langs:
                 ET.SubElement(entry, xhtml + 'link', rel='alternate',
                               hreflang=alternate['hreflang'], href=base_url+path_for(alternate,page))

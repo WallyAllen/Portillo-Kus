@@ -22,11 +22,13 @@ from analytics import analytics_fields, validate_analytics
 from seo import SITE_URL, metadata, write_files as write_seo_files
 from headers import write_files as write_headers
 from images import prepare_images, render_images
+from edge import write_files as write_edge_files
 
 BASE = pathlib.Path(__file__).resolve().parent
 SITE_ROOT = BASE.parent
 DIST = SITE_ROOT / "dist"
 PENDING = "[PENDIENTE]"
+IMAGE_SUFFIXES = {".jpg", ".jpeg", ".png", ".webp", ".avif", ".svg"}
 
 # Datos del estudio que se repiten en toda la página: se cambian solo acá.
 # En los textos de los JSON, "{reviews}" se reemplaza por la cantidad de reseñas.
@@ -92,6 +94,10 @@ def page_slug(lang, page="home"):
     return PRIVACY_SLUGS[lang["code"]] if page == "privacy" else lang["slug"]
 
 
+def lang_by_code(code):
+    return next(l for l in LANGS if l["code"] == code)
+
+
 def page_path(lang, page="home"):
     slug = page_slug(lang, page)
     return slug + "/" if slug else ""
@@ -103,13 +109,15 @@ def out_path_for(lang, page="home"):
 
 def rel_prefix_for(lang, page="home"):
     """Prefijo relativo hacia la raíz del sitio (donde vive portillo-images/)."""
+    if page == "404":
+        return "/"  # el Worker la sirve en cualquier ruta: sólo sirven los enlaces absolutos
     slug = page_slug(lang, page)
     return "../" * len(slug.split("/")) if slug else ""
 
 
 def link_to(target_lang, from_lang, page="home"):
     """Href relativo desde la página de from_lang hacia la home de target_lang."""
-    if from_lang["code"] == target_lang["code"]:
+    if from_lang["code"] == target_lang["code"] and page != "404":
         return "#top"
     prefix = rel_prefix_for(from_lang, page)
     slug = page_slug(target_lang, page)
@@ -192,12 +200,15 @@ def build(lang, template, base_url, flat, page="home", image_assets=None):
     flat.update(analytics_fields(lang["code"], os.environ.get("UMAMI_ID")))
     flat["img_prefix"] = rel_prefix_for(lang, page)
     flat["home_link"] = rel_prefix_for(lang, page) + (lang["slug"] + "/" if lang["slug"] else "") or "./"
-    flat["privacy_link"] = posixpath.relpath(PRIVACY_SLUGS[lang["code"]], page_slug(lang, page) or ".") + "/"
+    flat["privacy_link"] = ("/" + PRIVACY_SLUGS[lang["code"]] + "/" if page == "404" else
+                            posixpath.relpath(PRIVACY_SLUGS[lang["code"]], page_slug(lang, page) or ".") + "/")
     flat["og_image_url"] = f"{base_url}portillo-images/og-{lang['code']}.jpg"
-    flat["hreflang_tags"] = build_hreflang_tags(lang, base_url, page)
+    flat["hreflang_tags"] = "" if page == "404" else build_hreflang_tags(lang, base_url, page)
     flat["lang_label"] = lang["label"]
     flat["font_preloads"] = font_preloads(lang["code"], flat["img_prefix"], page)
-    flat["seo_tags"] = metadata(lang, flat, base_url, page_path(lang, page), page, LANGS)
+    # La 404 no es una página del sitio: sin canonical ni hreflang, y siempre noindex.
+    flat["seo_tags"] = ('<meta name="robots" content="noindex">' if page == "404" else
+                        metadata(lang, flat, base_url, page_path(lang, page), page, LANGS))
 
     def lang_links(text_key):
         return "\n".join(
@@ -273,9 +284,9 @@ def compactar(html):
     return re.sub(r"\n[ \t\r\n]+", "\n", html)
 
 
-def privacy_template(home_template):
+def privacy_template(home_template, name="privacy-template.html"):
     """Reuse the live home styles, logo and footer without duplicating their source."""
-    source = (BASE / "privacy-template.html").read_text(encoding="utf-8")
+    source = (BASE / name).read_text(encoding="utf-8")
     style = re.search(r"<style>.*?</style>", home_template, re.S).group(0)
     # Keep the same font/resource declarations, including future local-font changes.
     head = home_template.split("<style>", 1)[0]
@@ -339,6 +350,9 @@ def main():
         privacy = privacy_template(template)
         pages = [(lang, page, build(lang, source, base_url, contents[lang["code"]], page, image_assets))
                  for page, source in (("home", template), ("privacy", privacy)) for lang in LANGS]
+        es = lang_by_code(DEFAULT_LANG)
+        not_found = build(es, privacy_template(template, "404-template.html"), base_url,
+                          contents[DEFAULT_LANG], "404", image_assets)
     except (OSError, KeyError, ValueError) as error:
         parser.exit(1, f"No se pudo generar el sitio: {error}\n")
     images = SITE_ROOT / "portillo-images"
@@ -350,6 +364,10 @@ def main():
     if DIST.exists():
         shutil.rmtree(DIST)
     shutil.copytree(images, DIST / "portillo-images")
+    # Sólo imágenes: ninguna nota o archivo de trabajo de la carpeta sale al sitio.
+    for stray in (DIST / "portillo-images").iterdir():
+        if stray.suffix.lower() not in IMAGE_SUFFIXES:
+            stray.unlink()
     for filename, data in image_files.items():
         (DIST / "portillo-images" / filename).write_bytes(data)
     fonts = SITE_ROOT / "site-fonts"
@@ -361,7 +379,10 @@ def main():
         out.parent.mkdir(parents=True, exist_ok=True)
         out.write_text(html, encoding="utf-8")
         print(f"  {out.relative_to(SITE_ROOT)}  ({len(html.encode('utf-8'))/1024:.1f} KB)")
+    (DIST / "404.html").write_text(not_found, encoding="utf-8")
+    print(f"  dist/404.html  ({len(not_found.encode('utf-8'))/1024:.1f} KB)")
     write_seo_files(DIST, base_url, LANGS, page_path)
+    write_edge_files(DIST, BASE / "icons")
     write_headers(DIST, headers_source, LANGS, page_path)
     if args.servir:
         handler = partial(SimpleHTTPRequestHandler, directory=str(DIST))

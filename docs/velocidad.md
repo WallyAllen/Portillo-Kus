@@ -19,7 +19,7 @@ python src/build.py
 python -m unittest discover -s tests -v
 ```
 
-La distribución oficial de Pillow 12.3.0 incluye una rueda CPython 3.13 para Linux x86-64 (`manylinux_2_27`/`manylinux_2_28`). Su disponibilidad se verificó en [PyPI](https://pypi.org/project/pillow/12.3.0/); esto comprueba la compatibilidad de la dependencia, y no sustituye ejecutar el build en Cloudflare. La versión de Python y el comando de instalación de Pages se documentan en la preparación de P07.
+La distribución oficial de Pillow 12.3.0 incluye una rueda CPython 3.13 para Linux x86-64 (`manylinux_2_27`/`manylinux_2_28`). Su disponibilidad se verificó en [PyPI](https://pypi.org/project/pillow/12.3.0/); esto comprueba la compatibilidad de la dependencia, y no sustituye ejecutar el build en Cloudflare. La versión de Python y el comando de instalación se documentan en [Cloudflare Worker](cloudflare-worker.md).
 
 `scripts/fetch-fonts.py` permite volver a obtener los recursos desde Google Fonts y sus licencias desde el [repositorio oficial google/fonts](https://github.com/google/fonts). Es una tarea de mantenimiento manual. Las cuatro fuentes de producción ya están incluidas y el build funciona sin ese paso. El subconjunto latino cubre los idiomas actuales ES, EN y PT.
 
@@ -70,7 +70,7 @@ La inspección de los reportes de portada comprobó que no hay saltos de nivel e
 
 ## Herramientas reproducibles
 
-Las herramientas de auditoría son dependencias separadas del sitio: [Lighthouse](https://github.com/GoogleChrome/lighthouse), [axe-core](https://github.com/dequelabs/axe-core) y Playwright. El runner recibe sus rutas, por lo que no exige incorporarlas al build de Pages. Lighthouse requiere Node.js 22 o posterior.
+Las herramientas de auditoría son dependencias separadas del sitio: [Lighthouse](https://github.com/GoogleChrome/lighthouse), [axe-core](https://github.com/dequelabs/axe-core) y Playwright. El runner recibe sus rutas, por lo que no exige incorporarlas al build del Worker. Lighthouse requiere Node.js 22 o posterior.
 
 ```sh
 node scripts/audit-lighthouse.mjs --tools=/ruta/qa-tools --output=/ruta/evidencia/lighthouse --url=http://localhost:8537/ --langs=es,en,pt --runs=1 --chrome=/ruta/chrome
@@ -117,5 +117,5 @@ Aporte aproximado en ES, de a un cambio (una corrida cada uno): fuentes 2,70 →
 ### Límites, dicho sin vueltas
 
 - El mayor salto (punto 4) es real para quien entra desde el teléfono, porque las fuentes del título ya no compiten con la foto, pero en el número de Lighthouse pesa más todavía: la simulación no espera a las imágenes de prioridad baja, así que el informe móvil ya no registra cuándo termina de llegar la foto del hero. En una red lenta la foto puede aparecer un poco después que antes; el título, antes.
-- El servidor local no comprime ni reutiliza conexiones (HTTP/1.0). Cloudflare Pages entrega el HTML comprimido (unos 23 KB en vez de 92) por HTTP/2, así que en producción el compactado del punto 2 rinde mucho menos y el LCP debería salir más bajo que esta tabla. Hasta medir el despliegue, es una estimación.
+- El servidor local no comprime ni reutiliza conexiones (HTTP/1.0). Cloudflare entrega el HTML comprimido (unos 23 KB en vez de 92) por HTTP/2, así que en producción el compactado del punto 2 rinde mucho menos y el LCP debería salir más bajo que esta tabla. Hasta medir el despliegue, es una estimación.
 - Comprobado después de los cambios: build sin advertencias, `python -m pytest -q tests` con 28 pruebas aprobadas; `scripts/audit-browser.cjs` en las cinco portadas y las cinco páginas de privacidad a 390 y 1.440 px, sin violaciones de axe, sin desborde, sin errores de consola ni pedidos fallidos y con los mismos 17 objetivos chicos del carrusel que en `main`; `scripts/audit-interactions.cjs` con 56 checks aprobados. Capturas de página completa de `main` y de la rama, con movimiento reducido, idénticas en texto y maquetación en las diez vistas; las únicas diferencias de píxeles son fotos diferidas que todavía no habían cargado en una de las dos capturas.

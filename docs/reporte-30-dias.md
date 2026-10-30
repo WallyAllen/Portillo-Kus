@@ -10,7 +10,7 @@ El período empieza el día en que el sitio publicado tenga medición confirmada
    el dominio real. Invita al administrador con su propio usuario; no comparte
    contraseña. El ID del sitio se obtiene del código de seguimiento de esa cuenta.
 2. Configurar `UMAMI_ID` con ese UUID en las variables de build del entorno de
-   producción de Cloudflare Pages. Regenerar el sitio. No configurar un ID de
+   producción del Worker de Cloudflare. Regenerar el sitio. No configurar un ID de
    ejemplo ni copiar el fixture de las pruebas.
 3. Revisar en el navegador publicado que se carga `cloud.umami.is/script.js`,
    aparece una visita de prueba y se registra exactamente un evento por click.
