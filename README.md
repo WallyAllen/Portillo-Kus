@@ -134,9 +134,14 @@ copias temporales y no modifican el contenido del estudio.
 
 - Los JSON deben tener las mismas claves, incluidas las anidadas. El build falla
   y lista las faltantes o sobrantes por idioma, tomando español como referencia.
-- Un valor que empiece con `[PENDIENTE]` aparece resaltado en el build local.
-- `python src/build.py --produccion` falla mientras exista cualquier pendiente;
-  lista idioma y clave sin regenerar `dist/`.
+- Un dato que sólo el estudio puede dar va en un bloque `<!--si:clave-->…<!--/si:clave-->`
+  del molde: si la clave está vacía o empieza con `[PENDIENTE]`, el bloque entero
+  no se genera. Así se ocultan hoy reseñas, matrícula y socios (ver `PENDIENTES.md`).
+- Un `[PENDIENTE]` fuera de esos bloques aparece en la vista previa con su texto
+  base y la etiqueta "pendiente". `python src/build.py --produccion` falla si
+  alguno llega a una página; lista idioma y clave sin regenerar `dist/`.
+- `{reviews}` en los JSON es el piso de reseñas (`REVIEWS` en `src/build.py`,
+  los textos dicen "más de") y `{year}` el año del build, para el ©.
 - `SITE_URL` (constante en `src/seo.py`, `https://portillokusestudio.com`) define
   canonical, hreflang, sitemap, JSON-LD e imágenes Open Graph. Para una vista de
   prueba se cambia con la variable de entorno. En PowerShell:

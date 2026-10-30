@@ -13,7 +13,11 @@
     "main_nav": "主导航",
     "stats": "事务所数据",
     "carousel_prev": "上一个领域",
-    "carousel_next": "下一个领域"
+    "carousel_next": "下一个领域",
+    "social_instagram": "Portillo Kus & Asociados 的 Instagram",
+    "social_instagram_2": "Portillo Kus & Asociados 的第二个 Instagram 账号",
+    "social_tiktok": "Portillo Kus & Asociados 的 TikTok",
+    "social_youtube": "Portillo Kus & Asociados 的 YouTube"
   },
   "nav": {
     "ciudadania": "国籍",
@@ -36,12 +40,12 @@
     "cta_primary": "WhatsApp 咨询",
     "cta_primary_msg": "您好，我想咨询阿根廷国籍事宜。",
     "cta_secondary": "了解办理流程",
-    "reviews_text": "Google 上 {reviews} 条评价",
+    "reviews_text": "Google 上 {reviews} 多条评价",
     "address": "Av. Roque Sáenz Peña 616, 布宜诺斯艾利斯"
   },
   "stats": {
     "s1_label": "[PENDIENTE] 2020 年以来成功办结的国籍案件",
-    "s2_label": "Google 上 {reviews} 条评价",
+    "s2_label": "Google 上 {reviews} 多条评价",
     "s3_label": "法律业务领域",
     "s4_label": "付款方式，支持境外付款"
   },
@@ -147,7 +151,7 @@
     "photo_alt": "事务所办公桌上的正义女神像，旁边是印有 Portillo Kus & Asociados 标志的文件夹",
     "name": "Denis Portillo 律师",
     "role": "执行总裁",
-    "tag_matricula": "[PENDIENTE] 执业证号待补充",
+    "tag_matricula": "CPACF 执业注册",
     "team_note": "[PENDIENTE] 合伙人及执业证号：待补充"
   },
   "opiniones": {
@@ -161,7 +165,7 @@
     "r3_name": "[PENDIENTE] Jorge R.",
     "r4_text": "[PENDIENTE] \"Dennis is the BEST! I thought my case was hopeless after visiting other attorneys…\"",
     "r4_name": "[PENDIENTE] Adsterza",
-    "cta": "在 Google 上查看全部 {reviews} 条评价"
+    "cta": "在 Google 上查看 {reviews} 多条评价"
   },
   "trabajamos": {
     "eyebrow": "服务方式",
@@ -208,7 +212,7 @@
   "footer": {
     "tagline": "\"法律是我们的热忱所在。\"",
     "disclaimer": "Portillo Kus & Asociados 是一家私人律师事务所，并非官方机构，与阿根廷政府无任何关联。",
-    "rights": "© 2026 Portillo Kus & Asociados · 律师事务所",
+    "rights": "© {year} Portillo Kus & Asociados · 律师事务所",
     "address": "布宜诺斯艾利斯市 Av. Pte. Roque Sáenz Peña 616 号，Edificio Miguel Bencich 大厦 4 楼 403 室（邮编 C1035）",
     "hours": "周一至周五 10:30–18:00",
     "privacy_label": "隐私说明"

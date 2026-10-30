@@ -28,7 +28,8 @@ cualquier otro archivo de esa carpeta).
 - **Root directory:** `/`
 - Python: `3.13.3` por `.python-version`. `requirements.txt` instala Pillow
   (AVIF/WebP). Verificar en el log que se instaló.
-- `--produccion` falla mientras queden valores `[PENDIENTE]`: es a propósito.
+- `--produccion` falla si un valor `[PENDIENTE]` llega a una página: es a propósito.
+  Los datos que esperan al estudio van en bloques condicionales y no se generan.
 - Variables: `SITE_URL` no hace falta (el valor final está en `src/seo.py`);
   `NOINDEX=1` solo para una prueba en el dominio final; `UMAMI_ID` vacío hasta
   que exista el sitio en Umami Cloud.

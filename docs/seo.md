@@ -12,8 +12,9 @@ etapa 2: sus JSON e imágenes siguen en el repo, pero no están en
 selector, hreflang, `og:locale:alternate` ni el sitemap. Publicarlos es sumarlos
 a esa lista.
 
-Las tres imágenes `og-es/en/pt.jpg` existentes son 1200 × 630 px y pesan
-menos de 104 KB; se conservan.
+Las tres imágenes `og-es/en/pt.jpg` son 1200 × 630 px y pesan menos de 120 KB.
+Desde el 30/10/2026 dicen "más de 400 reseñas" (antes 417), igual que la página.
+`og-ru/zh.jpg` siguen con el 417: corregirlas antes de publicar esos idiomas.
 
 Los títulos y las descripciones usan servicios ya indicados en el boceto,
 sin citar puntajes, cantidades de reseñas ni cifras pendientes. El generador
@@ -26,9 +27,8 @@ describe las versiones de la web; no acredita los idiomas de atención.
 `seo.contact_languages` tenga idiomas confirmados, separados por coma.
 Mientras ese dato empieza con `[PENDIENTE]`, se omite.
 
-`aggregateRating` se omite si el puntaje (`stats.s2_value`) o la cantidad
-(`hero.reviews_text`) empiezan con `[PENDIENTE]`. P09 debe unificar esos campos
-al cargar las reseñas reales, manteniendo el mismo criterio de publicación.
+`aggregateRating` no se publica: Google no lo acepta sobre el propio negocio
+(ver `metadata()` en `src/seo.py`).
 
 ## Indexación
 

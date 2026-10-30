@@ -13,7 +13,11 @@
     "main_nav": "Navegação principal",
     "stats": "O escritório em números",
     "carousel_prev": "Área anterior",
-    "carousel_next": "Próxima área"
+    "carousel_next": "Próxima área",
+    "social_instagram": "Instagram da Portillo Kus & Asociados",
+    "social_instagram_2": "Segunda conta de Instagram da Portillo Kus & Asociados",
+    "social_tiktok": "TikTok da Portillo Kus & Asociados",
+    "social_youtube": "YouTube da Portillo Kus & Asociados"
   },
   "nav": {
     "ciudadania": "Cidadania",
@@ -32,16 +36,16 @@
     "img_alt": "Vista da Diagonal Norte (Av. Roque Sáenz Peña), a poucos passos do escritório, com o Obelisco ao fundo",
     "eyebrow": "ESCRITÓRIO DE ADVOCACIA · MICROCENTRO, BUENOS AIRES",
     "title": "Sua cidadania argentina, nas melhores mãos",
-    "sub": "[PENDIENTE] Assessoria jurídica em cidadania, residência e vistos. Mais de 1.200 processos de cidadania resolvidos favoravelmente desde 2020.",
+    "sub": "Assessoria jurídica em cidadania, residência e vistos. Mais de 1.200 processos de cidadania resolvidos favoravelmente desde 2020.",
     "cta_primary": "Consultar pelo WhatsApp",
     "cta_primary_msg": "Olá, gostaria de consultar sobre minha cidadania argentina.",
     "cta_secondary": "Como funciona o processo",
-    "reviews_text": "{reviews} avaliações no Google",
+    "reviews_text": "mais de {reviews} avaliações no Google",
     "address": "Av. Roque Sáenz Peña 616, Buenos Aires"
   },
   "stats": {
-    "s1_label": "[PENDIENTE] Cidadanias resolvidas desde 2020",
-    "s2_label": "{reviews} avaliações no Google",
+    "s1_label": "Cidadanias resolvidas desde 2020",
+    "s2_label": "Mais de {reviews} avaliações no Google",
     "s3_label": "Áreas do direito",
     "s4_label": "Formas de pagamento, também do exterior"
   },
@@ -67,11 +71,11 @@
   "ciudadania": {
     "eyebrow": "CIDADANIA ARGENTINA",
     "title": "Acompanhamos você em todo o processo",
-    "text": "[PENDIENTE] Oferecemos representação jurídica em todo o seu pedido de cidadania. Desde 2020 resolvemos favoravelmente mais de 1.200 processos, e também atuamos em pedidos de cidadania italiana e espanhola.",
-    "step1": "[PENDIENTE] 1. Consulta inicial, pelo WhatsApp ou no escritório.",
-    "step2": "[PENDIENTE] 2. Preparação da documentação.",
-    "step3": "[PENDIENTE] 3. Apresentação e acompanhamento do processo.",
-    "step4": "[PENDIENTE] 4. Acompanhamento até o juramento.",
+    "text": "Oferecemos representação jurídica em todo o seu pedido de cidadania. Desde 2020 resolvemos favoravelmente mais de 1.200 processos, e também atuamos em pedidos de cidadania italiana e espanhola.",
+    "step1": "1. Consulta inicial, pelo WhatsApp ou no escritório.",
+    "step2": "2. Preparação da documentação.",
+    "step3": "3. Apresentação e acompanhamento do processo.",
+    "step4": "4. Acompanhamento até o juramento.",
     "cta": "Consultar sobre minha cidadania",
     "cta_msg": "Olá, gostaria de consultar sobre minha cidadania argentina.",
     "photo_alt": "Dr. Portillo com um cliente e seu certificado de naturalização argentina, em frente ao Palacio de Tribunales"
@@ -147,7 +151,7 @@
     "photo_alt": "Estátua de Têmis sobre a mesa do escritório, junto a pastas com o logotipo da Portillo Kus & Asociados",
     "name": "Dr. Denis Portillo",
     "role": "Presidente Executivo",
-    "tag_matricula": "[PENDIENTE] REGISTRO PROFISSIONAL A CONFIRMAR",
+    "tag_matricula": "Inscrição na CPACF",
     "team_note": "[PENDIENTE] Sócios e registros profissionais: a completar"
   },
   "opiniones": {
@@ -161,7 +165,7 @@
     "r3_name": "[PENDIENTE] Jorge R.",
     "r4_text": "[PENDIENTE] \"Dennis is the BEST! I thought my case was hopeless after visiting other attorneys…\"",
     "r4_name": "[PENDIENTE] Adsterza",
-    "cta": "Ver as {reviews} avaliações no Google"
+    "cta": "Ver mais de {reviews} avaliações no Google"
   },
   "trabajamos": {
     "eyebrow": "COMO TRABALHAMOS",
@@ -208,7 +212,7 @@
   "footer": {
     "tagline": "\"O Direito é nossa paixão.\"",
     "disclaimer": "Portillo Kus & Asociados é um escritório de advocacia privado. Não é um órgão oficial nem tem vínculo com o Estado argentino.",
-    "rights": "© 2026 Portillo Kus & Asociados · Escritório de Advocacia",
+    "rights": "© {year} Portillo Kus & Asociados · Escritório de Advocacia",
     "address": "Edificio Miguel Bencich — Av. Pte. Roque Sáenz Peña 616, 4º andar, sala 403, C1035, Buenos Aires",
     "hours": "Segunda a sexta, das 10h30 às 18h",
     "privacy_label": "Privacidade"

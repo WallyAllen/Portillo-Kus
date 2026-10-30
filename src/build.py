@@ -15,6 +15,7 @@ import os
 import pathlib
 import posixpath
 import shutil
+from datetime import date
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from functools import partial
 from urllib.parse import quote, urlsplit
@@ -45,18 +46,23 @@ ESTUDIO = {
                   "postalCode": "C1035", "addressCountry": "AR"},
     "horario": {"dias": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
                 "abre": "10:30", "cierra": "18:00"},
+    # Matrícula CPACF del Dr. Portillo, tal como la dé el estudio (p. ej. "T° 100 F° 200").
+    # Vacía, "El estudio" no muestra la línea de matrícula.
+    "matricula": "",
     # Orden del pie; en el JSON-LD van como sameAs.
     "redes": {"instagram": "https://instagram.com/abogadoenargentina",
               "instagram_2": "https://instagram.com/soyabogadoenargentina",
               "tiktok": "https://tiktok.com/@abogadoenargentina",
               "youtube": "https://youtube.com/@portillokusestudio"},
 }
-REVIEWS = 417
+# Piso redondo: los textos dicen "más de {reviews}", así no envejece con cada reseña.
+# Ficha de Google al 30/10/2026: 5,0 con 448 reseñas.
+REVIEWS = 400
 RATING = 5.0
 CLIENTS = 1200
 # Datos de arriba que el estudio todavía no confirmó: se muestran marcados y
 # bloquean --produccion. Sacar el nombre cuando llegue el dato real.
-SIN_CONFIRMAR = {"reviews", "rating", "clients"}
+SIN_CONFIRMAR = set()
 
 # slug: carpeta de salida ("" = raíz) · html_lang: atributo lang · hreflang: código hreflang
 # og_locale: og:locale · thousands / decimal: separadores numéricos de cada idioma
@@ -86,10 +92,19 @@ def dato(nombre, texto):
 
 
 def resolve_reviews(value):
-    if not isinstance(value, str) or "{reviews}" not in value:
+    if not isinstance(value, str):
+        return value
+    value = value.replace("{year}", str(date.today().year))  # año del build, para el ©
+    if "{reviews}" not in value:
         return value
     value = value.replace("{reviews}", str(REVIEWS))
     return value if value.startswith(PENDING) else dato("reviews", value)
+
+
+def oculto(value):
+    """Vacío o pendiente: el bloque que depende de ese dato no se genera."""
+    value = str(value).strip()
+    return not value or value.startswith(PENDING)
 
 
 def flatten(d, prefix=""):
@@ -202,13 +217,18 @@ def font_preloads(code, prefix, page="home"):
     return "\n".join(tags)
 
 
-def build(lang, template, base_url, flat, page="home", image_assets=None):
+def build(lang, template, base_url, flat, page="home", image_assets=None, pendientes=None):
+    """pendientes: si es una lista, se le suma "idioma: clave" por cada pendiente que llega a la página."""
     flat = dict(flat)
 
     flat["wa_number"] = WA_NUMBER
     flat["tel"] = TEL
     flat["tel_visible"] = ESTUDIO["telefono_visible"]
     flat["email"] = ESTUDIO["email"]
+    flat["estudio.matricula"] = ESTUDIO["matricula"]
+    direccion = ESTUDIO["direccion"]
+    destino = f'{direccion["streetAddress"].split(",")[0]}, {direccion["postalCode"]} CABA'
+    flat["maps_directions_url"] = "https://www.google.com/maps/dir/?api=1&amp;destination=" + quote(destino, safe="")
     flat.update({f"redes.{red}": url for red, url in ESTUDIO["redes"].items()})
     flat["num.clients"] = dato("clients", fmt_number(CLIENTS, lang))
     flat["num.clients_raw"] = str(CLIENTS)
@@ -241,6 +261,15 @@ def build(lang, template, base_url, flat, page="home", image_assets=None):
     flat["lang_links"] = lang_links("label")
     flat["lang_links_named"] = lang_links("name")
 
+    # <!--si:clave-->…<!--/si:clave--> sólo se genera si la clave tiene un dato
+    # cargado: vacío o pendiente, el bloque entero (título, separador) no existe.
+    def si(m):
+        if m.group(1) not in flat:
+            raise KeyError(f"Falta la clave {m.group(1)} del bloque condicional en content.{lang['code']}.json")
+        return "" if oculto(flat[m.group(1)]) else m.group(2)
+
+    template = re.sub(r"<!--si:([\w.\-]+)-->(.*?)<!--/si:\1-->", si, template, flags=re.S)
+
     flagged_cards = set()
 
     # {{clave}} inserta el texto tal cual; {{url:clave}} lo codifica para usarlo en una URL
@@ -252,6 +281,8 @@ def build(lang, template, base_url, flat, page="home", image_assets=None):
         pending = value.startswith(PENDING)
         # La vista previa muestra el texto base; el marcador sólo frena --produccion.
         base = value.removeprefix(PENDING).lstrip() if pending else value
+        if pending and pendientes is not None:
+            pendientes.append(f"{lang['code']}: {key}")
         if as_url:
             return quote(base, safe="")
         if pending:
@@ -261,15 +292,13 @@ def build(lang, template, base_url, flat, page="home", image_assets=None):
             in_title = before.rfind("<title>") > before.rfind("</title>")
             if in_tag or in_title:
                 return html_tools.escape(base, quote=True)
-            # Sin etiqueta dentro de un botón o enlace (lo deformaría), dentro de un
-            # aviso que ya dice "a completar", ni repetida en la misma tarjeta o
-            # lista: una aclaración por bloque alcanza.
+            # Sin etiqueta dentro de un botón o enlace (lo deformaría) ni repetida
+            # en la misma tarjeta o lista: una aclaración por bloque alcanza.
             opened = lambda tag: max(before.rfind(f"<{tag} "), before.rfind(f"<{tag}>")) > before.rfind(f"</{tag}>")
-            in_notice = before.rfind('class="tag-pending') > before.rfind("</span>")
             blocks = [before.rfind(f"<{tag}") for tag in ("article", "ol", "ul") if opened(tag)]
             block = max(blocks, default=-1)
             flag = ""
-            if not (opened("a") or opened("button") or in_notice or (block >= 0 and block in flagged_cards)):
+            if not (opened("a") or opened("button") or (block >= 0 and block in flagged_cards)):
                 flagged_cards.add(block)
                 flag = '<span class="pending-flag">pendiente</span>'
             return f'<span class="pending-content" data-pending="{key}">{base}</span>{flag}'
@@ -327,7 +356,7 @@ def privacy_template(home_template, name="privacy-template.html"):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--produccion", action="store_true", help="Falla si quedan valores [PENDIENTE].")
+    parser.add_argument("--produccion", action="store_true", help="Falla si algún valor [PENDIENTE] llega a una página.")
     parser.add_argument("--servir", action="store_true", help="Genera y sirve dist/ en http://localhost:8532/.")
     parser.add_argument("--base-url", help="Override opcional de SITE_URL, por compatibilidad.")
     args = parser.parse_args()
@@ -355,12 +384,9 @@ def main():
     if errors:
         parser.exit(1, "Claves diferentes entre idiomas (referencia: es):\n" + "\n".join(errors) + "\n")
 
-    pending = [f"{code}: {key}" for code, flat in contents.items()
-               for key, value in sorted(flat.items())
-               if isinstance(value, str) and value.startswith(PENDING)]
-    pending += [f"build.py: {name}" for name in sorted(SIN_CONFIRMAR - {"reviews"})]
-    if args.produccion and pending:
-        parser.exit(1, "Producción bloqueada por pendientes:\n" + "\n".join(pending) + "\n")
+    # Lo que bloquea es un pendiente que llega a la página. Los que sólo viven en
+    # bloques <!--si:…--> no se generan, así que no bloquean.
+    pending = [f"build.py: {name}" for name in sorted(SIN_CONFIRMAR - {"reviews"})]
 
     template = (BASE / "template.html").read_text(encoding="utf-8")
     images = SITE_ROOT / "portillo-images"
@@ -368,13 +394,15 @@ def main():
         headers_source = (BASE / "_headers").read_text(encoding="utf-8")
         image_assets, image_files = prepare_images(images, template)
         privacy = privacy_template(template)
-        pages = [(lang, page, build(lang, source, base_url, contents[lang["code"]], page, image_assets))
+        pages = [(lang, page, build(lang, source, base_url, contents[lang["code"]], page, image_assets, pending))
                  for page, source in (("home", template), ("privacy", privacy)) for lang in LANGS]
         es = lang_by_code(DEFAULT_LANG)
         not_found = build(es, privacy_template(template, "404-template.html"), base_url,
-                          contents[DEFAULT_LANG], "404", image_assets)
+                          contents[DEFAULT_LANG], "404", image_assets, pending)
     except (OSError, KeyError, ValueError) as error:
         parser.exit(1, f"No se pudo generar el sitio: {error}\n")
+    if args.produccion and pending:
+        parser.exit(1, "Producción bloqueada por pendientes:\n" + "\n".join(dict.fromkeys(pending)) + "\n")
     images = SITE_ROOT / "portillo-images"
     if not images.is_dir():
         parser.exit(1, "Falta portillo-images/.\n")

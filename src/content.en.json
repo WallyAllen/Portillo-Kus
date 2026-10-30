@@ -13,7 +13,11 @@
     "main_nav": "Main navigation",
     "stats": "The firm in numbers",
     "carousel_prev": "Previous area",
-    "carousel_next": "Next area"
+    "carousel_next": "Next area",
+    "social_instagram": "Portillo Kus & Asociados on Instagram",
+    "social_instagram_2": "Portillo Kus & Asociados' second Instagram account",
+    "social_tiktok": "Portillo Kus & Asociados on TikTok",
+    "social_youtube": "Portillo Kus & Asociados on YouTube"
   },
   "nav": {
     "ciudadania": "Citizenship",
@@ -32,16 +36,16 @@
     "img_alt": "View of Diagonal Norte (Av. Roque Sáenz Peña), steps from the firm, with the Obelisk in the background",
     "eyebrow": "LAW FIRM · MICROCENTRO, BUENOS AIRES",
     "title": "Your Argentine citizenship, in the best hands",
-    "sub": "[PENDIENTE] Legal representation in citizenship, residence and visa matters. Over 1,200 citizenship cases resolved favourably since 2020.",
+    "sub": "Legal representation in citizenship, residence and visa matters. Over 1,200 citizenship cases resolved favourably since 2020.",
     "cta_primary": "Contact us on WhatsApp",
     "cta_primary_msg": "Hello, I would like advice on my Argentine citizenship application.",
     "cta_secondary": "How the process works",
-    "reviews_text": "{reviews} Google reviews",
+    "reviews_text": "over {reviews} Google reviews",
     "address": "Av. Roque Sáenz Peña 616, Buenos Aires"
   },
   "stats": {
-    "s1_label": "[PENDIENTE] Citizenship cases resolved since 2020",
-    "s2_label": "{reviews} Google reviews",
+    "s1_label": "Citizenship cases resolved since 2020",
+    "s2_label": "Over {reviews} Google reviews",
     "s3_label": "Areas of law",
     "s4_label": "Payment methods, including from abroad"
   },
@@ -67,11 +71,11 @@
   "ciudadania": {
     "eyebrow": "ARGENTINE CITIZENSHIP",
     "title": "We guide you through the whole process",
-    "text": "[PENDIENTE] We provide legal representation throughout your citizenship application. Since 2020, we have resolved over 1,200 cases favourably, and we also handle Italian and Spanish citizenship applications.",
-    "step1": "[PENDIENTE] 1. Initial consultation, by WhatsApp or at the firm.",
-    "step2": "[PENDIENTE] 2. Preparing the documentation.",
-    "step3": "[PENDIENTE] 3. Submitting and monitoring the application.",
-    "step4": "[PENDIENTE] 4. Support through the oath ceremony.",
+    "text": "We provide legal representation throughout your citizenship application. Since 2020, we have resolved over 1,200 cases favourably, and we also handle Italian and Spanish citizenship applications.",
+    "step1": "1. Initial consultation, by WhatsApp or at the firm.",
+    "step2": "2. Preparing the documentation.",
+    "step3": "3. Submitting and monitoring the application.",
+    "step4": "4. Support through the oath ceremony.",
     "cta": "Ask about my citizenship",
     "cta_msg": "Hello, I would like advice on my Argentine citizenship application.",
     "photo_alt": "Dr. Portillo with a client and their Argentine certificate of naturalisation, in front of the Palacio de Tribunales"
@@ -147,7 +151,7 @@
     "photo_alt": "Statue of Themis on the firm's desk, next to folders with the Portillo Kus & Asociados logo",
     "name": "Dr. Denis Portillo",
     "role": "Executive President",
-    "tag_matricula": "[PENDIENTE] BAR NUMBER TO BE ADDED",
+    "tag_matricula": "CPACF bar registration",
     "team_note": "[PENDIENTE] Partners and bar numbers: to be completed"
   },
   "opiniones": {
@@ -161,7 +165,7 @@
     "r3_name": "[PENDIENTE] Jorge R.",
     "r4_text": "[PENDIENTE] \"Dennis is the BEST! I thought my case was hopeless after visiting other attorneys…\"",
     "r4_name": "[PENDIENTE] Adsterza",
-    "cta": "See all {reviews} reviews on Google"
+    "cta": "See over {reviews} reviews on Google"
   },
   "trabajamos": {
     "eyebrow": "HOW WE WORK",
@@ -208,7 +212,7 @@
   "footer": {
     "tagline": "\"The Law is our passion.\"",
     "disclaimer": "Portillo Kus & Asociados is a private law firm. It is not a government body and is not affiliated with the Argentine State.",
-    "rights": "© 2026 Portillo Kus & Asociados · Law Firm",
+    "rights": "© {year} Portillo Kus & Asociados · Law Firm",
     "address": "Edificio Miguel Bencich — Av. Pte. Roque Sáenz Peña 616, 4th floor, office 403, C1035, Buenos Aires",
     "hours": "Monday to Friday, 10:30 am to 6 pm",
     "privacy_label": "Privacy"

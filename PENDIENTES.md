@@ -1,23 +1,48 @@
 # Pendientes antes de publicar
 
-Actualizado: 10/10/2026 · P00 a P06 reconciliados con el rediseño v2.2 y P07 preparado; P10 local parcial y P11 de solo lectura. P09 omitido por falta de reseñas adjuntas.
+Actualizado: 30/10/2026 · P4 de la entrega: el sitio publica sin placeholders.
+`python src/build.py --produccion` pasa.
 
-Los valores de contenido que empiezan con `[PENDIENTE]` se muestran en la vista
-previa con su texto base y una etiqueta discreta "pendiente" (una por tarjeta o
-lista; ninguna dentro de botones o enlaces), así las preentregas no pierden la
-visual. El marcador nunca aparece en la página. `python src/build.py --produccion`
-falla y lista idioma y clave. Para
-resolverlos, reemplazar el valor completo con el dato confirmado en los cinco
-JSON. No quitar el marcador para permitir publicar un dato sin evidencia.
+Criterio: si el texto base es correcto sin el dato faltante, se publica tal cual.
+Si depende de un dato que sólo el estudio puede dar, el elemento no se genera:
+va en un bloque `<!--si:clave-->…<!--/si:clave-->` de `src/template.html` y
+vuelve solo cuando la clave tiene un valor sin `[PENDIENTE]`. Un `[PENDIENTE]`
+fuera de esos bloques se ve en la vista previa con la etiqueta "pendiente" y
+hace fallar `--produccion`. No quitar el marcador para publicar un dato sin evidencia.
 
-## Campos que bloquean producción
+## Oculto hasta que el estudio pase el dato
 
-- Matrícula del Dr. Portillo y nombres/matrículas de socios: `estudio.tag_matricula`, `estudio.team_note`.
-- Cantidad de ciudadanías y año de inicio: `clients` en `SIN_CONFIRMAR` de `src/build.py`, `hero.sub`, `stats.s1_label`, `ciudadania.text`.
-- Pasos reales del trámite: `ciudadania.step1` a `ciudadania.step4`.
-- Reseñas completas y autores tal como figuran en Google: `opiniones.r1_text`/`r1_name` a `r4_text`/`r4_name`.
-- Puntaje y cantidad de reseñas: `rating` y `reviews` en `SIN_CONFIRMAR` de `src/build.py`. Mientras sigan ahí, todo texto con `{reviews}` se marca pendiente (`hero.reviews_text`, `stats.s2_label`, `opiniones.cta`) y el JSON-LD sale sin `aggregateRating`. Las imágenes `og-*.jpg` tienen el 417 escrito: regenerarlas si cambia. Desde P03, las descripciones SEO usan sólo servicios confirmados y no publican cifras pendientes.
-- Idiomas de atención confirmados: `seo.contact_languages` (códigos separados por coma, por ejemplo `es,en,pt-BR`, únicamente cuando el estudio los confirme).
+| Qué | Dónde se carga | Qué aparece al cargarlo |
+|---|---|---|
+| Matrícula CPACF del Dr. Portillo | `ESTUDIO["matricula"]` en `src/build.py` (p. ej. `"T° 100 F° 200"`) | Línea "Matrícula CPACF …" bajo su cargo en "El estudio", en los cinco idiomas |
+| Socios y sus matrículas | `estudio.team_note` en los cinco JSON, reemplazando el valor completo | Nota bajo la firma en "El estudio" |
+| Reseñas de Google, texto completo y autor tal como figuran | `opiniones.r1_text`/`r1_name` a `r4_text`/`r4_name` en los cinco JSON | Cada tarjeta aparece sola cuando su `rN_text` está cargado; sin ninguna, "Opiniones" muestra sólo el puntaje y el botón a Google |
+| Idiomas de atención | `seo.contact_languages` (códigos separados por coma, p. ej. `es,en,pt-BR`) | `ContactPoint.availableLanguage` en el JSON-LD |
+
+Si el `rN_text` se carga y el `rN_name` no, el nombre sale marcado y
+`--produccion` falla: es a propósito.
+
+## Publicado con el texto base
+
+- `hero.sub`, `stats.s1_label`, `ciudadania.text`: "+1.200 expedientes desde 2020"
+  se mantiene por decisión del 30/10/2026 (dato propio del estudio).
+- `ciudadania.step1` a `step4`: pasos genéricos (consulta, documentación,
+  presentación y seguimiento, jura). Siguen siendo una reconstrucción a partir del
+  brief: conviene que el estudio los revise, pero no afirman nada falso.
+- Reseñas y calificación: la ficha de Google mostraba 5,0 con 448 reseñas el
+  30/10/2026. La página dice "más de 400" (`REVIEWS = 400` en `src/build.py`, un
+  solo lugar); `og-es/en/pt.jpg` también. `og-ru/zh.jpg` siguen con el 417.
+
+## Cookies (revisado 30/10/2026)
+
+No hace falta aviso de cookies. El sitio no escribe cookies ni `localStorage`,
+no tiene formularios ni scripts de terceros al cargar: fuentes e imágenes son
+locales. Umami sólo se agrega si el build corre con `UMAMI_ID` (hoy no está en
+el repo; en Cloudflare, revisar que la variable siga vacía o sea el UUID real) y
+Umami Cloud no usa cookies. Lo único de terceros es el mapa de Google, que se
+carga recién al tocar "Ver mapa": desde ahí Google puede poner sus cookies, y
+la página de privacidad ya lo explica. Si se suma un embed, un píxel o un
+formulario, revisar esto de nuevo.
 
 El uso de la segunda línea ya no bloquea: el rediseño v2.2 sacó de la página
 su tarjeta. Sigue como pregunta para el estudio.

@@ -64,11 +64,10 @@ class BuildTests(unittest.TestCase):
             self.assertIn('https://example.pages.dev/portillo-images/og-', html)
             # Una URL que no es la de producción nunca se indexa.
             self.assertIn('<meta name="robots" content="noindex, nofollow">', html)
-            self.assertIn('data-pending="ciudadania.step1"', html)
-            self.assertNotIn('content="[PENDIENTE]', html)
-            # La vista previa muestra el texto base con una aclaración, sin el marcador.
+            # Lo que espera datos del estudio no se genera: la vista previa es lo que se publica.
             self.assertNotIn('[PENDIENTE]', html)
-            self.assertIn('<span class="pending-flag">pendiente</span>', html)
+            self.assertNotIn('data-pending=', html)
+            self.assertNotIn('pending-flag">', html)
             self.assertNotIn('{{', html)
             self.assertNotIn('vercel.app', html)
         self.assertEqual((self.root / 'dist/portillo-images/fixture.jpg').read_bytes(), b'fixture')
@@ -100,40 +99,93 @@ class BuildTests(unittest.TestCase):
         self.assertIn('en: sobran claves: nav.unused', result.stderr)
         self.assertFalse((self.root / 'dist').exists())
 
-    def test_production_reports_all_languages_and_preserves_previous_output(self):
+    def test_production_reports_visible_pending_in_all_languages_and_preserves_output(self):
         self.assertEqual(self.run_build().returncode, 0)
         before = (self.root / 'dist/index.html').read_bytes()
+        # Un pendiente fuera de un bloque condicional llega a la página: bloquea.
+        for code in ('es', 'en', 'pt'):
+            self.change(code, lambda d: d['hero'].update(sub='[PENDIENTE] ' + d['hero']['sub']))
         result = self.run_build('--produccion')
         self.assertEqual(result.returncode, 1)
         for code in ('es', 'en', 'pt'):
-            self.assertIn(f'{code}: estudio.tag_matricula', result.stderr)
-            self.assertIn(f'{code}: hero.reviews_text', result.stderr)
-            self.assertIn(f'{code}: opiniones.r4_text', result.stderr)
-        self.assertIn('build.py: clients', result.stderr)
-        self.assertIn('build.py: rating', result.stderr)
+            self.assertIn(f'{code}: hero.sub', result.stderr)
+            # Los que esperan datos del estudio están ocultos y no bloquean.
+            self.assertNotIn(f'{code}: opiniones.r4_text', result.stderr)
+            self.assertNotIn(f'{code}: estudio.team_note', result.stderr)
         self.assertEqual((self.root / 'dist/index.html').read_bytes(), before)
+        # Sin --produccion, la vista previa lo muestra con su aclaración.
+        self.assertEqual(self.run_build().returncode, 0)
+        html = (self.root / 'dist/index.html').read_text(encoding='utf-8')
+        self.assertIn('data-pending="hero.sub"', html)
+        self.assertIn('<span class="pending-flag">pendiente</span>', html)
 
-    def test_production_succeeds_only_after_resolving_pending_values(self):
-        def resolve(data):
-            for key, value in data.items():
-                if isinstance(value, dict):
-                    resolve(value)
-                elif key == 'contact_languages':
-                    data[key] = 'es,en,pt-BR'
-                elif isinstance(value, str) and value.startswith('[PENDIENTE]'):
-                    data[key] = value.removeprefix('[PENDIENTE] ').strip()
-        for code in ('es', 'en', 'pt', 'ru', 'zh'):
-            self.change(code, resolve)
+    def test_production_hides_blocks_until_the_studio_loads_the_data(self):
+        result = self.run_build('--produccion')
+        self.assertEqual(result.returncode, 0, result.stderr)
+        for slug in ('', 'en', 'pt'):
+            html = (self.root / 'dist' / slug / 'index.html').read_text(encoding='utf-8')
+            self.assertNotIn('class="review-card', html)
+            self.assertNotIn('class="team-role team-matricula', html)
+            self.assertNotIn('class="team-note"', html)
+            self.assertNotIn('a completar', html.lower())
+            self.assertNotIn('to be completed', html)
+            self.assertNotIn('417', html)
+            self.assertIn('400', html)
+        # Cargados los datos, los bloques vuelven sin tocar el molde.
         build = self.root / 'src/build.py'
         source = build.read_text(encoding='utf-8')
-        self.assertIn('SIN_CONFIRMAR = {"reviews", "rating", "clients"}', source)
-        build.write_text(source.replace('SIN_CONFIRMAR = {"reviews", "rating", "clients"}',
-                                        'SIN_CONFIRMAR = set()'), encoding='utf-8')
+        build.write_text(source.replace('"matricula": "",', '"matricula": "T° 1 F° 2",'), encoding='utf-8')
+        self.change('es', lambda d: d['opiniones'].update(r1_text='"Texto"', r1_name='Ana'))
+        self.change('es', lambda d: d['estudio'].update(team_note='Socios: Dra. Kus'))
         result = self.run_build('--produccion')
         self.assertEqual(result.returncode, 0, result.stderr)
         html = (self.root / 'dist/index.html').read_text(encoding='utf-8')
-        self.assertNotIn('data-pending=', html)
-        self.assertNotIn('[PENDIENTE]', html)
+        self.assertEqual(html.count('class="review-card'), 1)
+        self.assertIn('Matrícula CPACF T° 1 F° 2', html)
+        self.assertIn('Socios: Dra. Kus', html)
+
+    def test_copyright_year_and_review_floor(self):
+        from datetime import date
+        self.assertEqual(self.run_build().returncode, 0)
+        for slug, reviews in (('', 'más de 400 reseñas'), ('en', 'over 400 Google reviews'),
+                              ('pt', 'mais de 400 avaliações'), ('privacidad', None)):
+            html = (self.root / 'dist' / slug / 'index.html').read_text(encoding='utf-8')
+            self.assertIn(f'© {date.today().year} Portillo Kus', html)
+            self.assertNotIn('{year}', html)
+            if reviews:
+                self.assertIn(reviews, html)
+
+    def test_external_links_open_apart_and_contacts_match_the_page_language(self):
+        from html.parser import HTMLParser
+        from urllib.parse import parse_qs, urlsplit
+
+        class Links(HTMLParser):
+            def __init__(self):
+                super().__init__()
+                self.links = []
+
+            def handle_starttag(self, tag, attrs):
+                if tag == 'a':
+                    self.links.append(dict(attrs))
+        self.assertEqual(self.run_build().returncode, 0)
+        pages = {'': 'Hola', 'privacidad': 'Hola', 'en': 'Hello', 'en/privacy': 'Hello',
+                 'pt': 'Olá', 'pt/privacidade': 'Olá'}
+        for slug, greeting in pages.items():
+            parser = Links()
+            parser.feed((self.root / 'dist' / slug / 'index.html').read_text(encoding='utf-8'))
+            for link in parser.links:
+                href = urlsplit(link.get('href', ''))
+                if href.scheme in ('http', 'https') and href.hostname != 'portillokusestudio.com':
+                    self.assertEqual(link.get('target'), '_blank', href.geturl())
+                    self.assertIn('noopener', link.get('rel', ''), href.geturl())
+                if href.hostname == 'wa.me':
+                    self.assertEqual(href.path, '/5491127111987')
+                    text = parse_qs(href.query)['text'][0]
+                    self.assertTrue(text.startswith(greeting), (slug, text))
+                if href.scheme == 'tel':
+                    self.assertEqual(link['href'], 'tel:+5491127111987')
+                if href.scheme == 'mailto':
+                    self.assertEqual(link['href'], 'mailto:portillokusyasociados@gmail.com')
 
     def test_production_head_is_indexable_with_canonical_and_alternates(self):
         result = self.run_build()

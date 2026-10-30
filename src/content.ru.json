@@ -13,7 +13,11 @@
     "main_nav": "Основная навигация",
     "stats": "Фирма в цифрах",
     "carousel_prev": "Предыдущее направление",
-    "carousel_next": "Следующее направление"
+    "carousel_next": "Следующее направление",
+    "social_instagram": "Portillo Kus & Asociados в Instagram",
+    "social_instagram_2": "Второй аккаунт Portillo Kus & Asociados в Instagram",
+    "social_tiktok": "Portillo Kus & Asociados в TikTok",
+    "social_youtube": "Portillo Kus & Asociados на YouTube"
   },
   "nav": {
     "ciudadania": "Гражданство",
@@ -36,12 +40,12 @@
     "cta_primary": "Консультация в WhatsApp",
     "cta_primary_msg": "Здравствуйте! Я хотел(а) бы проконсультироваться по поводу аргентинского гражданства.",
     "cta_secondary": "Как проходит оформление",
-    "reviews_text": "{reviews} отзывов в Google",
+    "reviews_text": "более {reviews} отзывов в Google",
     "address": "Av. Roque Sáenz Peña 616, Буэнос-Айрес"
   },
   "stats": {
     "s1_label": "[PENDIENTE] Дел о гражданстве с 2020 года",
-    "s2_label": "{reviews} отзывов в Google",
+    "s2_label": "Более {reviews} отзывов в Google",
     "s3_label": "Отраслей права",
     "s4_label": "Способов оплаты, в том числе из-за рубежа"
   },
@@ -147,7 +151,7 @@
     "photo_alt": "Статуэтка Фемиды на столе в офисе рядом с папками с логотипом Portillo Kus & Asociados",
     "name": "Д-р Денис Портильо",
     "role": "Президент фирмы",
-    "tag_matricula": "[PENDIENTE] РЕГИСТРАЦИОННЫЙ НОМЕР УТОЧНЯЕТСЯ",
+    "tag_matricula": "Регистрация в CPACF",
     "team_note": "[PENDIENTE] Партнёры и регистрационные номера: уточняются"
   },
   "opiniones": {
@@ -161,7 +165,7 @@
     "r3_name": "[PENDIENTE] Jorge R.",
     "r4_text": "[PENDIENTE] \"Dennis is the BEST! I thought my case was hopeless after visiting other attorneys…\"",
     "r4_name": "[PENDIENTE] Adsterza",
-    "cta": "Все {reviews} отзывов в Google"
+    "cta": "Более {reviews} отзывов в Google"
   },
   "trabajamos": {
     "eyebrow": "КАК МЫ РАБОТАЕМ",
@@ -208,7 +212,7 @@
   "footer": {
     "tagline": "\"Право — наше призвание.\"",
     "disclaimer": "Portillo Kus & Asociados — частная юридическая фирма. Она не является государственным органом и не связана с государственными учреждениями Аргентины.",
-    "rights": "© 2026 Portillo Kus & Asociados · Юридическая фирма",
+    "rights": "© {year} Portillo Kus & Asociados · Юридическая фирма",
     "address": "Edificio Miguel Bencich — Av. Pte. Roque Sáenz Peña 616, 4-й этаж, офис 403, C1035, Буэнос-Айрес",
     "hours": "Пн–пт, с 10:30 до 18:00",
     "privacy_label": "Конфиденциальность"

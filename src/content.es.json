@@ -13,7 +13,11 @@
     "main_nav": "Navegación principal",
     "stats": "El estudio en cifras",
     "carousel_prev": "Área anterior",
-    "carousel_next": "Área siguiente"
+    "carousel_next": "Área siguiente",
+    "social_instagram": "Instagram de Portillo Kus & Asociados",
+    "social_instagram_2": "Segunda cuenta de Instagram de Portillo Kus & Asociados",
+    "social_tiktok": "TikTok de Portillo Kus & Asociados",
+    "social_youtube": "YouTube de Portillo Kus & Asociados"
   },
   "nav": {
     "ciudadania": "Ciudadanía",
@@ -32,16 +36,16 @@
     "img_alt": "Vista de Diagonal Norte (Av. Roque Sáenz Peña), a pasos del estudio, con el Obelisco al fondo",
     "eyebrow": "ESTUDIO JURÍDICO · MICROCENTRO, BUENOS AIRES",
     "title": "Tu ciudadanía argentina, en las mejores manos",
-    "sub": "[PENDIENTE] Patrocinio en ciudadanía, residencias y visas. Más de 1.200 expedientes de ciudadanía resueltos favorablemente desde 2020.",
+    "sub": "Patrocinio en ciudadanía, residencias y visas. Más de 1.200 expedientes de ciudadanía resueltos favorablemente desde 2020.",
     "cta_primary": "Consultar por WhatsApp",
     "cta_primary_msg": "Hola, quiero consultar por mi ciudadanía argentina.",
     "cta_secondary": "Cómo es el trámite",
-    "reviews_text": "{reviews} reseñas en Google",
+    "reviews_text": "más de {reviews} reseñas en Google",
     "address": "Av. Roque Sáenz Peña 616, CABA"
   },
   "stats": {
-    "s1_label": "[PENDIENTE] Ciudadanías resueltas desde 2020",
-    "s2_label": "{reviews} reseñas en Google",
+    "s1_label": "Ciudadanías resueltas desde 2020",
+    "s2_label": "Más de {reviews} reseñas en Google",
     "s3_label": "Áreas del derecho",
     "s4_label": "Medios de pago, también desde el exterior"
   },
@@ -67,11 +71,11 @@
   "ciudadania": {
     "eyebrow": "CIUDADANÍA ARGENTINA",
     "title": "Te acompañamos en todo el proceso",
-    "text": "[PENDIENTE] Patrocinamos tu carta de ciudadanía de principio a fin. Desde 2020 resolvimos favorablemente más de 1.200 expedientes, y también gestionamos ciudadanías italianas y españolas.",
-    "step1": "[PENDIENTE] 1. Consulta inicial, por WhatsApp o en el estudio.",
-    "step2": "[PENDIENTE] 2. Preparación de la documentación.",
-    "step3": "[PENDIENTE] 3. Presentación y seguimiento del expediente.",
-    "step4": "[PENDIENTE] 4. Acompañamiento hasta la jura.",
+    "text": "Patrocinamos tu carta de ciudadanía de principio a fin. Desde 2020 resolvimos favorablemente más de 1.200 expedientes, y también gestionamos ciudadanías italianas y españolas.",
+    "step1": "1. Consulta inicial, por WhatsApp o en el estudio.",
+    "step2": "2. Preparación de la documentación.",
+    "step3": "3. Presentación y seguimiento del expediente.",
+    "step4": "4. Acompañamiento hasta la jura.",
     "cta": "Consultar por mi ciudadanía",
     "cta_msg": "Hola, quiero consultar por mi ciudadanía argentina.",
     "photo_alt": "Dr. Portillo con un cliente y su carta de ciudadanía argentina, frente al Palacio de Tribunales"
@@ -147,7 +151,7 @@
     "photo_alt": "Estatua de Themis sobre el escritorio del estudio, junto a carpetas con el logo de Portillo Kus & Asociados",
     "name": "Dr. Denis Portillo",
     "role": "Presidente Ejecutivo",
-    "tag_matricula": "[PENDIENTE] MATRÍCULA A COMPLETAR",
+    "tag_matricula": "Matrícula CPACF",
     "team_note": "[PENDIENTE] Socios y matrículas: a completar"
   },
   "opiniones": {
@@ -161,7 +165,7 @@
     "r3_name": "[PENDIENTE] Jorge R.",
     "r4_text": "[PENDIENTE] \"Dennis is the BEST! I thought my case was hopeless after visiting other attorneys…\"",
     "r4_name": "[PENDIENTE] Adsterza",
-    "cta": "Ver las {reviews} opiniones en Google"
+    "cta": "Ver las más de {reviews} opiniones en Google"
   },
   "trabajamos": {
     "eyebrow": "CÓMO TRABAJAMOS",
@@ -208,7 +212,7 @@
   "footer": {
     "tagline": "\"El Derecho es nuestra pasión.\"",
     "disclaimer": "Portillo Kus & Asociados es un estudio jurídico privado. No es un organismo oficial ni tiene vínculo con el Estado argentino.",
-    "rights": "© 2026 Portillo Kus & Asociados · Estudio Jurídico",
+    "rights": "© {year} Portillo Kus & Asociados · Estudio Jurídico",
     "address": "Edificio Miguel Bencich — Av. Pte. Roque Sáenz Peña 616, piso 4, of. 403, C1035, CABA",
     "hours": "Lunes a viernes de 10:30 a 18 h",
     "privacy_label": "Privacidad"
