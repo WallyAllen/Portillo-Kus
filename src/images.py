@@ -71,3 +71,12 @@ def render_images(markup, assets):
                            f'imagesizes="{asset["sizes"]}" media="{media.group(1)}" fetchpriority="high">')
         return preload + '<picture>' + ''.join(sources) + tag + '</picture>' if sources else tag
     return re.sub(r'<img\b[^>]*\bsrc="([^" ]*portillo-images/)([^"/]+)"[^>]*>', replace, markup)
+
+
+def version_images(markup, digests):
+    """?v=<hash de contenido> en cada referencia a portillo-images/ (img, srcset,
+    preload, og:image, JSON-LD): la URL cambia con el archivo y puede ser immutable."""
+    def replace(match):
+        digest = digests.get(match.group(2))
+        return match.group(0) if digest is None else f'{match.group(1)}{match.group(2)}?v={digest}'
+    return re.sub(r'(portillo-images/)([\w.-]+\.(?:jpe?g|png|avif|webp))(?![\w.?-])', replace, markup)

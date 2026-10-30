@@ -7,6 +7,7 @@ Para sumar un idioma nuevo: crear content.<lang>.json con las mismas claves que
 content.es.json, agregar una entrada a TODOS_LOS_IDIOMAS y una imagen og-<lang>.jpg,
 y nombrarlo en IDIOMAS_PUBLICADOS.
 """
+import hashlib
 import json
 import re
 import argparse
@@ -22,7 +23,7 @@ from urllib.parse import quote, urlsplit
 from analytics import analytics_fields, validate_analytics
 from seo import SITE_URL, metadata, write_files as write_seo_files
 from headers import write_files as write_headers
-from images import prepare_images, render_images
+from images import prepare_images, render_images, version_images
 from edge import write_files as write_edge_files
 
 BASE = pathlib.Path(__file__).resolve().parent
@@ -407,6 +408,10 @@ def main():
     images = SITE_ROOT / "portillo-images"
     if not images.is_dir():
         parser.exit(1, "Falta portillo-images/.\n")
+    digests = {f.name: hashlib.sha256(f.read_bytes()).hexdigest()[:10] for f in images.iterdir() if f.is_file()}
+    digests.update({name: hashlib.sha256(data).hexdigest()[:10] for name, data in image_files.items()})
+    pages = [(lang, page, version_images(html, digests)) for lang, page, html in pages]
+    not_found = version_images(not_found, digests)
     # Rehacer únicamente la salida del proyecto evita publicar idiomas o archivos viejos.
     if DIST.is_symlink() or DIST.resolve().parent != SITE_ROOT:
         parser.exit(1, "dist/ debe estar dentro del proyecto y no ser un enlace.\n")
@@ -432,7 +437,7 @@ def main():
     print(f"  dist/404.html  ({len(not_found.encode('utf-8'))/1024:.1f} KB)")
     write_seo_files(DIST, base_url, LANGS, page_path)
     write_edge_files(DIST, BASE / "icons")
-    write_headers(DIST, headers_source, LANGS, page_path)
+    write_headers(DIST, headers_source, LANGS, page_path, [html for _, _, html in pages] + [not_found])
     if args.servir:
         handler = partial(SimpleHTTPRequestHandler, directory=str(DIST))
         with ThreadingHTTPServer(("127.0.0.1", 8532), handler) as server:

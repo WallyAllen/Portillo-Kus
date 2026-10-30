@@ -4,14 +4,9 @@
   Permissions-Policy: camera=(), microphone=(), geolocation=()
   X-Frame-Options: SAMEORIGIN
 
-/portillo-images/*
-  Cache-Control: public, max-age=604800
-
+# Fuentes e imágenes llevan hash de contenido en la URL (nombre o ?v=), así que no cambian nunca.
 /fonts/*
   Cache-Control: public, max-age=31536000, immutable
 
-https://:project.pages.dev/*
-  X-Robots-Tag: noindex, nofollow
-
-https://:version.:project.pages.dev/*
-  X-Robots-Tag: noindex, nofollow
+/portillo-images/*
+  Cache-Control: public, max-age=31536000, immutable

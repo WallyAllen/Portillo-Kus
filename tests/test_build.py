@@ -74,8 +74,8 @@ class BuildTests(unittest.TestCase):
         self.assertFalse((self.root / 'index.html').exists())
         headers = (self.root / 'dist/_headers').read_text(encoding='utf-8')
         self.assertIn('/en/privacy/\n  Cache-Control: public, max-age=0, must-revalidate', headers)
-        self.assertIn('/portillo-images/*\n  Cache-Control: public, max-age=604800', headers)
-        self.assertNotIn('/*\n  Cache-Control:', headers.split('/portillo-images/*')[0])
+        self.assertIn('/portillo-images/*\n  Cache-Control: public, max-age=31536000, immutable', headers)
+        self.assertNotIn('Cache-Control', headers.split('\n\n')[0])
         # A rebuild removes stale output, including obsolete language directories.
         (self.root / 'dist/obsolete.html').write_text('old', encoding='utf-8')
         self.assertEqual(self.run_build().returncode, 0)

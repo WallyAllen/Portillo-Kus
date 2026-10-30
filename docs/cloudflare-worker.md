@@ -36,8 +36,15 @@ cualquier otro archivo de esa carpeta).
 
 ## Archivos que genera el build para el Worker
 
-- `_headers`: copia de `src/_headers` más caché corta de los HTML. Las reglas
-  `*.pages.dev` quedan sin efecto en un Worker.
+- `_headers`: `src/_headers` (seguridad global, caché inmutable de `/fonts/*` y
+  `/portillo-images/*`) más `Cache-Control: max-age=0, must-revalidate` para el
+  HTML, sitemap, robots y manifest, y la `Content-Security-Policy` que arma
+  `src/headers.py`: el script en línea se autoriza por hash (sin `'unsafe-inline'`
+  en `script-src`) y Umami (`cloud.umami.is`, `api-gateway.umami.dev`) sólo
+  entra si se construyó con `UMAMI_ID`. Las imágenes llevan `?v=<hash>` en toda
+  referencia (HTML, srcset, og:image, JSON-LD), por eso pueden ser immutable.
+  Sin HSTS: se activa desde Cloudflare. Hay una sola regla `/*` (en Workers no
+  se combinan dos).
 - `_redirects`: 301 del sitio viejo (Weebyaa): `/index.html`, `/home`, `/inicio`
   → `/`; `/contacto` → `/#contacto`; `/nosotros` → `/#estudio`;
   `/servicios` → `/#areas` (con y sin barra final). Lista en `src/edge.py`.
