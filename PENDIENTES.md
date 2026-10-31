@@ -44,6 +44,12 @@ carga recién al tocar "Ver mapa": desde ahí Google puede poner sus cookies, y
 la página de privacidad ya lo explica. Si se suma un embed, un píxel o un
 formulario, revisar esto de nuevo.
 
+## Para confirmar con el estudio (publicado 31/10/2026)
+
+- Instagram: el pie y el `sameAs` del JSON-LD llevan dos cuentas
+  (abogadoenargentina y soyabogadoenargentina). Confirmar cuál es la oficial o
+  si van las dos; se cambia en `ESTUDIO` de `src/build.py`.
+
 El uso de la segunda línea ya no bloquea: el rediseño v2.2 sacó de la página
 su tarjeta. Sigue como pregunta para el estudio.
 
