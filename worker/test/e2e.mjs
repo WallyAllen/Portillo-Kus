@@ -285,6 +285,44 @@ async function principal() {
     assert.equal(github.head, antes);
   });
 
+  console.log('Contenido');
+  const editarEs = async (cambio) => {
+    const { commit, texto } = await leer(cliente, es);
+    const datos = JSON.parse(texto);
+    cambio(datos);
+    return { commit, archivo: { ruta: es, texto: JSON.stringify(datos, null, 2) } };
+  };
+  const JPEG = Buffer.from([0xff, 0xd8, 0xff, 0xe0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0xff, 0xd9]).toString('base64');
+  await caso('la lista cerrada vale también para un admin', async () => {
+    const campos = await (await cliente.pedir('/api/campos')).json();
+    assert.ok(campos.textos.some((c) => c.clave === 'hero.title'));
+    const { commit, archivo } = await editarEs((d) => { d.hero.eyebrow = 'Fuera de la lista'; });
+    const r = await cliente.pedir('/api/guardar', { metodo: 'POST', cuerpo: { base: commit, archivos: [archivo] } });
+    assert.equal(r.status, 422);
+    assert.ok((await r.json()).errores.some((t) => t.includes('no se puede editar')));
+    assert.equal(github.head, commit);
+  });
+  await caso('"<" y un texto demasiado largo: 422 con un mensaje entendible', async () => {
+    for (const [valor, parecido] of [['<script>alert(1)</script>', /carácter </], ['x'.repeat(300), /pasa de 220/]]) {
+      const { commit, archivo } = await editarEs((d) => { d.hero.sub = valor; });
+      const r = await cliente.pedir('/api/guardar', { metodo: 'POST', cuerpo: { base: commit, archivos: [archivo] } });
+      assert.equal(r.status, 422);
+      assert.ok((await r.json()).errores.some((t) => parecido.test(t)));
+    }
+  });
+  await caso('una foto no va a una ruta arbitraria ni sin su descripción', async () => {
+    for (const ruta of ['portillo-images/hero.jpg', 'portillo-images/area-laboral.jpg']) {
+      const r = await cliente.pedir('/api/guardar', { metodo: 'POST', cuerpo: { base: github.head, archivos: [{ ruta, base64: JPEG }] } });
+      assert.equal(r.status, 422);
+    }
+  });
+  await caso('una foto de servicio con su descripción nueva: un solo commit', async () => {
+    const { commit, archivo } = await editarEs((d) => { d.areas.a1_alt = 'Descripción de prueba'; });
+    const r = await cliente.pedir('/api/guardar', { metodo: 'POST', cuerpo: { base: commit, archivos: [{ ruta: 'portillo-images/area-laboral.jpg', base64: JPEG }, archivo] } });
+    assert.equal(r.status, 200, await r.clone().text());
+    assert.equal(github.leerEnHead('portillo-images/area-laboral.jpg').toString('base64'), JPEG);
+  });
+
   console.log('Traducciones');
   const redactor = new Cliente();
   const pendientesEnHead = () => JSON.parse(github.leerEnHead('src/traducciones-pendientes.json')).pendientes;

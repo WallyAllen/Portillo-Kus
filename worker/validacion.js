@@ -97,6 +97,9 @@ function validarAbogado(abogado, imagenes, errores) {
     const faltan = reglas.idiomasTodos.filter((c) => typeof textos[c] !== 'string');
     if (faltan.length) errores.push(`${nombre}: ${campo} sin ${faltan.join(', ')}`);
   }
+  if (abogado.linkedin && !String(abogado.linkedin).startsWith(LINKEDIN)) {
+    errores.push(`${nombre}: linkedin debe empezar con ${LINKEDIN}`);
+  }
   if (abogado.publicado !== true) return;
 
   if (incompleto(nombre)) errores.push(`${nombre}: falta el nombre real`);
@@ -112,9 +115,6 @@ function validarAbogado(abogado, imagenes, errores) {
     if (String(abogado.idiomas?.[codigo] ?? '').includes('[')) errores.push(`${nombre}: idiomas de muestra en ${codigo}`);
   }
   if (String(abogado.matricula ?? '').includes('[')) errores.push(`${nombre}: matrícula de muestra`);
-  if (abogado.linkedin && !String(abogado.linkedin).startsWith(LINKEDIN)) {
-    errores.push(`${nombre}: linkedin debe empezar con ${LINKEDIN}`);
-  }
 }
 
 function leerJson(texto, ruta, errores) {

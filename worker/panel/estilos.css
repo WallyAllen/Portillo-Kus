@@ -116,6 +116,18 @@ input:focus-visible, textarea:focus-visible, button:focus-visible, a:focus-visib
 .campo-check { display: flex; align-items: center; gap: .5rem; margin: .75rem 0 0; min-height: 44px; font-weight: 400; }
 .campo-check input { width: 22px; height: 22px; min-height: 0; flex-shrink: 0; }
 
+.acciones { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .75rem; }
+.campo-rotulo { font-weight: 600; margin-bottom: .25rem; }
+.abogados-lista { list-style: none; margin: 1rem 0 0; padding: 0; display: flex; flex-direction: column; gap: .75rem; }
+.abogado-fila-datos { display: flex; flex-wrap: wrap; align-items: baseline; gap: .25rem .75rem; overflow-wrap: anywhere; }
+.estado-publicado { font-size: .9rem; color: var(--ok); }
+.estado-oculto { font-size: .9rem; color: var(--ink-muted); }
+.abogado-confirmar { margin-top: .75rem; padding: .75rem; background: #FBEDEF; border-radius: 6px; display: flex; flex-wrap: wrap; gap: .5rem; }
+.abogado-confirmar p { flex-basis: 100%; margin: 0; font-weight: 600; overflow-wrap: anywhere; }
+.boton-borde:disabled { opacity: .4; cursor: default; }
+.boton-borde:disabled:hover { color: var(--brand); background: transparent; }
+.vista-previa { border-radius: 8px; overflow: hidden; padding: 1rem; background: var(--ink); }
+
 .fotos-rejilla { display: grid; gap: 1rem; }
 .foto-tarjeta { display: flex; flex-direction: column; min-width: 0; }
 .foto-tarjeta h3 { margin: 0 0 .5rem; font-size: 1.05rem; }

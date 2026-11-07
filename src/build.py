@@ -421,9 +421,11 @@ def main():
     if DIST.exists():
         shutil.rmtree(DIST)
     shutil.copytree(images, DIST / "portillo-images")
-    # Sólo imágenes: ninguna nota o archivo de trabajo de la carpeta sale al sitio.
+    # Sólo imágenes: ninguna nota o archivo de trabajo de la carpeta sale al sitio. Tampoco la foto
+    # de un abogado eliminado o sin publicar: el panel no borra archivos del repo.
+    fotos_usadas = {a.get("foto") for a in abogados}
     for stray in (DIST / "portillo-images").iterdir():
-        if stray.suffix.lower() not in IMAGE_SUFFIXES:
+        if stray.suffix.lower() not in IMAGE_SUFFIXES or (stray.name.startswith("abogado-") and stray.name not in fotos_usadas):
             stray.unlink()
     for filename, data in image_files.items():
         (DIST / "portillo-images" / filename).write_bytes(data)

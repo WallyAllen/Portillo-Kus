@@ -105,6 +105,7 @@
     {"nombre": "publicado con idiomas de muestra", "espera": "error", "cambios": [{"abogados": [{"idiomas": {"es": "[Idiomas]", "en": "x", "pt": "x", "ru": "x", "zh": "x"}}]}]},
     {"nombre": "publicado con matrícula de muestra", "espera": "error", "cambios": [{"abogados": [{"matricula": "[T° y F°]"}]}]},
     {"nombre": "publicado con linkedin ajeno", "espera": "error", "cambios": [{"abogados": [{"linkedin": "https://ejemplo.com/"}]}]},
+    {"nombre": "borrador con linkedin javascript", "espera": "error", "cambios": [{"abogados": [{"publicado": false, "linkedin": "javascript:alert(1)"}]}]},
     {"nombre": "equipo.json roto", "espera": "error", "cambios": [{"archivo": "src/equipo.json", "crudo": "{ roto"}]},
     {"nombre": "equipo.json sin la lista", "espera": "error", "cambios": [{"archivo": "src/equipo.json", "crudo": "{}"}]}
   ]

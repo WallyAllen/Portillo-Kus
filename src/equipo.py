@@ -57,6 +57,8 @@ def cargar(path, todos, publicados, imagenes, pendientes=None):
             faltan = set(todos) - set(abogado.get(campo, {}))
             if faltan:
                 errores.append(f"{nombre}: {campo} sin {', '.join(sorted(faltan))}")
+        if abogado.get("linkedin") and not str(abogado["linkedin"]).startswith("https://www.linkedin.com/in/"):
+            errores.append(f"{nombre}: linkedin debe empezar con https://www.linkedin.com/in/")
         if abogado.get("publicado") is not True:
             continue
         if _incompleto(nombre):
@@ -72,8 +74,6 @@ def cargar(path, todos, publicados, imagenes, pendientes=None):
                 errores.append(f"{nombre}: idiomas de muestra en {code}")
         if "[" in str(abogado.get("matricula", "")):
             errores.append(f"{nombre}: matrícula de muestra")
-        if abogado.get("linkedin") and not str(abogado["linkedin"]).startswith("https://www.linkedin.com/in/"):
-            errores.append(f"{nombre}: linkedin debe empezar con https://www.linkedin.com/in/")
     if errores:
         raise ValueError("equipo.json:\n" + "\n".join(errores))
     return abogados

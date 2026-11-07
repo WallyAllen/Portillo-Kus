@@ -225,6 +225,58 @@ dentro de `python -m unittest discover -s tests`:
 Donde el build fallaría por un dato con forma rara, el panel es más estricto: esos
 casos llevan `"estricto": true` y sólo corren en JS.
 
+## Pantallas de contenido
+
+**Lista cerrada.** Lo único de `content.*.json` que se edita está en
+`src/panel-campos.json`: los textos (clave, rótulo simple y largo máximo), las
+reseñas y las fotos de servicios. Para sumar un texto, se agrega ahí; las pruebas
+comprueban que la clave exista y que su largo alcance. `worker/campos.js` lo hace
+cumplir en `/api/guardar`, comparando contra la rama: una clave fuera de la lista da
+422 con **cualquier rol, también admin**. Ninguna pantalla necesita más, y una
+excepción abriría de nuevo el riesgo del script. Para cambiar otro texto se edita el
+repo.
+
+**Caracteres.** El build no escapa los textos: el servidor rechaza `<` en todo
+`content.*.json` que entra por el panel, traducciones incluidas. En un texto usado
+dentro de un atributo, como la descripción de una foto, también rechaza `"`.
+`equipo.json` sí se escapa al armar la página. Su LinkedIn tiene que empezar con
+`https://www.linkedin.com/in/`, también en un borrador. El largo máximo se aplica al
+español; una traducción puede ser más larga.
+
+**Fotos.** El navegador siempre recodifica a JPEG con recorte y 1200 px como máximo
+en el lado mayor (calidad 0.85), en `pantallas/imagen.js`. Esto descarta los datos
+EXIF y evita subir un archivo cortado. Una foto sin decodificar, como HEIC en un
+navegador que no la abre, da un aviso. El servidor sólo acepta un JPEG entero en estos
+nombres: los de `panel-campos.json` y `abogado-<slug>.jpg`, con el slug del `id` de un
+abogado de la lista. Por eso corregir un nombre no cambia el archivo.
+
+**Fotos de servicios.** Los nombres siguen escritos en `template.html` y no se
+pasaron a un dato: la foto nueva reemplaza el mismo archivo y `version_images` cambia
+la URL por el hash. Así, si nadie cambia una foto, el `dist/` queda igual. La
+descripción (`alt`) se edita junto con la foto: el servidor no acepta una foto sin una
+descripción distinta, porque la anterior dejaría de ser cierta. La descripción entra
+en traducciones pendientes como cualquier texto.
+
+**Abogados.** La lista se ordena con Subir y Bajar. Publicar a alguien incompleto
+abre su ficha con los avisos junto a cada campo. Eliminar saca la entrada de
+`equipo.json` y sus pendientes. **El panel no borra archivos:** la foto vieja queda en
+`portillo-images/`, pero el build no copia al `dist/` ninguna `abogado-*` que no use
+alguien publicado. Una foto reemplazada se pisa, y queda sólo en el historial de git.
+
+**Vista previa.** `pantallas/vista-abogado.js` copia el marcado de `equipo.render`, y
+`tests/test_panel_reglas.py` compara los dos resultados. El CSS no se copia: se lee de
+la portada publicada y se aplica en un shadow DOM con una hoja construida, lo que la
+CSP del panel admite. Una foto recién guardada no se ve en la vista previa hasta que
+termina la publicación.
+
+**Avisos antes de guardar.** `pantallas/revisar.js` repite las reglas del servidor en
+lenguaje simple. `worker/test/campos.test.mjs` y `abogados.test.mjs` comparan los dos
+sobre los mismos casos.
+
+**Horarios.** Los textos de horario se editan, pero `ESTUDIO["horario"]` en
+`build.py`, que alimenta los datos estructurados para buscadores, no. Si cambia el
+horario real, hay que actualizarlo en el repo.
+
 ## Sumar una pantalla
 
 1. Crear `worker/panel/cliente/pantallas/<nombre>.js` (ver `inicio.js`). `render`

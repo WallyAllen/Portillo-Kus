@@ -140,6 +140,47 @@ class PanelCamposTests(unittest.TestCase):
                     self.assertNotIn('"', str(valor), f'{codigo}: {clave}')
 
 
+class VistaPreviaTests(unittest.TestCase):
+    """La vista previa del panel copia el marcado de equipo.render: si cambia uno, falla acá."""
+
+    def renderizar_en_node(self, abogados, textos):
+        modulo = (ROOT / 'worker/panel/cliente/pantallas/vista-abogado.js').as_uri()
+        guion = (f"import {{ renderEquipo }} from {json.dumps(modulo)};"
+                 "const [a, t] = JSON.parse(process.argv[1]);"
+                 "process.stdout.write(renderEquipo(a, 'es', t, '/'));")
+        resultado = subprocess.run(['node', '--input-type=module', '-e', guion, json.dumps([abogados, textos])],
+                                   capture_output=True, text=True, encoding='utf-8', check=True)
+        return resultado.stdout
+
+    def test_mismo_marcado_que_el_sitio(self):
+        textos = build.flatten(json.loads((ROOT / 'src/content.es.json').read_text(encoding='utf-8')))
+        textos = {c: textos[c] for c in ('estudio.tag_matricula', 'equipo.ver_perfil', 'equipo.tag_idiomas', 'equipo.cerrar')}
+        peligroso = """<script>alert(1)</script> & "comillas" 'simples'"""
+        completo = {'nombre': peligroso, 'foto': 'abogado-1.jpg', 'matricula': peligroso, 'linkedin': 'https://www.linkedin.com/in/a"b/',
+                    'cargo': {'es': peligroso}, 'idiomas': {'es': peligroso}, 'biografia': {'es': f'Uno {peligroso}\n\n  Dos  \n\n\n\n'}}
+        minimo = {'nombre': 'Sin datos', 'foto': '', 'matricula': '', 'linkedin': '',
+                  'cargo': {'es': ''}, 'idiomas': {'es': ' '}, 'biografia': {'es': ''}}
+        for abogados in ([], [minimo], [completo, minimo]):
+            with self.subTest(len(abogados)):
+                salida = equipo.render(abogados, 'es', textos, '/')
+                self.assertEqual(self.renderizar_en_node(abogados, textos), salida)
+                self.assertNotIn('<script', salida)
+
+
+class FotosHuerfanasTests(unittest.TestCase):
+    def test_la_foto_de_un_abogado_que_ya_no_esta_no_se_publica(self):
+        with tempfile.TemporaryDirectory() as temporal:
+            raiz = Path(temporal)
+            shutil.copytree(ROOT / 'src', raiz / 'src')
+            (raiz / 'portillo-images').mkdir()
+            for nombre in ('abogado-viejo.jpg', 'otra.jpg'):
+                Image.new('RGB', (100, 100)).save(raiz / 'portillo-images' / nombre)
+            subprocess.run([sys.executable, str(raiz / 'src/build.py'), '--produccion'], check=True, capture_output=True,
+                           env=dict(os.environ, PYTHONUTF8='1'))
+            self.assertFalse((raiz / 'dist/portillo-images/abogado-viejo.jpg').exists())
+            self.assertTrue((raiz / 'dist/portillo-images/otra.jpg').exists())
+
+
 class CasosCompartidosTests(unittest.TestCase):
     def test_build_produccion_da_lo_que_dicen_los_casos(self):
         with tempfile.TemporaryDirectory() as temporal:
