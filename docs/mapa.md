@@ -13,7 +13,8 @@ Sáenz Peña 616, piso 4, oficina 403, C1035 CABA. La oficina coincide con la
 domicilio, teléfonos, horarios, reseñas ni valoración en este paso.
 
 `google_maps_url` es la única clave de cada JSON para los enlaces a la ficha;
-se usa en portada, opiniones y contacto. Un valor pendiente, vacío, malformado
+se usa en portada, opiniones, contacto y en `hasMap` del JSON-LD de la portada,
+que se omite si la URL no es válida. Un valor pendiente, vacío, malformado
 o ajeno a Google Maps genera un enlace con `role="link" aria-disabled="true"`,
 sin `href` ni `tabindex`: no navega con mouse, teclado ni con JavaScript ausente.
 
@@ -21,8 +22,16 @@ El iframe usa el embed obtenido de la propia ficha mediante **Compartir →
 Insertar un mapa**, con identificador `0x680786357004fb40`. Se verificó su carga
 real en el navegador y muestra el nombre y pin del estudio. Buscar solamente
 la dirección abre resultados ambiguos; por eso se usa el embed de la ficha.
-**Cómo llegar** mantiene el destino literal del plan:
-`Av. Pres. Roque Sáenz Peña 616, C1035 CABA`, con `api=1`.
+
+**Cómo llegar** usa el formato documentado (`/maps/dir/?api=1`) con destino
+`Portillo Kus & Asociados. Estudio Jurídico, Av. Pte. Roque Sáenz Peña 616, C1035
+CABA`, que sale de `ESTUDIO["nombre_ficha"]` y de la dirección en `src/build.py`.
+El estudio pidió que Maps lleve a la ficha (31/10/2026). Probado en Chromium el
+07/11/2026, con el navegador en es-AR, en-US y pt-BR, a 1280 y 390 px: la ruta
+termina en la ficha, con el identificador `0x680786357004fb40`. Con la dirección
+sola, en cambio, llegaba al edificio y no a la ficha. No se usa `destination_place_id`
+porque no tenemos un Place ID obtenido de Google. Si Google cambia cómo resuelve
+la búsqueda o la ficha cambia de nombre, hay que volver a probarlo.
 
 ## Comportamiento y comprobaciones
 

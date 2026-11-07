@@ -23,6 +23,18 @@ def plain(value):
     return re.sub(r'<[^>]*>', '', str(value)).strip()
 
 
+def valid_maps_url(value):
+    """Sólo una URL https de Google Maps, sin credenciales: lo demás no se enlaza ni se declara."""
+    try:
+        parts = urlsplit(str(value).strip())
+        return (parts.scheme == 'https' and parts.hostname in
+                ('www.google.com', 'google.com', 'maps.google.com', 'maps.app.goo.gl')
+                and not parts.username and not parts.password
+                and (parts.path.startswith('/maps/') or parts.hostname == 'maps.app.goo.gl'))
+    except ValueError:
+        return False
+
+
 def business(flat, base_url, image, langs, estudio):
     """LegalService con los datos de ESTUDIO (build.py), los mismos que muestra el pie."""
     horario = estudio['horario']
@@ -44,6 +56,8 @@ def business(flat, base_url, image, langs, estudio):
                         '@type': 'Service', 'name': plain(flat[f'areas.a{i}_title'])}}
                         for i in range(1, 10)]},
     }
+    if valid_maps_url(flat.get('google_maps_url', '')):
+        data['hasMap'] = str(flat['google_maps_url']).strip()
     # Traducciones del sitio no acreditan los idiomas de atención del estudio.
     contact_languages = flat.get('seo.contact_languages', '')
     if contact_languages and not str(contact_languages).startswith(PENDING):

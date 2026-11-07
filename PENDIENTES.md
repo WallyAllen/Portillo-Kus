@@ -53,6 +53,8 @@ formulario, revisar esto de nuevo.
 - Instagram: el pie y el `sameAs` del JSON-LD llevan dos cuentas
   (abogadoenargentina y soyabogadoenargentina). Confirmar cuál es la oficial o
   si van las dos; se cambia en `ESTUDIO` de `src/build.py`.
+- Ficha de Google: el 07/11/2026 su sitio web figura como instagram.com, no
+  como portillokusestudio.com. Lo cambia el estudio desde su perfil de Google.
 
 El uso de la segunda línea ya no bloquea: el rediseño v2.2 sacó de la página
 su tarjeta. Sigue como pregunta para el estudio.

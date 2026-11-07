@@ -21,7 +21,7 @@ from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from functools import partial
 from urllib.parse import quote, urlsplit
 from analytics import analytics_fields, validate_analytics
-from seo import SITE_URL, metadata, write_files as write_seo_files
+from seo import SITE_URL, metadata, valid_maps_url, write_files as write_seo_files
 from headers import write_files as write_headers
 from images import prepare_images, render_images, version_images
 from edge import write_files as write_edge_files
@@ -39,6 +39,8 @@ TEL = "+5491127111987"
 # Los mismos datos los leen el pie y el JSON-LD (seo.py): cambiarlos acá cambia los dos.
 ESTUDIO = {
     "nombre": "Portillo Kus & Asociados",
+    # Tal como figura en la ficha de Google: "Cómo llegar" lo usa para llegar a la ficha.
+    "nombre_ficha": "Portillo Kus & Asociados. Estudio Jurídico",
     "telefono": TEL,
     "telefono_visible": "+54 9 11 2711-1987",
     "email": "portillokusyasociados@gmail.com",
@@ -174,17 +176,8 @@ def build_hreflang_tags(lang, base_url, page="home"):
 
 def google_maps_link_attrs(value):
     """Un pendiente o URL ajena a Maps nunca genera un enlace navegable."""
-    maps_url = str(value).strip()
-    try:
-        maps_parts = urlsplit(maps_url)
-        valid = (maps_parts.scheme == "https" and maps_parts.hostname in
-                 ("www.google.com", "google.com", "maps.google.com", "maps.app.goo.gl")
-                 and not maps_parts.username and not maps_parts.password
-                 and (maps_parts.path.startswith("/maps/") or maps_parts.hostname == "maps.app.goo.gl"))
-    except ValueError:
-        valid = False
-    if valid:
-        return f'href="{html_tools.escape(maps_url, quote=True)}" target="_blank" rel="noopener"'
+    if valid_maps_url(value):
+        return f'href="{html_tools.escape(str(value).strip(), quote=True)}" target="_blank" rel="noopener"'
     return 'role="link" aria-disabled="true"'
 
 
@@ -228,7 +221,7 @@ def build(lang, template, base_url, flat, page="home", image_assets=None, pendie
     flat["email"] = ESTUDIO["email"]
     flat["estudio.matricula"] = ESTUDIO["matricula"]
     direccion = ESTUDIO["direccion"]
-    destino = f'{direccion["streetAddress"].split(",")[0]}, {direccion["postalCode"]} CABA'
+    destino = f'{ESTUDIO["nombre_ficha"]}, {direccion["streetAddress"].split(",")[0]}, {direccion["postalCode"]} CABA'
     flat["maps_directions_url"] = "https://www.google.com/maps/dir/?api=1&amp;destination=" + quote(destino, safe="")
     flat.update({f"redes.{red}": url for red, url in ESTUDIO["redes"].items()})
     flat["num.clients"] = dato("clients", fmt_number(CLIENTS, lang))

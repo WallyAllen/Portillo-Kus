@@ -68,6 +68,13 @@ class SeoTests(unittest.TestCase):
         self.assertIn('twitter:card',self.rendered())
         self.assertIn('rel="canonical"',self.rendered())
 
+    def test_has_map_points_to_the_profile_and_only_if_valid(self):
+        self.assertEqual(self.graph()['LegalService']['hasMap'],self.flat['google_maps_url'])
+        self.assertIn('0x680786357004fb40',self.flat['google_maps_url'])
+        for value in ('[PENDIENTE] Confirmar ficha','','https://example.com/maps/place/test'):
+            self.flat['google_maps_url']=value
+            self.assertNotIn('hasMap',self.graph()['LegalService'])
+
     def test_ratings_and_reviews_are_never_emitted(self):
         # Ni con reseñas confirmadas: Google no admite las del propio negocio.
         self.flat.update({'num.rating':'5,0','num.reviews':'417'})
