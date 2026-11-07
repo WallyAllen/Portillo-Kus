@@ -2,67 +2,267 @@
 
 El estudio edita contenido en `/panel`; cada guardado es un commit en
 `WallyAllen/Portillo-Kus` y Workers Builds lo publica. Vive en el mismo Worker que
-sirve el sitio, en `worker/`. No hay `package.json` ni dependencias: sólo APIs de la
-plataforma, así Workers Builds sigue corriendo los mismos comandos de siempre.
+sirve el sitio, en `worker/`. El Worker no tiene dependencias: sólo APIs de la
+plataforma. Las únicas dependencias de Node son de prueba y viven en
+`worker/test/vitest/` (ver "Pruebas").
 
-Estado: base, login, guardado y traducciones pendientes. Las pantallas de contenido
-y usuarios vienen después; hoy el panel muestra Inicio y, a un admin, Traducciones.
+Para el estudio, sin términos técnicos: [guía del panel](guia-del-estudio.md).
 
-## Antes de mergear a `main`
+## Arquitectura
 
-**Mergear sin hacer esto no rompe nada:** el sitio se sigue publicando igual,
-`/panel` carga y `/api/*` responde 503 "todavía no está configurado". Comprobado
-con `wrangler deploy --dry-run` y con `wrangler dev` sin base.
+```
+navegador ── /panel/* ──▶ worker/panel/rutas.js   página, estilos y pantallas (texto)
+          ── /api/*   ──▶ worker/api.js           sesión, CSRF y rol en cada pedido
+                              ├─ worker/auth.js       contraseñas, sesiones, bloqueo   ─▶ D1
+                              ├─ worker/usuarios.js   alta, baja, contraseña nueva      ─▶ D1
+                              └─ worker/guardado.js   leer y escribir el contenido      ─▶ API de GitHub
+          ── el resto ─▶ dist/ (capa de assets, sin ejecutar el Worker)
 
-Para que el panel funcione hay que hacer, una sola vez, con la sesión de Cloudflare
-de la cuenta del estudio:
+GitHub (rama del entorno) ──▶ Workers Builds: build.py --produccion + wrangler deploy ──▶ sitio nuevo
+```
 
-1. **Confirmar el nombre del Worker.** `name` en `wrangler.jsonc` sigue siendo el
-   provisorio `portillo-kus`; tiene que coincidir con el de Cloudflare.
-2. **Crear la base D1** y copiar el `database_id` que imprime:
+- **D1** guarda sólo usuarios, sesiones e intentos de login (`worker/migrations/`).
+- **El contenido** vive en el repo: `src/content.*.json`, `src/equipo.json` y
+  `portillo-images/`. El panel lo lee y lo escribe con la Git Data API, en un solo
+  commit por guardado (ver "Cómo se guarda").
+- **Publicación:** el panel sigue `/version.json` hasta ver su commit (ver "Publicación").
+- **Validación:** antes de escribir, el Worker repite las reglas de `build.py` y las
+  del panel. Lo que rompería la publicación no se commitea.
+
+| Entorno | Worker | Rama | Base D1 | Indexa |
+|---|---|---|---|---|
+| Producción | `portillo-kus` | `main` | `portillo-panel` | sí |
+| Prueba | `portillo-kus-pruebas` | `pruebas` | `portillo-panel-pruebas` | no (`NOINDEX=1`) |
+| Local | `wrangler dev --env dev` | GitHub simulado | `.wrangler/` | no |
+
+`vars` y `d1_databases` no se heredan entre entornos de `wrangler.jsonc`: el deploy de
+producción no recibe nada de `pruebas`. Lo comprueban `tests/test_panel_reglas.py` y
+`wrangler deploy --dry-run` con y sin `--env pruebas`.
+
+## Pasos de Felipe
+
+Requieren sus cuentas: nada de esto está hecho. En este orden, `wrangler.jsonc`
+nunca queda con un id que no exista: cada bloque se descomenta recién después de crear
+su base, y producción no lee el bloque de prueba. Los comandos van en la raíz del repo,
+en la rama del panel (`claude/panel-1-base-dd3159`) salvo que se diga otra cosa.
+
+**A. Worker de prueba**
+
+1. **Entrar con la cuenta de Cloudflare del estudio** y confirmar que el Worker del
+   sitio se llama `portillo-kus`, como `name` en `wrangler.jsonc`. Si no, cambiar
+   `name`: el de prueba pasa a llamarse `<name>-pruebas`.
+
+   ```bash
+   npx wrangler@4 login
+   ```
+
+2. **Crear la base de prueba** y copiar el `database_id` que imprime:
+
+   ```bash
+   npx wrangler@4 d1 create portillo-panel-pruebas
+   ```
+
+   En `wrangler.jsonc`, dentro de `env.pruebas`, descomentar `d1_databases` (y la coma
+   que lo separa de `vars`) y reemplazar `PEGAR_ACA_EL_ID_DE_PRUEBAS`. No es secreto.
+
+   ```bash
+   git commit -am "Panel: base D1 del Worker de prueba"
+   ```
+
+3. **Crear las tablas de prueba:**
+
+   ```bash
+   npx wrangler@4 d1 migrations apply DB --remote --env pruebas
+   ```
+
+4. **Crear la rama `pruebas` en GitHub** con el código del panel:
+
+   ```bash
+   git push origin claude/panel-1-base-dd3159:pruebas
+   ```
+
+5. **Crear el Worker de prueba** en el dashboard: Workers & Pages → Create → Import a
+   repository → `WallyAllen/Portillo-Kus`.
+   - Nombre: `portillo-kus-pruebas` (tiene que coincidir con el de `wrangler.jsonc`).
+   - Rama de producción (Settings → Build → Branch control): `pruebas`. Desmarcar
+     **Enable Preview Builds**.
+   - Build command: `python -m pip install -r requirements.txt && python src/build.py --produccion`
+   - Deploy command: `npx wrangler deploy --env pruebas`
+   - Build variables: `NOINDEX=1`. Es del build, no del Worker: genera `noindex` y
+     `Disallow: /`.
+   - API token: el que propone Workers Builds. Si el deploy falla por D1, ver la
+     comprobación 5.
+
+   En el Worker de producción, en la misma pantalla, desmarcar **Enable Preview Builds**:
+   si no, cada guardado del panel de prueba en `pruebas` dispara un build del Worker de
+   producción.
+
+6. **Token de GitHub de prueba:** GitHub → Settings → Developer settings →
+   Fine-grained tokens. Resource owner: el dueño del repo. Repository access: sólo
+   `WallyAllen/Portillo-Kus`. Permissions: **Contents: Read and write**, nada más.
+   Anotar el vencimiento. Un token fine-grained no se limita a una rama: lo que hace que
+   el de prueba escriba sólo en `pruebas` es `GITHUB_BRANCH` en `wrangler.jsonc`.
+
+   ```bash
+   npx wrangler@4 secret put GITHUB_TOKEN --env pruebas
+   ```
+
+7. **Primer admin de prueba.** Pide la contraseña sin mostrarla (mínimo 12 caracteres):
+
+   ```bash
+   node scripts/crear-admin.mjs --usuario felipe --nombre "Felipe" --remote --env pruebas
+   ```
+
+8. **Correr las comprobaciones reales** de la sección siguiente. Si alguna falla, no
+   seguir con producción.
+
+**B. Producción**
+
+9. **Crear la base de producción** y copiar el `database_id`:
 
    ```bash
    npx wrangler@4 d1 create portillo-panel
    ```
 
-3. **Pegar el id:** en `wrangler.jsonc`, descomentar el bloque `d1_databases` de
-   arriba y reemplazar `PEGAR_ACA_EL_ID`. No es secreto; va commiteado.
-4. **Crear las tablas:**
+   Descomentar el bloque `d1_databases` de arriba de `wrangler.jsonc` y reemplazar
+   `PEGAR_ACA_EL_ID`.
 
    ```bash
-   npx wrangler@4 d1 migrations apply DB --remote
+   git commit -am "Panel: base D1 de producción"
    ```
 
-5. **Crear el token de GitHub:** GitHub → Settings → Developer settings →
-   Fine-grained tokens. Resource owner: el dueño del repo. Repository access: sólo
-   `WallyAllen/Portillo-Kus`. Permissions: **Contents: Read and write**, nada más.
-   Anotar cuándo vence: al vencer, guardar da error hasta cargar otro.
-6. **Cargar el token como secreto**, nunca en el repo:
+10. **Crear las tablas:**
+
+    ```bash
+    npx wrangler@4 d1 migrations apply DB --remote
+    ```
+
+11. **Token de producción**, otro distinto del de prueba y con los mismos permisos:
+
+    ```bash
+    npx wrangler@4 secret put GITHUB_TOKEN
+    ```
+
+12. **Primer admin de producción:**
+
+    ```bash
+    node scripts/crear-admin.mjs --usuario felipe --nombre "Felipe" --remote
+    ```
+
+13. **Permisos de D1 del token de Workers Builds de producción:** si la comprobación 5
+    obligó a sumar D1 en el Worker de prueba, hacer lo mismo en el de producción antes
+    del merge.
+
+14. **Mergear a `main`** cuando Felipe lo decida: es un deploy a producción. Se mergea la
+    rama del panel, **nunca `origin/pruebas`**, que trae los cambios de contenido de
+    prueba.
+
+    ```bash
+    git checkout main
+    ```
+
+    ```bash
+    git pull origin main
+    ```
+
+    ```bash
+    git merge --no-ff claude/panel-1-base-dd3159
+    ```
+
+    ```bash
+    git push origin main
+    ```
+
+15. **Desde ahí, `main` recibe commits desde GitHub** cada vez que el estudio guarda.
+    Antes de trabajar en local, `git pull`. Si un push se rechaza por estar atrasado,
+    `git pull` y repetir; **nunca `--force` sobre `main`**: borraría lo que cargó el
+    estudio. Para actualizar el Worker de prueba con código nuevo, `git push origin
+    <rama>:pruebas`. Si se rechaza por los guardados de prueba, ahí sí se pueden
+    descartar con `git push --force-with-lease origin <rama>:pruebas`.
+
+## Comprobaciones reales en el Worker de prueba
+
+No se pueden probar en local: `wrangler dev` y las pruebas de vitest no aplican los
+límites de producción. Hacerlas antes del paso 9, en
+`https://portillo-kus-pruebas.<subdominio>.workers.dev/panel`.
+
+| # | Qué se hace | Qué se espera | Si falla |
+|---|---|---|---|
+| 1 | **CPU del login en el plan Free.** Entrar y salir 6 veces seguidas, y mirar Observability del Worker → CPU time de `POST /api/login` | Entra siempre. Cada login usa unos 100 ms de CPU | Error 1102 (*Worker exceeded CPU*): decide Felipe entre Workers Paid y bajar `ITERACIONES` (ver "Costo del login") |
+| 2 | **Tope de PBKDF2.** El mismo login | Entra. Ningún log dice *iteration counts above 100000* | Ese mensaje significa que el hash no se está calculando en tramos: no mergear y revisar `TRAMO_MAXIMO` en `worker/auth.js` |
+| 3 | **Guardado real con la API de GitHub.** Textos → cambiar "Paso 1" → Guardar | Aparece un commit `Panel (Felipe): Textos: Paso 1` en la rama `pruebas`, nunca en `main`; el panel pasa de "Publicando…" a "Publicado" | 500 y en logs 401 o 403 de GitHub: el token venció o le faltan permisos. 404: `GITHUB_REPO` o el dueño del token. Si apareciera en `main`: borrar el token en GitHub y revisar `GITHUB_BRANCH` |
+| 4 | **`WORKERS_CI_COMMIT_SHA` en un build real.** Abrir `/version.json` tras el build de la comprobación 3 | `{"sha": "<el commit de la comprobación 3>"}` | Dice `local`: Workers Builds no pasó la variable. El sitio funciona, pero el panel dice "Hubo un problema" a los 5 minutos. Revisar el log del build y `src/build.py` |
+| 5 | **Permisos de D1 del token de Workers Builds.** Mirar el log del primer build con la base descomentada | El deploy termina y lista `env.DB (portillo-panel-pruebas)` | Error de autenticación al hacer el deploy: en Settings → Build → API token, sumarle **Account → D1 → Edit** y reintentar |
+| 6 | **noindex.** Ver el código fuente de la portada y abrir `/robots.txt` | `<meta name="robots" content="noindex, nofollow">` y `Disallow: /` | Falta la variable `NOINDEX=1` del build (paso 5) |
+| 7 | **Tiempo de publicación.** Medir desde Guardar hasta "Publicado" | Menos de 5 minutos | Si tarda más, el aviso dice "Hubo un problema" aunque después publique: subir `CINCO_MINUTOS` en `cliente/app.js` |
+
+## Usuarios
+
+Pantalla **Usuarios**, sólo para admin. La API comprueba el rol en cada pedido, no la
+pantalla.
+
+- **Crear:** nombre, usuario y qué puede hacer (`admin` o `editor`). El Worker genera
+  una contraseña provisoria de 16 caracteres, la guarda con `hashContrasena` y la
+  muestra **una sola vez**. No queda en D1 ni en los logs: `api.js` sólo registra el
+  mensaje de error, nunca el cuerpo. Hay que pasársela a la persona por un medio privado.
+- **Desactivar** cierra sus sesiones en el mismo momento. **Reactivar** le devuelve el
+  acceso con la contraseña que tenía.
+- **Nueva contraseña** reemplaza la anterior, cierra sus sesiones y borra sus intentos
+  fallidos: también sirve para desbloquear a alguien.
+- **El último admin activo no se puede desactivar.** La condición va en la misma
+  sentencia SQL: dos admins que se desactivan a la vez no dejan el panel sin ninguno.
+- **No hay cambio de contraseña propio:** la provisoria queda como definitiva. Para
+  cambiarla, otro admin genera una nueva.
+- Sin pantalla, desde la terminal:
+
+  ```bash
+  npx wrangler@4 d1 execute DB --remote --command="DELETE FROM login_attempts WHERE usuario = 'felipe'"
+  ```
+
+  `scripts/crear-admin.mjs` crea un usuario con la contraseña que se elija; es la
+  única forma de crear el primero.
+
+## Rotar el token de GitHub
+
+Al vencer, guardar da "Hubo un problema" y en los logs aparece un 401 de GitHub. Para
+cambiarlo, antes o después de que venza:
+
+1. Crear un token nuevo con los mismos permisos (paso 6).
+2. Cargarlo; reemplaza al anterior y rige desde el pedido siguiente:
 
    ```bash
    npx wrangler@4 secret put GITHUB_TOKEN
    ```
 
-7. **Crear el primer admin.** Pide la contraseña sin mostrarla (mínimo 12 caracteres):
+   Para el de prueba, con `--env pruebas`.
+3. Guardar un cambio para probarlo, y recién después borrar el token viejo en GitHub.
 
-   ```bash
-   node scripts/crear-admin.mjs --usuario felipe --nombre "Felipe" --remote
-   ```
+## Deshacer un cambio
 
-8. **Mergear a `main` y pushear** cuando Felipe lo decida: es un deploy a producción.
+Cada guardado es un commit `Panel (Nombre): descripción`, así que se deshace con
+`git revert`, que crea otro commit y no borra historia:
 
-### Comprobar en el primer deploy
+```bash
+git pull origin main
+```
 
-Lo siguiente no se puede probar en local. Si algo falla, el sitio no se afecta:
+```bash
+git log --oneline --grep="Panel (" -20
+```
 
-- [ ] **Entrar a `/panel`.** Si el login da error 1102 (*Worker exceeded CPU*), ver
-      "Costo del login" abajo.
-- [ ] Probar el build: si Workers Builds se queja por permisos de D1, revisar los
-      permisos del token de la pestaña Build del Worker.
-- [ ] `https://portillokusestudio.com/version.json` debe mostrar un sha real, no `local`.
-- [ ] Guardar un cambio real y ver "Publicando…" → "Publicado".
-- [ ] Workers Builds debe tardar menos de 5 minutos: si no, el panel dice "Hubo un
-      problema" aunque después se publique.
+```bash
+git revert <sha>
+```
+
+```bash
+git push origin main
+```
+
+Workers Builds republica en unos minutos. El revert también devuelve las traducciones
+pendientes al estado anterior, porque van en el mismo commit. Si un guardado posterior
+tocó el mismo archivo, `git revert` puede dar conflicto: a veces es más simple volver a
+escribir el texto desde el panel. Una foto reemplazada se recupera igual, con el revert
+del commit que la cambió.
 
 ## Git: el panel escribe en `main`
 
@@ -80,8 +280,8 @@ borraría lo que cargó el estudio.
 | Bloqueo | 5 fallos por usuario en 15 minutos; también 20 por IP, para que no se prueben muchos usuarios. Conteo atómico: pedidos en paralelo no lo saltean. Un bloqueado no gasta CPU |
 | Usuario desactivado | Pierde el acceso en el pedido siguiente |
 | Encabezados | `_headers` no se aplica a lo que genera el Worker: noindex, CSP y demás están en `worker/http.js`. Además, `Disallow` en `robots.txt` |
-| Qué se puede escribir | Sólo `src/content.<idioma>.json`, `src/equipo.json` e imágenes JPG, PNG o WebP de hasta 5 MB en `portillo-images/`, en `worker/guardado.js`. Aunque el token pueda más, el panel no toca código |
-| Roles | Un `editor` sólo lee y escribe el español. Un rol desconocido o ausente cuenta como `editor`. Se comprueba en la API: ver "Traducciones pendientes" |
+| Qué se puede escribir | Sólo `src/content.<idioma>.json` (y ahí, la lista de `src/panel-campos.json`), `src/equipo.json` y fotos JPEG de hasta 5 MB con los nombres de "Pantallas de contenido", en `worker/guardado.js`. Aunque el token pueda más, el panel no toca código |
+| Roles | Un `editor` sólo lee y escribe el español. `admin` además traduce y maneja usuarios. Un rol desconocido o ausente cuenta como `editor`. Se comprueba en la API |
 
 ### Por qué 210000 en tramos
 
@@ -107,15 +307,7 @@ Si aparece el error 1102 hay dos salidas, y la decisión es de Felipe:
 
 ### Desbloquear o desactivar a alguien
 
-Hasta que exista la pantalla de usuarios:
-
-```bash
-npx wrangler@4 d1 execute DB --remote --command="DELETE FROM login_attempts WHERE usuario = 'felipe'"
-```
-
-```bash
-npx wrangler@4 d1 execute DB --remote --command="UPDATE users SET activo = 0 WHERE usuario = 'felipe'"
-```
+Desde la pantalla Usuarios: ver "Usuarios" arriba.
 
 ## Cómo se guarda
 
@@ -290,9 +482,9 @@ horario real, hay que actualizarlo en el repo.
 `soloAdmin: true` en la pantalla sólo la oculta. Para cerrar la API, `soloAdmin: true`
 también en su entrada de `RUTAS`.
 
-## Probar en local
+## Pruebas
 
-Necesita Node 22.7 o superior y `dist/` generado. No toca Cloudflare ni GitHub.
+Necesitan Node 22.7 o superior y `dist/` generado. No tocan Cloudflare ni GitHub.
 
 ```bash
 python -m unittest discover -s tests
@@ -309,6 +501,28 @@ node worker/test/e2e.mjs
 La última levanta `wrangler dev`, D1 local en una carpeta temporal y un GitHub
 simulado, y recorre login, bloqueo, CSRF, cierre de sesión, guardado, conflictos,
 traducciones, permisos por rol, publicación y sitio estático. Usa los puertos 8787, 8788 y 8790.
+
+Las de vitest corren la API dentro de workerd con la configuración de `wrangler.jsonc`
+(entorno `dev`), D1 en memoria y el GitHub simulado en el puerto 8792: login, sesión,
+CSRF, permisos, validación y usuarios.
+
+```bash
+cd worker/test/vitest && npm ci && npx vitest run
+```
+
+**Por qué en una subcarpeta.** Workers Builds instala dependencias por su cuenta cuando
+encuentra un `package.json`, y su documentación no detalla en qué casos. Con el
+directorio raíz en `/` y sin `package.json` en la raíz, el build y el deploy siguen sin
+instalar nada; vitest sólo existe en `worker/test/vitest/`. El paquete es
+`@cloudflare/vitest-plugin`: `@cloudflare/vitest-pool-workers` es su nombre anterior,
+deprecado en npm. Las pruebas de `node --test` siguen: cubren el guardado contra el
+GitHub simulado con ganchos (carreras, conteo de subpedidos) que vitest no reemplaza.
+
+**Lo que ninguna prueba local cubre:** el tope de 100000 iteraciones de PBKDF2 y el
+límite de CPU no rigen en `wrangler dev` ni en vitest. `auth.test.mjs` simula el tope;
+lo real está en "Comprobaciones reales".
+
+## Probar en local a mano
 
 Para mirar el panel a mano, con la base en `.wrangler/`:
 

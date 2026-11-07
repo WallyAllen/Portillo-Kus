@@ -212,9 +212,12 @@ es un borrador no enviado.
   deploy command: `npx wrangler deploy`.
 - **DNS:** para servir el dominio sin `www`, los nameservers tienen que estar
   en Cloudflare.
-- **Autogestión:** panel propio en `/panel`, dentro del mismo Worker (en construcción,
-  ver [panel](docs/panel.md)). El contenido vive en el repo: cada guardado es un commit
-  y Cloudflare republica. Fijo: diseño, colores, estructura.
+- **Autogestión:** panel propio en `/panel`, dentro del mismo Worker: abogados, fotos
+  de servicios, reseñas, una lista cerrada de textos, traducciones y usuarios. El
+  contenido vive en el repo: cada guardado es un commit y Cloudflare republica. Fijo:
+  diseño, colores, estructura. Técnico: [panel](docs/panel.md); para el estudio:
+  [guía](docs/guia-del-estudio.md). Antes de usarlo, los
+  [pasos de Felipe](docs/panel.md#pasos-de-felipe).
 - Lo que se edite en español queda pendiente de traducción: hasta cargarla, los otros
   idiomas muestran el español. Ver [traducciones pendientes](docs/panel.md#traducciones-pendientes).
 
@@ -231,7 +234,7 @@ es un borrador no enviado.
       (P06); RU y 中文 las armó una IA y falta revisarlas.
 - [ ] En qué idioma responden las consultas que lleguen en ruso o en chino.
 - [ ] Los pasos reales del trámite de ciudadanía.
-- [ ] Con qué mails entran al panel.
+- [ ] Quiénes del estudio usan el panel y cuáles administran (los usuarios los crea un admin desde el panel).
 - [ ] Acceso de administrador a la ficha de Google Business.
 
 ## Nota de diseño

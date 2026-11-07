@@ -7,6 +7,7 @@ import {
 import { definicion } from './campos.js';
 import { error, json } from './http.js';
 import reglas from './reglas.json' with { type: 'json' };
+import { cambiarActivo, crearUsuario, ErrorUsuario, listarUsuarios, resetearContrasena } from './usuarios.js';
 
 const SHA = /^[0-9a-f]{40}$/;
 const USUARIO = /^[a-z0-9._-]{1,40}$/;
@@ -68,6 +69,9 @@ async function publicacion({ url, env }) {
   return json(await estadoPublicacion(env, commit, url.origin));
 }
 
+const usuarios = async ({ env }) => json({ usuarios: await listarUsuarios(env.DB) });
+const conDatos = (fn) => async ({ request, env }) => json(await fn(env.DB, await request.json().catch(() => null)));
+
 const RUTAS = {
   'POST /api/login': { fn: login, publica: true },
   'POST /api/logout': { fn: logout },
@@ -78,6 +82,10 @@ const RUTAS = {
   'GET /api/campos': { fn: campos },
   'GET /api/traducciones': { fn: traducciones, soloAdmin: true },
   'POST /api/traducciones': { fn: guardarTraduccion, soloAdmin: true },
+  'GET /api/usuarios': { fn: usuarios, soloAdmin: true },
+  'POST /api/usuarios': { fn: conDatos(crearUsuario), soloAdmin: true },
+  'POST /api/usuarios/activo': { fn: conDatos(cambiarActivo), soloAdmin: true },
+  'POST /api/usuarios/contrasena': { fn: conDatos(resetearContrasena), soloAdmin: true },
 };
 
 export async function manejarApi(request, env) {
@@ -106,6 +114,7 @@ export async function manejarApi(request, env) {
     }
     if (e instanceof DatosInvalidos) return json({ error: e.message, errores: e.errores }, 422);
     if (e instanceof Prohibido) return error(e.message, 403);
+    if (e instanceof ErrorUsuario) return error(e.message, e.estado);
     console.error(`${request.method} ${url.pathname}:`, e?.message); // nunca el cuerpo: puede traer contraseñas
     return error('Hubo un problema. Probá de nuevo en un rato.', 500);
   }

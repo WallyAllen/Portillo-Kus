@@ -31,7 +31,27 @@
   //     "migrations_dir": "worker/migrations"
   //   }
   // ],
+  // vars y d1_databases no se heredan entre entornos: el Worker de producción (este nivel) no
+  // recibe nada de "pruebas" ni de "dev", y viceversa. tests/test_panel_reglas.py lo comprueba.
   "env": {
+    // Worker de prueba: `npx wrangler deploy --env pruebas` publica "portillo-kus-pruebas".
+    // Escribe en la rama pruebas, nunca en main. Su build lleva NOINDEX=1 (docs/panel.md).
+    "pruebas": {
+      "vars": {
+        "GITHUB_REPO": "WallyAllen/Portillo-Kus",
+        "GITHUB_BRANCH": "pruebas"
+      }
+      // Su propia base, distinta de la de producción. Descomentar y pegar el id al crearla
+      // (paso 2 de "Pasos de Felipe" en docs/panel.md). Sin esto, /api/* responde 503.
+      // "d1_databases": [
+      //   {
+      //     "binding": "DB",
+      //     "database_name": "portillo-panel-pruebas",
+      //     "database_id": "PEGAR_ACA_EL_ID_DE_PRUEBAS",
+      //     "migrations_dir": "worker/migrations"
+      //   }
+      // ]
+    },
     // Sólo para probar en local: npx wrangler@4 dev --env dev
     "dev": {
       "vars": {

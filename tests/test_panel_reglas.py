@@ -181,6 +181,33 @@ class FotosHuerfanasTests(unittest.TestCase):
             self.assertTrue((raiz / 'dist/portillo-images/otra.jpg').exists())
 
 
+class EntornosTests(unittest.TestCase):
+    """wrangler.jsonc: el Worker de prueba nunca escribe en main y producción no hereda nada de él."""
+
+    @classmethod
+    def setUpClass(cls):
+        texto = (ROOT / 'wrangler.jsonc').read_text(encoding='utf-8')
+        sin_comentarios = '\n'.join(l for l in texto.splitlines() if not l.strip().startswith('//'))
+        cls.config = json.loads(re.sub(r',(\s*[}\]])', r'\1', sin_comentarios))
+
+    def test_produccion_escribe_en_main_contra_github_real(self):
+        self.assertEqual(self.config['vars']['GITHUB_BRANCH'], 'main')
+        self.assertNotIn('GITHUB_API_URL', self.config['vars'])
+
+    def test_pruebas_escribe_en_su_rama_con_su_base(self):
+        pruebas = self.config['env']['pruebas']
+        self.assertEqual(pruebas['vars']['GITHUB_BRANCH'], 'pruebas')
+        self.assertEqual(pruebas['vars']['GITHUB_REPO'], self.config['vars']['GITHUB_REPO'])
+        self.assertNotIn('GITHUB_API_URL', pruebas['vars'])
+        produccion = {b['database_name'] for b in self.config.get('d1_databases', [])}
+        for base in pruebas.get('d1_databases', []):
+            self.assertNotIn(base['database_name'], produccion)
+
+    def test_ningun_secreto_en_la_configuracion(self):
+        for nombre, entorno in [('produccion', self.config), *self.config['env'].items()]:
+            self.assertNotIn('GITHUB_TOKEN', entorno.get('vars', {}), nombre)
+
+
 class CasosCompartidosTests(unittest.TestCase):
     def test_build_produccion_da_lo_que_dicen_los_casos(self):
         with tempfile.TemporaryDirectory() as temporal:

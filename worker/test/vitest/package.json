@@ -1,0 +1,13 @@
+{
+  "name": "portillo-panel-pruebas",
+  "private": true,
+  "description": "Pruebas del panel en el runtime de Workers. Vive acá y no en la raíz para que Workers Builds no instale nada al publicar: ver docs/panel.md.",
+  "type": "module",
+  "scripts": {
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@cloudflare/vitest-plugin": "1.4.7",
+    "vitest": "4.1.12"
+  }
+}

@@ -12,9 +12,12 @@ hace fallar `--produccion`. No quitar el marcador para publicar un dato sin evid
 
 ## Panel de administración
 
-En construcción. Antes de usarlo hay que crear en Cloudflare y GitHub lo que lista
-[docs/panel.md](docs/panel.md#antes-de-mergear-a-main). Falta comprobar en producción
-que el login entra en el límite de CPU del plan Free.
+Completo en la rama del panel, sin mergear. Antes de usarlo hay que seguir los
+[pasos de Felipe](docs/panel.md#pasos-de-felipe): crear en Cloudflare y GitHub lo que
+requiere sus cuentas, probar en el Worker de prueba con las
+[comprobaciones reales](docs/panel.md#comprobaciones-reales-en-el-worker-de-prueba)
+(entre ellas, si el login entra en el límite de CPU del plan Free) y recién después
+mergear a `main`.
 
 ## Oculto hasta que el estudio pase el dato
 

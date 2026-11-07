@@ -13,6 +13,7 @@ import resenas from './cliente/pantallas/resenas.js';
 import revisar from './cliente/pantallas/revisar.js';
 import textos from './cliente/pantallas/textos.js';
 import vistaAbogado from './cliente/pantallas/vista-abogado.js';
+import usuarios from './cliente/pantallas/usuarios.js';
 import traducciones from './cliente/pantallas/traducciones.js';
 
 const JS = 'text/javascript; charset=utf-8';
@@ -21,6 +22,7 @@ const ARCHIVOS = {
   '/panel/app.js': [app, JS],
   '/panel/pantallas/abogados.js': [abogados, JS],
   '/panel/pantallas/comun.js': [comun, JS],
+  '/panel/pantallas/usuarios.js': [usuarios, JS],
   '/panel/pantallas/vista-abogado.js': [vistaAbogado, JS],
   '/panel/pantallas/fotos.js': [fotos, JS],
   '/panel/pantallas/imagen.js': [imagen, JS],

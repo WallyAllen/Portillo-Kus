@@ -8,8 +8,9 @@ import inicio from './pantallas/inicio.js';
 import resenas from './pantallas/resenas.js';
 import textos from './pantallas/textos.js';
 import traducciones from './pantallas/traducciones.js';
+import usuarios from './pantallas/usuarios.js';
 
-const PANTALLAS = [inicio, abogados, fotos, resenas, textos, traducciones];
+const PANTALLAS = [inicio, abogados, fotos, resenas, textos, traducciones, usuarios];
 
 const CINCO_MINUTOS = 5 * 60 * 1000;
 const CADA_CUANTO = 10 * 1000;
