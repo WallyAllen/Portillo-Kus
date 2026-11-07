@@ -1,8 +1,10 @@
 {
   // El Worker sirve dist/ (lo genera `python src/build.py`) y, sólo en /panel y /api/*,
   // el panel de administración. Ver docs/panel.md.
-  // "name" es provisorio: debe coincidir con el nombre del Worker en Cloudflare.
   "name": "portillo-kus",
+  // Cuenta de Cloudflare del estudio (portillokus.estudio@gmail.com). Fijarla evita que un
+  // deploy desde una máquina con varias cuentas salga en otra.
+  "account_id": "db3b93a7d8b9501a90784cd4f1120e14",
   "main": "worker/index.js",
   "compatibility_date": "2026-10-01",
   "assets": {
@@ -21,16 +23,15 @@
     "GITHUB_REPO": "WallyAllen/Portillo-Kus",
     "GITHUB_BRANCH": "main"
   },
-  // Antes de usar el panel en producción: crear la base, descomentar y pegar su id
-  // (pasos en docs/panel.md). Sin este bloque el sitio funciona y /api/* responde 503.
-  // "d1_databases": [
-  //   {
-  //     "binding": "DB",
-  //     "database_name": "portillo-panel",
-  //     "database_id": "PEGAR_ACA_EL_ID",
-  //     "migrations_dir": "worker/migrations"
-  //   }
-  // ],
+  // Base del panel en producción (creada el 07/11/2026). Ver docs/panel.md.
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "portillo-panel",
+      "database_id": "8a549f0c-b5a6-45d4-a124-17954593b32a",
+      "migrations_dir": "worker/migrations"
+    }
+  ],
   // vars y d1_databases no se heredan entre entornos: el Worker de producción (este nivel) no
   // recibe nada de "pruebas" ni de "dev", y viceversa. tests/test_panel_reglas.py lo comprueba.
   "env": {
@@ -40,17 +41,16 @@
       "vars": {
         "GITHUB_REPO": "WallyAllen/Portillo-Kus",
         "GITHUB_BRANCH": "pruebas"
-      }
-      // Su propia base, distinta de la de producción. Descomentar y pegar el id al crearla
-      // (paso 2 de "Pasos de Felipe" en docs/panel.md). Sin esto, /api/* responde 503.
-      // "d1_databases": [
-      //   {
-      //     "binding": "DB",
-      //     "database_name": "portillo-panel-pruebas",
-      //     "database_id": "PEGAR_ACA_EL_ID_DE_PRUEBAS",
-      //     "migrations_dir": "worker/migrations"
-      //   }
-      // ]
+      },
+      // Su propia base, distinta de la de producción (creada el 07/11/2026).
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "portillo-panel-pruebas",
+          "database_id": "b5ed94f5-d2c4-46f3-ad34-8f8284e33b25",
+          "migrations_dir": "worker/migrations"
+        }
+      ]
     },
     // Sólo para probar en local: npx wrangler@4 dev --env dev
     "dev": {

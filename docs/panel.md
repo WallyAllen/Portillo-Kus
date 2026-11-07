@@ -41,9 +41,13 @@ producción no recibe nada de `pruebas`. Lo comprueban `tests/test_panel_reglas.
 
 ## Pasos de Felipe
 
-Requieren sus cuentas: nada de esto está hecho. En este orden, `wrangler.jsonc`
-nunca queda con un id que no exista: cada bloque se descomenta recién después de crear
-su base, y producción no lee el bloque de prueba. Los comandos van en la raíz del repo,
+Requieren sus cuentas. **Hechos el 07/11/2026:** pasos 2, 3, 9 y 10. Las bases
+`portillo-panel-pruebas` y `portillo-panel` existen en la cuenta del estudio
+(`portillokus.estudio@gmail.com`, `account_id` fijado en `wrangler.jsonc`), con sus
+tablas, y sus ids ya están en `wrangler.jsonc`. Producción no lee el bloque de prueba.
+Con la base de producción ya declarada, el primer deploy de `main` que incluya el panel
+necesita que el token de Workers Builds tenga permiso de D1 (paso 13). Si no lo tiene,
+falla el deploy y el sitio sigue con la versión anterior: no se rompe. Los comandos van en la raíz del repo,
 en la rama del panel (`claude/panel-1-base-dd3159`) salvo que se diga otra cosa.
 
 **A. Worker de prueba**
