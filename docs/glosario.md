@@ -11,7 +11,7 @@ títulos proporcionados y citas de reseñas pendientes.
 
 | Español | Inglés | Português brasileiro | Ruso (ru) | Chino simplificado (zh-Hans) | Criterio |
 |---|---|---|---|---|---|
-| Ciudadanía argentina | Argentine citizenship | Cidadania argentina | Гражданство Аргентины | 阿根廷公民身份 | No confundir ciudadanía, residencia y permiso de ingreso. |
+| Ciudadanía argentina | Argentine citizenship | Cidadania argentina | Гражданство Аргентины | 阿根廷国籍 | No confundir ciudadanía, residencia y permiso de ingreso. Como nombre del servicio lleva mayúsculas (pedido del estudio, 31/10/2026): Ciudadanía Argentina, Argentine Citizenship, Cidadania Argentina; ru y zh no usan mayúsculas de título. Como palabra común, en minúscula. |
 | Naturalización | Naturalisation | Naturalização | Натурализация | 入籍 | Inglés internacional con grafía británica; no tocar la grafía de citas originales. |
 | Carta de ciudadanía / carta de naturalización | Certificate of naturalisation (carta de ciudadanía) | Certificado de naturalização (carta de ciudadanía) | Свидетельство о натурализации (carta de ciudadanía / carta de naturalización) | 入籍证明（carta de ciudadanía / carta de naturalización） | Explicar el documento, conservando el término argentino si hace falta. No traducir como pasaporte. |
 | Jura | Oath ceremony | Juramento | Церемония принесения присяги | 宣誓仪式 | Equivalencia descriptiva; no afirmar que sea un paso universal del trámite vigente. El paso del boceto sigue pendiente. |

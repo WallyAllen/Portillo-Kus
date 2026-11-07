@@ -1,9 +1,9 @@
 {
   "meta": {
     "title": "Argentine Citizenship & Immigration | Portillo Kus",
-    "description": "Private law firm in Buenos Aires. Legal advice on Argentine citizenship, residency, visas and other practice areas.",
+    "description": "Private law firm in Buenos Aires. Legal advice on Argentine Citizenship, residency, visas and other practice areas.",
     "og_title": "Argentine Citizenship & Immigration | Portillo Kus",
-    "og_description": "Private law firm in Buenos Aires. Legal advice on Argentine citizenship, residency, visas and other practice areas.",
+    "og_description": "Private law firm in Buenos Aires. Legal advice on Argentine Citizenship, residency, visas and other practice areas.",
     "og_image_alt": "Portillo Kus & Asociados, law firm in Buenos Aires"
   },
   "a11y": {
@@ -21,9 +21,9 @@
     "social_youtube": "Portillo Kus & Asociados on YouTube"
   },
   "nav": {
-    "ciudadania": "Citizenship",
+    "ciudadania": "Argentine Citizenship",
     "opiniones": "Reviews",
-    "areas": "Practice areas",
+    "areas": "Areas",
     "estudio": "The firm",
     "contacto": "Contact",
     "consultar": "Contact us",
@@ -36,7 +36,7 @@
   "hero": {
     "img_alt": "View of Diagonal Norte (Av. Roque Sáenz Peña), steps from the firm, with the Obelisk in the background",
     "eyebrow": "LAW FIRM · MICROCENTRO, BUENOS AIRES",
-    "title": "Your Argentine citizenship, in the best hands",
+    "title": "Your Argentine Citizenship",
     "sub": "Legal representation in citizenship, residence and visa matters. Over 1,200 citizenship cases resolved favourably since 2020.",
     "cta_primary": "Contact us on WhatsApp",
     "cta_primary_msg": "Hello, I would like advice on my Argentine citizenship application.",
@@ -54,7 +54,7 @@
     "eyebrow": "WHAT DO YOU NEED?",
     "title": "Choose where to start",
     "c1_alt": "Client who has obtained Argentine citizenship, alongside Dr. Portillo",
-    "c1_title": "Argentine citizenship",
+    "c1_title": "Argentine Citizenship",
     "c1_desc": "Legal advice and representation for your citizenship application.",
     "c1_cta": "Contact us on WhatsApp",
     "c1_msg": "Hello, I would like advice on an Argentine citizenship application.",
