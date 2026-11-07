@@ -155,6 +155,13 @@
     "tag_matricula": "CPACF bar registration",
     "team_note": "[PENDIENTE] Partners and bar numbers: to be completed"
   },
+  "equipo": {
+    "eyebrow": "THE TEAM",
+    "title": "Our lawyers",
+    "ver_perfil": "View profile",
+    "cerrar": "Close",
+    "tag_idiomas": "Languages"
+  },
   "opiniones": {
     "eyebrow": "REVIEWS",
     "title": "What our clients say",

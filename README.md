@@ -140,6 +140,13 @@ copias temporales y no modifican el contenido del estudio.
 - Un `[PENDIENTE]` fuera de esos bloques aparece en la vista previa con su texto
   base y la etiqueta "pendiente". `python src/build.py --produccion` falla si
   alguno llega a una página; lista idioma y clave sin regenerar `dist/`.
+- Los abogados viven en `src/equipo.json`: agregar, sacar o editar a alguien es
+  tocar esa lista. Cada uno lleva nombre, foto (`portillo-images/abogado-*`),
+  matrícula y LinkedIn (opcionales), y cargo, idiomas y biografía por idioma; en
+  la biografía, una línea en blanco separa párrafos. La vista previa muestra los
+  borradores; `--produccion` sólo a quien tiene `"publicado": true`, y falla si a
+  esa persona le falta un dato o le queda un texto entre corchetes. Sin nadie
+  publicado, la sección no se genera.
 - `{reviews}` en los JSON es el piso de reseñas (`REVIEWS` en `src/build.py`,
   los textos dicen "más de") y `{year}` el año del build, para el ©.
 - `SITE_URL` (constante en `src/seo.py`, `https://portillokusestudio.com`) define

@@ -25,6 +25,7 @@ from seo import SITE_URL, metadata, valid_maps_url, write_files as write_seo_fil
 from headers import write_files as write_headers
 from images import prepare_images, render_images, version_images
 from edge import write_files as write_edge_files
+import equipo as equipo_mod
 
 BASE = pathlib.Path(__file__).resolve().parent
 SITE_ROOT = BASE.parent
@@ -211,7 +212,7 @@ def font_preloads(code, prefix, page="home"):
     return "\n".join(tags)
 
 
-def build(lang, template, base_url, flat, page="home", image_assets=None, pendientes=None):
+def build(lang, template, base_url, flat, page="home", image_assets=None, pendientes=None, abogados=()):
     """pendientes: si es una lista, se le suma "idioma: clave" por cada pendiente que llega a la página."""
     flat = dict(flat)
 
@@ -233,6 +234,7 @@ def build(lang, template, base_url, flat, page="home", image_assets=None, pendie
     flat["html_lang"] = lang["html_lang"]
     flat.update(analytics_fields(lang["code"], os.environ.get("UMAMI_ID")))
     flat["img_prefix"] = rel_prefix_for(lang, page)
+    flat["equipo_html"] = equipo_mod.render(abogados, lang["code"], flat, flat["img_prefix"])
     flat["home_link"] = rel_prefix_for(lang, page) + (lang["slug"] + "/" if lang["slug"] else "") or "./"
     flat["privacy_link"] = ("/" + PRIVACY_SLUGS[lang["code"]] + "/" if page == "404" else
                             posixpath.relpath(PRIVACY_SLUGS[lang["code"]], page_slug(lang, page) or ".") + "/")
@@ -387,9 +389,11 @@ def main():
     images = SITE_ROOT / "portillo-images"
     try:
         headers_source = (BASE / "_headers").read_text(encoding="utf-8")
-        image_assets, image_files = prepare_images(images, template)
+        todos = [l["code"] for l in TODOS_LOS_IDIOMAS]
+        abogados = equipo_mod.visibles(equipo_mod.cargar(BASE / "equipo.json", todos, IDIOMAS_PUBLICADOS, images), args.produccion)
+        image_assets, image_files = prepare_images(images, template + equipo_mod.imagenes_usadas(abogados))
         privacy = privacy_template(template)
-        pages = [(lang, page, build(lang, source, base_url, contents[lang["code"]], page, image_assets, pending))
+        pages = [(lang, page, build(lang, source, base_url, contents[lang["code"]], page, image_assets, pending, abogados))
                  for page, source in (("home", template), ("privacy", privacy)) for lang in LANGS]
         es = lang_by_code(DEFAULT_LANG)
         not_found = build(es, privacy_template(template, "404-template.html"), base_url,

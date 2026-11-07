@@ -17,6 +17,7 @@ hace fallar `--produccion`. No quitar el marcador para publicar un dato sin evid
 | Matrícula CPACF del Dr. Portillo | `ESTUDIO["matricula"]` en `src/build.py` (p. ej. `"T° 100 F° 200"`) | Línea "Matrícula CPACF …" bajo su cargo en "El estudio", en los cinco idiomas |
 | Socios y sus matrículas | `estudio.team_note` en los cinco JSON, reemplazando el valor completo | Nota bajo la firma en "El estudio" |
 | Reseñas de Google, texto completo y autor tal como figuran | `opiniones.r1_text`/`r1_name` a `r4_text`/`r4_name` en los cinco JSON | Cada tarjeta aparece sola cuando su `rN_text` está cargado; sin ninguna, "Opiniones" muestra sólo el puntaje y el botón a Google |
+| Abogados: foto, nombre, cargo, matrícula, idiomas, biografía y LinkedIn | `src/equipo.json` (foto en `portillo-images/abogado-*`), reemplazando `[Abogado 1]` y demás, en los cinco idiomas, con `"publicado": true` | Sección "Nuestros abogados" con tarjeta y perfil |
 | Idiomas de atención | `seo.contact_languages` (códigos separados por coma, p. ej. `es,en,pt-BR`) | `ContactPoint.availableLanguage` en el JSON-LD |
 
 Si el `rN_text` se carga y el `rN_name` no, el nombre sale marcado y

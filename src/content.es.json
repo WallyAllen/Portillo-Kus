@@ -155,6 +155,13 @@
     "tag_matricula": "Matrícula CPACF",
     "team_note": "[PENDIENTE] Socios y matrículas: a completar"
   },
+  "equipo": {
+    "eyebrow": "EL EQUIPO",
+    "title": "Nuestros abogados",
+    "ver_perfil": "Ver perfil",
+    "cerrar": "Cerrar",
+    "tag_idiomas": "Idiomas"
+  },
   "opiniones": {
     "eyebrow": "OPINIONES",
     "title": "Lo que dicen nuestros clientes",

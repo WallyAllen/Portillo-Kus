@@ -553,6 +553,34 @@ section[id]{ scroll-margin-top: 60px; }
   .team-sign-text{ padding-left: var(--sp-4); }
 }
 
+/* Equipo: tarjetas y perfil en <dialog>, datos en src/equipo.json */
+.section--dark :focus-visible{ outline-color: #fff; }
+#equipo .section-head{ margin-inline: auto; text-align: center; }
+.equipo-grid{ list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: var(--sp-7) var(--sp-8); }
+.abogado{ width: min(100%, 260px); display: flex; flex-direction: column; align-items: center; text-align: center; }
+.abogado-foto{ width: 180px; height: 180px; flex-shrink: 0; overflow: hidden; border-radius: var(--radius-full); border: 2px solid var(--celeste); background: var(--dark-surface); color: var(--ink-on-dark-muted); }
+.abogado-foto picture{ display: contents; }
+.abogado-foto img{ width: 100%; height: 100%; object-fit: cover; object-position: 50% 20%; display: block; }
+.abogado-sin-foto{ display: flex; width: 100%; height: 100%; padding: 22%; }
+.abogado-nombre{ margin-top: var(--sp-4); font-size: var(--text-xl); color: var(--ink-on-dark); }
+.abogado-cargo{ margin-top: var(--sp-1); font-size: var(--text-sm); color: var(--ink-on-dark-muted); }
+.abogado-matricula{ margin-top: 2px; font-size: var(--text-xs); color: var(--ink-on-dark-muted); }
+.abogado-abrir{ margin-top: var(--sp-4); }
+html:has(.abogado-dialog[open]){ overflow: hidden; }
+.abogado-dialog{ width: min(640px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); padding: 0; overflow: auto; background: var(--dark-surface); color: var(--ink-on-dark); border: 1px solid var(--dark-line); border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); }
+.abogado-dialog::backdrop{ background: rgba(15,27,38,0.78); }
+.abogado-dialog :focus-visible{ outline-color: #fff; }
+.abogado-dialog-body{ position: relative; padding: var(--sp-7) var(--sp-6) var(--sp-6); }
+.abogado-cerrar{ position: absolute; top: var(--sp-2); right: var(--sp-2); width: 44px; height: 44px; border: 0; background: none; color: var(--ink-on-dark); font-size: 28px; line-height: 1; cursor: pointer; }
+.abogado-cabecera{ display: flex; align-items: center; gap: var(--sp-5); padding-right: var(--sp-6); }
+.abogado-cabecera .abogado-foto{ width: 88px; height: 88px; }
+.abogado-cabecera .abogado-nombre{ margin-top: 0; }
+.abogado-bio{ margin-top: var(--sp-5); font-size: var(--text-sm); color: var(--ink-on-dark); }
+.abogado-bio p + p{ margin-top: var(--sp-3); }
+.abogado-pie{ display: flex; align-items: center; justify-content: space-between; gap: var(--sp-4); margin-top: var(--sp-5); padding-top: var(--sp-4); border-top: 1px solid var(--dark-line); }
+.abogado-idiomas{ font-size: var(--text-xs); color: var(--ink-on-dark-muted); }
+.abogado-linkedin{ flex-shrink: 0; display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; margin-left: auto; border: 1px solid var(--dark-line); border-radius: var(--radius-md); color: var(--ink-on-dark); }
+
 /* Opiniones */
 .reviews-grid{ display: grid; grid-template-columns: 1fr; gap: var(--sp-5); }
 .reviews-grid:not(:has(.review-card)){ display: none; } /* reseñas ocultas hasta tener los textos de Google */
@@ -674,7 +702,7 @@ a[aria-disabled="true"]{ opacity: 0.65; cursor: default; }
 .skip-link{ position: absolute; left: 12px; top: -64px; z-index: 1000; padding: 10px 16px; background: #fff; color: #1a1a1a; font-weight: 700; border-radius: 6px; box-shadow: 0 2px 10px rgba(0,0,0,.3); }
 .skip-link:focus{ top: 12px; }
 </style>
-<noscript><style>.reveal,.reveal-scale{opacity:1;transform:none}</style></noscript>
+<noscript><style>.reveal,.reveal-scale{opacity:1;transform:none}.abogado-dialog{display:block;position:static;margin:var(--sp-6) auto 0}.abogado-abrir,.abogado-cerrar{display:none}</style></noscript>
 {{analytics_script}}
 </head>
 <body>
@@ -1068,6 +1096,19 @@ a[aria-disabled="true"]{ opacity: 0.65; cursor: default; }
       </div>
     </div>
   </section>
+
+  <!-- 8b. EQUIPO: datos en src/equipo.json; sin nadie publicado, no se genera -->
+  <!--si:equipo_html-->
+  <section class="section--dark section-pad" id="equipo">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="section-label">{{equipo.eyebrow}}</span>
+        <h2>{{equipo.title}}</h2>
+      </div>
+      {{equipo_html}}
+    </div>
+  </section>
+  <!--/si:equipo_html-->
 
   <!-- 9. FRANJA BUENOS AIRES -->
   <section class="section--surface section-pad">
@@ -1533,12 +1574,21 @@ a[aria-disabled="true"]{ opacity: 0.65; cursor: default; }
     });
   }
 
+  // Perfiles del equipo: <dialog> atrapa el foco, cierra con Escape y lo devuelve al botón.
+  document.querySelectorAll('[data-abogado]').forEach(function(boton){
+    boton.addEventListener('click', function(){ document.getElementById(boton.dataset.abogado).showModal(); });
+  });
+  document.querySelectorAll('.abogado-dialog').forEach(function(dialogo){
+    dialogo.querySelector('.abogado-cerrar').addEventListener('click', function(){ dialogo.close(); });
+    dialogo.addEventListener('click', function(e){ if (e.target === dialogo) dialogo.close(); });
+  });
+
   // El selector conserva la sección visible y el comportamiento nativo de abrir otra pestaña.
   function updateLanguageLinks(){
     var section = '';
     var headerBottom = header.getBoundingClientRect().bottom + 32;
     document.querySelectorAll('main [id]').forEach(function(el){
-      if (['ciudadania','opiniones','areas','estudio','contacto'].includes(el.id) && el.getBoundingClientRect().top <= headerBottom) section = el.id;
+      if (['ciudadania','opiniones','areas','estudio','equipo','contacto'].includes(el.id) && el.getBoundingClientRect().top <= headerBottom) section = el.id;
     });
     document.querySelectorAll('.lang-switch a').forEach(function(a){
       a.href = a.href.split('#')[0] + (section ? '#' + section : '');

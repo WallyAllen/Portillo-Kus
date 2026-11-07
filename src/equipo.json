@@ -1,0 +1,88 @@
+{
+  "abogados": [
+    {
+      "publicado": false,
+      "nombre": "[Abogado 1]",
+      "foto": "",
+      "matricula": "[T° y F°]",
+      "linkedin": "https://www.linkedin.com/in/",
+      "cargo": {
+        "es": "[Cargo]",
+        "en": "[Position]",
+        "pt": "[Cargo]",
+        "ru": "[Должность]",
+        "zh": "[职位]"
+      },
+      "idiomas": {
+        "es": "[Idiomas de atención]",
+        "en": "[Languages spoken]",
+        "pt": "[Idiomas de atendimento]",
+        "ru": "[Языки работы]",
+        "zh": "[服务语言]"
+      },
+      "biografia": {
+        "es": "[Formación: universidad, títulos y certificaciones.]\n\n[Especialidad: áreas de práctica y tipo de clientes.]\n\n[Experiencia: casos, países y publicaciones.]",
+        "en": "[Education: university, degrees and certifications.]\n\n[Specialisation: practice areas and type of clients.]\n\n[Experience: cases, countries and publications.]",
+        "pt": "[Formação: universidade, títulos e certificações.]\n\n[Especialidade: áreas de atuação e tipo de clientes.]\n\n[Experiência: casos, países e publicações.]",
+        "ru": "[Образование: университет, степени и сертификаты.]\n\n[Специализация: области практики и типы клиентов.]\n\n[Опыт: дела, страны и публикации.]",
+        "zh": "[教育背景：大学、学位和证书。]\n\n[专业领域：业务范围和客户类型。]\n\n[工作经验：案件、国家和出版物。]"
+      }
+    },
+    {
+      "publicado": false,
+      "nombre": "[Abogado 2]",
+      "foto": "",
+      "matricula": "[T° y F°]",
+      "linkedin": "",
+      "cargo": {
+        "es": "[Cargo]",
+        "en": "[Position]",
+        "pt": "[Cargo]",
+        "ru": "[Должность]",
+        "zh": "[职位]"
+      },
+      "idiomas": {
+        "es": "[Idiomas de atención]",
+        "en": "[Languages spoken]",
+        "pt": "[Idiomas de atendimento]",
+        "ru": "[Языки работы]",
+        "zh": "[服务语言]"
+      },
+      "biografia": {
+        "es": "[Formación: universidad, títulos y certificaciones.]\n\n[Especialidad: áreas de práctica y tipo de clientes.]\n\n[Experiencia: casos, países y publicaciones.]",
+        "en": "[Education: university, degrees and certifications.]\n\n[Specialisation: practice areas and type of clients.]\n\n[Experience: cases, countries and publications.]",
+        "pt": "[Formação: universidade, títulos e certificações.]\n\n[Especialidade: áreas de atuação e tipo de clientes.]\n\n[Experiência: casos, países e publicações.]",
+        "ru": "[Образование: университет, степени и сертификаты.]\n\n[Специализация: области практики и типы клиентов.]\n\n[Опыт: дела, страны и публикации.]",
+        "zh": "[教育背景：大学、学位和证书。]\n\n[专业领域：业务范围和客户类型。]\n\n[工作经验：案件、国家和出版物。]"
+      }
+    },
+    {
+      "publicado": false,
+      "nombre": "[Abogado 3]",
+      "foto": "",
+      "matricula": "[T° y F°]",
+      "linkedin": "",
+      "cargo": {
+        "es": "[Cargo]",
+        "en": "[Position]",
+        "pt": "[Cargo]",
+        "ru": "[Должность]",
+        "zh": "[职位]"
+      },
+      "idiomas": {
+        "es": "[Idiomas de atención]",
+        "en": "[Languages spoken]",
+        "pt": "[Idiomas de atendimento]",
+        "ru": "[Языки работы]",
+        "zh": "[服务语言]"
+      },
+      "biografia": {
+        "es": "[Formación: universidad, títulos y certificaciones.]\n\n[Especialidad: áreas de práctica y tipo de clientes.]\n\n[Experiencia: casos, países y publicaciones.]",
+        "en": "[Education: university, degrees and certifications.]\n\n[Specialisation: practice areas and type of clients.]\n\n[Experience: cases, countries and publications.]",
+        "pt": "[Formação: universidade, títulos e certificações.]\n\n[Especialidade: áreas de atuação e tipo de clientes.]\n\n[Experiência: casos, países e publicações.]",
+        "ru": "[Образование: университет, степени и сертификаты.]\n\n[Специализация: области практики и типы клиентов.]\n\n[Опыт: дела, страны и публикации.]",
+        "zh": "[教育背景：大学、学位和证书。]\n\n[专业领域：业务范围和客户类型。]\n\n[工作经验：案件、国家和出版物。]"
+      }
+    }
+  ]
+}

@@ -21,6 +21,7 @@ def prepare_images(source, template):
             image = ImageOps.exif_transpose(original).convert('RGB')
         width, height = image.size
         sizes = ('100vw' if name.startswith('hero-') else
+                 '180px' if name.startswith('abogado-') else
                  '(min-width: 900px) 300px, (min-width: 640px) 320px, 78vw' if name.startswith('area-') else
                  '(min-width: 900px) 540px, calc(100vw - 48px)' if name in ('ciudadania.jpg', 'estudio.jpg') else
                  '(min-width: 760px) 360px, calc(100vw - 48px)')
