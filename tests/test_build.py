@@ -55,6 +55,17 @@ class BuildTests(unittest.TestCase):
             self.assertTrue(all(f'href="{url}"' in footer for url in business['sameAs']))
             self.assertIn(business['email'], footer)
 
+    def test_header_logo_is_an_image_that_does_not_wait_for_js_or_the_title(self):
+        self.assertEqual(self.run_build().returncode, 0)
+        for page in ('index.html', 'en/index.html', 'pt/index.html', 'privacidad/index.html'):
+            html = (self.root / 'dist' / page).read_text(encoding='utf-8')
+            header = re.search(r'<header class="site-header.*?</header>', html, re.S).group(0)
+            logo = re.search(r'class="logo"[^>]*><img [^>]*portillo-images/logo\.png[^>]*>', header)
+            self.assertIsNotNone(logo, page)
+            self.assertIn('alt="Portillo Kus &amp; Asociados"', logo.group(0))
+            self.assertIn('loading="eager"', logo.group(0))
+            self.assertIn('fetchpriority="low"', logo.group(0))  # el LCP móvil es el título
+
     def test_normal_output_and_site_url(self):
         result = self.run_build(site_url='https://example.pages.dev')
         self.assertEqual(result.returncode, 0, result.stderr)

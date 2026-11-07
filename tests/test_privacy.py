@@ -36,6 +36,7 @@ class PrivacyTests(unittest.TestCase):
         shutil.copytree(ROOT / 'site-fonts', cls.root / 'site-fonts')
         (cls.root / 'portillo-images').mkdir()
         Image.new('RGB', (150, 80), 'white').save(cls.root / 'portillo-images/logo.jpg')
+        Image.new('RGBA', (150, 80), 'white').save(cls.root / 'portillo-images/logo.png')  # encabezado
         result = subprocess.run([sys.executable, str(cls.root / 'src/build.py'),
                                  '--base-url', 'https://example.com/site/'],
                                 capture_output=True, text=True, encoding='utf-8')
@@ -72,7 +73,7 @@ class PrivacyTests(unittest.TestCase):
                     href = attrs.get(attr, '')
                     if not href or href.startswith(('#', 'https:', 'http:', 'mailto:', 'tel:')):
                         continue
-                    self.assertTrue((self.root / 'dist' / slug / href.split('#')[0]).exists(), href)
+                    self.assertTrue((self.root / 'dist' / slug / href.split('#')[0].split('?')[0]).exists(), href)
 
     def test_privacy_hreflang_and_default_use_privacy_routes(self):
         expected = {'es': 'privacidad/', 'en': 'en/privacy/', 'pt-BR': 'pt/privacidade/',
