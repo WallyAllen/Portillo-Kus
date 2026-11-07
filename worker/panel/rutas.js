@@ -5,12 +5,14 @@ import pagina from './pagina.html';
 import estilos from './estilos.css';
 import app from './cliente/app.js';
 import inicio from './cliente/pantallas/inicio.js';
+import traducciones from './cliente/pantallas/traducciones.js';
 
 const JS = 'text/javascript; charset=utf-8';
 const ARCHIVOS = {
   '/panel/estilos.css': [estilos, 'text/css; charset=utf-8'],
   '/panel/app.js': [app, JS],
   '/panel/pantallas/inicio.js': [inicio, JS],
+  '/panel/pantallas/traducciones.js': [traducciones, JS],
 };
 
 export function manejarPanel(request) {

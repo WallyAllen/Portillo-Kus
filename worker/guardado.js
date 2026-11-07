@@ -1,15 +1,23 @@
 // Guardar es un commit en el repo. Este módulo decide qué se puede guardar, lo valida contra
 // el estado de la rama en ese momento y evita pisar lo que otra persona guardó.
 import { RepoGitHub } from './github.js';
+import reglas from './reglas.json' with { type: 'json' };
+import {
+  ARCHIVO_PENDIENTES, equipoSoloEspanol, fijarTexto, OTROS_IDIOMAS, oculto, parsearPendientes, reconciliar,
+  reponerTraducciones, RUTA_EQUIPO, RUTAS_TEXTOS, rutaDeClave, serializarPendientes, vistaDeTextos,
+} from './traducciones.js';
 import { validarRepo } from './validacion.js';
 
 const RUTA_TEXTO = /^src\/(content\.(es|en|pt|ru|zh)\.json|equipo\.json)$/;
+const RUTA_TRADUCCION = /^src\/content\.(en|pt|ru|zh)\.json$/;
 const RUTA_IMAGEN = /^portillo-images\/([a-z0-9][a-z0-9._-]*\.(jpe?g|png|webp))$/;
 const IMAGEN_MAXIMA = 5 * 1024 * 1024;
 const MAX_ARCHIVOS = 10;
 // Un reintento sólo por una carrera justo al mover la rama. Con más, una ráfaga de escrituras
 // podría pasar de 50 subpedidos, el límite del plan Free de Workers.
 const INTENTOS = 2;
+
+const serializar = (datos) => `${JSON.stringify(datos, null, 2)}\n`;
 
 export class Conflicto extends Error {
   constructor(archivos) {
@@ -27,6 +35,12 @@ export class DatosInvalidos extends Error {
   }
 }
 
+export class Prohibido extends Error {
+  constructor() {
+    super('Tu usuario no tiene permiso para esto.');
+  }
+}
+
 function esImagenReal(base64) {
   let inicio;
   try {
@@ -41,6 +55,7 @@ function esImagenReal(base64) {
 
 // Una imagen corrupta frena el build (Pillow no la abre) y un archivo de otro tipo no debe
 // llegar al repo. Sólo se aceptan estas rutas: el token podría escribir cualquier archivo.
+// La lista de pendientes no está: la escribe únicamente el servidor, también para un admin.
 function comprobarArchivos(archivos) {
   if (!archivos.length || archivos.length > MAX_ARCHIVOS) return [`Se guardan entre 1 y ${MAX_ARCHIVOS} archivos por vez.`];
   const errores = [];
@@ -61,15 +76,54 @@ function comprobarArchivos(archivos) {
   return errores;
 }
 
-function validar(repo, ref, archivos) {
-  const propios = new Map(archivos.map((a) => [a.ruta, a]));
+const lector = (repo, ref, propios = new Map()) => (ruta) => (propios.has(ruta) ? propios.get(ruta) : repo.leer(ruta, ref));
+
+function validar(repo, leer, archivos, ref) {
   return validarRepo({
-    leer: (ruta) => (propios.has(ruta) ? propios.get(ruta).texto : repo.leer(ruta, ref)),
+    leer,
     listarImagenes: async () => {
-      const nuevas = [...propios.keys()].filter((r) => RUTA_IMAGEN.test(r)).map((r) => r.split('/')[1]);
+      const nuevas = archivos.map((a) => a.ruta).filter((r) => RUTA_IMAGEN.test(r)).map((r) => r.split('/')[1]);
       return new Set([...await repo.listar('portillo-images', ref), ...nuevas]);
     },
   });
+}
+
+// Lo que escribe un editor en equipo.json pierde las traducciones que haya mandado.
+async function comoEditor(archivos, leerRama) {
+  return Promise.all(archivos.map(async (archivo) => {
+    if (archivo.ruta !== RUTA_EQUIPO) return archivo;
+    try {
+      const enviado = JSON.parse(archivo.texto);
+      if (!Array.isArray(enviado.abogados)) return archivo; // lo rechaza la validación
+      return { ...archivo, texto: serializar(reponerTraducciones(enviado, JSON.parse(await leerRama(RUTA_EQUIPO)))) };
+    } catch {
+      return archivo; // JSON roto: lo rechaza la validación
+    }
+  }));
+}
+
+// Suma al mismo commit lo que cambia en la lista de pendientes. Se calcula contra la rama, que
+// para estos archivos es igual a la base: si no, el guardado ya terminó en Conflicto.
+// confirmados: [{ clave, codigo }] que un admin dio por traducidos aunque el texto no haya cambiado.
+async function conPendientes(archivos, leerRama, confirmados = []) {
+  if (!archivos.some((a) => RUTAS_TEXTOS.includes(a.ruta))) return archivos;
+  const propios = new Map(archivos.map((a) => [a.ruta, a.texto]));
+  let pendientes;
+  let nuevos;
+  try {
+    pendientes = parsearPendientes(await leerRama(ARCHIVO_PENDIENTES));
+    const despues = await vistaDeTextos((ruta) => (propios.has(ruta) ? propios.get(ruta) : leerRama(ruta)));
+    nuevos = reconciliar(pendientes, await vistaDeTextos(leerRama), despues, new Date().toISOString());
+  } catch {
+    return archivos; // algo roto: lo rechaza la validación
+  }
+  for (const { clave, codigo } of confirmados) {
+    if (!nuevos[clave]) continue;
+    delete nuevos[clave].viejo[codigo];
+    if (!Object.keys(nuevos[clave].viejo).length) delete nuevos[clave];
+  }
+  if (JSON.stringify(nuevos) === JSON.stringify(pendientes)) return archivos;
+  return [...archivos, { ruta: ARCHIVO_PENDIENTES, texto: serializarPendientes(nuevos) }];
 }
 
 function armarMensaje(descripcion, autor, archivos) {
@@ -79,10 +133,13 @@ function armarMensaje(descripcion, autor, archivos) {
 
 // base: el commit sobre el que se leyó. Si la rama avanzó sin tocar estos archivos, el cambio
 // entra arriba de lo nuevo; si tocó alguno, Conflicto. Devuelve { commit }.
-export async function guardarCambios(env, { base, archivos, descripcion, autor }) {
+// La lista de pendientes no cuenta para el conflicto: se recalcula sobre lo último de la rama.
+// comprobar(leerRama) es opcional y corre en cada intento: puede lanzar Conflicto.
+export async function guardarCambios(env, { base, archivos, descripcion, autor, comprobar, confirmados, repo = new RepoGitHub(env) }) {
   const invalidos = comprobarArchivos(archivos);
   if (invalidos.length) throw new DatosInvalidos(invalidos);
-  const repo = new RepoGitHub(env);
+  const esAdmin = autor.rol === 'admin';
+  if (!esAdmin && archivos.some((a) => RUTA_TRADUCCION.test(a.ruta))) throw new Prohibido();
   const rutas = archivos.map((a) => a.ruta);
   for (let intento = 0; intento < INTENTOS; intento++) {
     const head = await repo.head();
@@ -92,11 +149,16 @@ export async function guardarCambios(env, { base, archivos, descripcion, autor }
       const choque = rutas.filter((r) => cambiados.includes(r));
       if (choque.length) throw new Conflicto(choque);
     }
+    const leerRama = lector(repo, head);
+    if (comprobar) await comprobar(leerRama);
+    const propios = esAdmin ? archivos : await comoEditor(archivos, leerRama);
+    const finales = await conPendientes(propios, leerRama, confirmados);
     // Contra head y no contra base: lo que entró recién también cuenta para las reglas.
-    const errores = await validar(repo, head, archivos);
+    const conMios = lector(repo, head, new Map(finales.filter((a) => a.texto !== undefined).map((a) => [a.ruta, a.texto])));
+    const errores = await validar(repo, conMios, finales, head);
     if (errores.length) throw new DatosInvalidos(errores);
     const firma = { name: autor.nombre, email: `${autor.usuario}@panel.invalid` };
-    const commit = await repo.crearCommit({ padre: head, archivos, mensaje: armarMensaje(descripcion, autor, archivos), autor: firma });
+    const commit = await repo.crearCommit({ padre: head, archivos: finales, mensaje: armarMensaje(descripcion, autor, finales), autor: firma });
     if (await repo.moverRama(commit)) return { commit };
   }
   throw new Conflicto([]);
@@ -104,11 +166,91 @@ export async function guardarCambios(env, { base, archivos, descripcion, autor }
 
 // Lee un archivo editable y el commit al que pertenece: ese commit es la base del guardado.
 // Con varios archivos, pasar el commit del primero como ref para leerlos todos en la misma versión.
-export async function leerParaEditar(env, ruta, ref) {
+// Un editor no ve las traducciones: ni los otros idiomas ni sus campos en equipo.json.
+export async function leerParaEditar(env, ruta, ref, rol) {
   if (!RUTA_TEXTO.test(ruta)) throw new DatosInvalidos([`${ruta}: este archivo no se puede editar desde el panel`]);
+  const esAdmin = rol === 'admin';
+  if (!esAdmin && RUTA_TRADUCCION.test(ruta)) throw new Prohibido();
   const repo = new RepoGitHub(env);
   const commit = ref || await repo.head();
-  return { ruta, commit, texto: await repo.leer(ruta, commit) };
+  const texto = await repo.leer(ruta, commit);
+  const visible = !esAdmin && ruta === RUTA_EQUIPO && texto !== null ? serializar(equipoSoloEspanol(JSON.parse(texto))) : texto;
+  return { ruta, commit, texto: visible };
+}
+
+function tituloDeClave(clave, equipo) {
+  const deEquipo = clave.match(/^equipo:([^.]+)\.(.+)$/);
+  if (!deEquipo) return clave;
+  const abogado = JSON.parse(equipo).abogados.find((a) => a.id === deEquipo[1]);
+  return `${abogado?.nombre ?? deEquipo[1]} · ${deEquipo[2]}`;
+}
+
+// Para la pantalla Traducciones. Sólo admin: lo comprueba la ruta en api.js.
+export async function listarTraducciones(env) {
+  const repo = new RepoGitHub(env);
+  const commit = await repo.head();
+  const leer = lector(repo, commit);
+  const pendientes = parsearPendientes(await leer(ARCHIVO_PENDIENTES));
+  const vista = await vistaDeTextos(leer);
+  const equipo = await leer(RUTA_EQUIPO);
+  const lista = Object.entries(pendientes).map(([clave, { fecha, viejo }]) => ({
+    clave,
+    titulo: tituloDeClave(clave, equipo),
+    fecha,
+    nuevo: vista[clave]?.es ?? '',
+    idiomas: OTROS_IDIOMAS.filter((c) => c in viejo).map((codigo) => {
+      const actual = vista[clave]?.[codigo] ?? '';
+      return { codigo, viejo: viejo[codigo], actual: oculto(actual) ? '' : actual, publicado: reglas.idiomasPublicados.includes(codigo) };
+    }),
+  }));
+  return { commit, pendientes: lista };
+}
+
+// textos: { clave: { idioma: texto } }. Un campo vacío deja ese idioma pendiente. Traducción y baja
+// del pendiente salen en un solo commit. El texto recibido da de baja el idioma aunque sea igual al
+// que ya estaba: un cambio de coma en español puede no pedir otra traducción.
+export async function guardarTraducciones(env, { base, textos, autor }) {
+  if (autor.rol !== 'admin') throw new Prohibido();
+  const repo = new RepoGitHub(env);
+  const leerBase = lector(repo, base);
+  const pendientesBase = parsearPendientes(await leerBase(ARCHIVO_PENDIENTES));
+  const vistaBase = await vistaDeTextos(leerBase);
+
+  const pedido = [];
+  const errores = [];
+  for (const [clave, porIdioma] of Object.entries(textos ?? {})) {
+    for (const [codigo, valor] of Object.entries(porIdioma ?? {})) {
+      const texto = typeof valor === 'string' ? valor.trim() : '';
+      if (!texto) continue;
+      if (!(codigo in (pendientesBase[clave]?.viejo ?? {}))) errores.push(`${clave}: ${codigo} no está pendiente`);
+      else if (oculto(vistaBase[clave]?.es ?? '')) errores.push(`${clave}: el español todavía no tiene texto para traducir`);
+      else if (oculto(texto)) errores.push(`${clave}: ${codigo} no puede quedar marcado como pendiente`);
+      else if (texto.includes('<')) errores.push(`${clave}: ${codigo} no puede llevar el carácter <`); // el build no escapa los textos
+      else pedido.push({ clave, codigo, texto });
+    }
+  }
+  if (!pedido.length && !errores.length) errores.push('Escribí al menos una traducción.');
+  if (errores.length) throw new DatosInvalidos(errores);
+
+  const porRuta = new Map();
+  for (const { clave, codigo, texto } of pedido) {
+    const ruta = rutaDeClave(clave, codigo);
+    if (!porRuta.has(ruta)) porRuta.set(ruta, JSON.parse(await leerBase(ruta)));
+    if (!fijarTexto(porRuta.get(ruta), clave, codigo, texto)) throw new DatosInvalidos([`${clave}: ya no existe`]);
+  }
+  const archivos = [...porRuta].map(([ruta, datos]) => ({ ruta, texto: serializar(datos) }));
+  const claves = [...new Set(pedido.map((p) => p.clave))];
+
+  // Si el español cambió mientras se traducía, esta traducción ya no le corresponde.
+  const comprobar = async (leerRama) => {
+    const pendientes = parsearPendientes(await leerRama(ARCHIVO_PENDIENTES));
+    const vista = await vistaDeTextos(leerRama);
+    const cambiaron = claves.filter((clave) => vista[clave]?.es !== vistaBase[clave]?.es
+      || pedido.some((p) => p.clave === clave && !(p.codigo in (pendientes[clave]?.viejo ?? {}))));
+    if (cambiaron.length) throw new Conflicto(cambiaron);
+  };
+  const descripcion = `Traducción de ${pedido.map((p) => `${p.clave} (${p.codigo})`).join(', ')}`;
+  return guardarCambios(env, { base, archivos, descripcion, autor, comprobar, confirmados: pedido, repo });
 }
 
 // version.json dice qué commit está sirviendo el sitio. Si es otro, el nuestro igual puede estar

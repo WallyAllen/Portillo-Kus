@@ -1,7 +1,9 @@
 // Rutas /api/*. Para sumar una pantalla: una entrada en RUTAS. Las rutas con sesión ya
 // tienen comprobados el origen y el CSRF cuando llega el pedido a su función.
 import { cerrarSesion, cookieDeSesion, cookieVencida, csrfValido, iniciarSesion, leerSesion, origenValido } from './auth.js';
-import { Conflicto, DatosInvalidos, guardarCambios, leerParaEditar, estadoPublicacion } from './guardado.js';
+import {
+  Conflicto, DatosInvalidos, estadoPublicacion, guardarCambios, guardarTraducciones, leerParaEditar, listarTraducciones, Prohibido,
+} from './guardado.js';
 import { error, json } from './http.js';
 
 const SHA = /^[0-9a-f]{40}$/;
@@ -31,10 +33,18 @@ async function logout({ request, env }) {
 
 const sesionActual = ({ sesion }) => json({ usuario: sesion.usuario, csrf: sesion.csrf });
 
-async function archivo({ url, env }) {
+async function archivo({ url, env, sesion }) {
   const ref = url.searchParams.get('ref');
   if (ref && !SHA.test(ref)) return error('Versión inválida.', 400);
-  return json(await leerParaEditar(env, url.searchParams.get('ruta') || '', ref));
+  return json(await leerParaEditar(env, url.searchParams.get('ruta') || '', ref, sesion.usuario.rol));
+}
+
+const traducciones = async ({ env }) => json(await listarTraducciones(env));
+
+async function guardarTraduccion({ request, env, sesion }) {
+  const datos = await request.json().catch(() => null);
+  if (!datos || !SHA.test(datos.base || '')) return error('Pedido inválido.', 400);
+  return json(await guardarTraducciones(env, { base: datos.base, textos: datos.textos, autor: sesion.usuario }));
 }
 
 async function guardar({ request, env, sesion }) {
@@ -42,7 +52,9 @@ async function guardar({ request, env, sesion }) {
   if (largo > CUERPO_MAXIMO) return error('Los archivos son demasiado grandes.', 413);
   const datos = await request.json().catch(() => null);
   if (!datos || !SHA.test(datos.base || '') || !Array.isArray(datos.archivos)) return error('Pedido inválido.', 400);
-  return json(await guardarCambios(env, { ...datos, autor: sesion.usuario }));
+  // Campo por campo: comprobar y confirmados no pueden venir del pedido.
+  const { base, archivos, descripcion } = datos;
+  return json(await guardarCambios(env, { base, archivos, descripcion, autor: sesion.usuario }));
 }
 
 async function publicacion({ url, env }) {
@@ -58,6 +70,8 @@ const RUTAS = {
   'GET /api/archivo': { fn: archivo },
   'POST /api/guardar': { fn: guardar },
   'GET /api/publicacion': { fn: publicacion },
+  'GET /api/traducciones': { fn: traducciones, soloAdmin: true },
+  'POST /api/traducciones': { fn: guardarTraduccion, soloAdmin: true },
 };
 
 export async function manejarApi(request, env) {
@@ -77,6 +91,7 @@ export async function manejarApi(request, env) {
       sesion = await leerSesion(env.DB, request);
       if (!sesion) return error('Tenés que iniciar sesión.', 401);
       if (escribe && !csrfValido(request, sesion)) return error('Pedido rechazado.', 403);
+      if (ruta.soloAdmin && sesion.usuario.rol !== 'admin') return error(new Prohibido().message, 403);
     }
     return await ruta.fn({ request, env, url, sesion });
   } catch (e) {
@@ -84,6 +99,7 @@ export async function manejarApi(request, env) {
       return json({ error: e.message, conflicto: e.archivos }, 409);
     }
     if (e instanceof DatosInvalidos) return json({ error: e.message, errores: e.errores }, 422);
+    if (e instanceof Prohibido) return error(e.message, 403);
     console.error(`${request.method} ${url.pathname}:`, e?.message); // nunca el cuerpo: puede traer contraseñas
     return error('Hubo un problema. Probá de nuevo en un rato.', 500);
   }

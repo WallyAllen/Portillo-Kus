@@ -1,10 +1,11 @@
 // Armazón del panel: sesión, menú, pantallas y aviso de publicación.
 // Una pantalla es { id, titulo, soloAdmin?, render(contenedor, ctx) }; ctx trae
-// { usuario, api, guardar }. Para sumar una: importarla, agregarla a PANTALLAS y
-// servirla en worker/panel/rutas.js.
+// { usuario, api, guardar, seguirPublicacion }. Para sumar una: importarla, agregarla a
+// PANTALLAS y servirla en worker/panel/rutas.js.
 import inicio from './pantallas/inicio.js';
+import traducciones from './pantallas/traducciones.js';
 
-const PANTALLAS = [inicio];
+const PANTALLAS = [inicio, traducciones];
 
 const CINCO_MINUTOS = 5 * 60 * 1000;
 const CADA_CUANTO = 10 * 1000;
@@ -143,7 +144,7 @@ function mostrarPantalla() {
   document.title = `${pantalla.titulo} · Panel`;
   const contenedor = document.createElement('div');
   $('contenido').replaceChildren(contenedor);
-  pantalla.render(contenedor, { usuario: sesion.usuario, api, guardar });
+  pantalla.render(contenedor, { usuario: sesion.usuario, api, guardar, seguirPublicacion });
 }
 
 function entrar() {

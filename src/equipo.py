@@ -7,6 +7,9 @@ La vista previa (build sin --produccion) muestra también los borradores.
 from html import escape
 import json
 
+from traducciones import oculto
+
+BASE = "es"
 TEXTOS = ("cargo", "idiomas", "biografia")
 OBLIGATORIOS = ("cargo", "biografia")
 ICONO_PERSONA = ('<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 12a4.5 4.5 0 1 0 '
@@ -21,7 +24,26 @@ def _incompleto(valor):
     return not valor or "[" in valor
 
 
-def cargar(path, todos, publicados, imagenes):
+def aplicar_respaldo(abogado, todos, pendientes):
+    """Un texto vacío, pendiente o en la lista muestra el español. Sin el español, lo frena cargar()."""
+    respaldo = set()
+    for campo in TEXTOS:
+        textos = abogado.get(campo)
+        if not isinstance(textos, dict):
+            continue
+        es = textos.get(BASE, "")
+        viejo = pendientes.get(f'equipo:{abogado["id"]}.{campo}', {}).get("viejo", {}) if abogado.get("id") else {}
+        for code in todos:
+            if code == BASE or (code not in textos and code not in viejo):
+                continue
+            if code in viejo or oculto(textos[code]):
+                textos[code] = es
+                if not oculto(es):
+                    respaldo.add((campo, code))
+    abogado["_respaldo"] = respaldo
+
+
+def cargar(path, todos, publicados, imagenes, pendientes=None):
     """Devuelve la lista validada. Un error acá frena el build en cualquier modo."""
     try:
         abogados = json.loads(path.read_text(encoding="utf-8"))["abogados"]
@@ -29,6 +51,7 @@ def cargar(path, todos, publicados, imagenes):
         raise ValueError(f"equipo.json no se pudo leer: {error}") from error
     errores = []
     for abogado in abogados:
+        aplicar_respaldo(abogado, todos, pendientes or {})
         nombre = abogado.get("nombre", "(sin nombre)")
         for campo in TEXTOS:
             faltan = set(todos) - set(abogado.get(campo, {}))
@@ -77,16 +100,20 @@ def render(abogados, code, textos, prefijo):
     tarjetas, dialogos = [], []
     for numero, a in enumerate(abogados, 1):
         id_ = f"abogado-{numero}"
+        en_espanol = lambda campo: ' lang="es"' if (campo, code) in a.get("_respaldo", ()) else ""
         nombre, cargo = escape(a["nombre"]), escape(a["cargo"][code])
         matricula = (f'<p class="abogado-matricula">{textos["estudio.tag_matricula"]} {escape(a["matricula"])}</p>'
                      if a.get("matricula") else "")
         tarjetas.append(
             f'<li class="abogado reveal" style="--i:{numero - 1}"><div class="abogado-foto">{_foto(a, prefijo, a["nombre"])}</div>'
-            f'<h3 class="abogado-nombre">{nombre}</h3><p class="abogado-cargo">{cargo}</p>{matricula}'
+            f'<h3 class="abogado-nombre">{nombre}</h3><p class="abogado-cargo"{en_espanol("cargo")}>{cargo}</p>{matricula}'
             f'<button type="button" class="btn btn-secondary abogado-abrir" data-abogado="{id_}" aria-haspopup="dialog">'
             f'{textos["equipo.ver_perfil"]}</button></li>')
-        parrafos = "".join(f"<p>{escape(p.strip())}</p>" for p in a["biografia"][code].split("\n\n") if p.strip())
-        idiomas = (f'<p class="abogado-idiomas"><strong>{textos["equipo.tag_idiomas"]}:</strong> {escape(a["idiomas"][code])}</p>'
+        parrafos = "".join(f'<p{en_espanol("biografia")}>{escape(p.strip())}</p>' for p in a["biografia"][code].split("\n\n") if p.strip())
+        valor_idiomas = escape(a["idiomas"][code])
+        if en_espanol("idiomas"):
+            valor_idiomas = f'<span lang="es">{valor_idiomas}</span>'
+        idiomas = (f'<p class="abogado-idiomas"><strong>{textos["equipo.tag_idiomas"]}:</strong> {valor_idiomas}</p>'
                    if a["idiomas"][code].strip() else "")
         linkedin = (f'<a class="abogado-linkedin" href="{escape(a["linkedin"], quote=True)}" target="_blank" rel="noopener" '
                     f'aria-label="LinkedIn: {escape(a["nombre"], quote=True)}">{ICONO_LINKEDIN}</a>' if a.get("linkedin") else "")
@@ -95,7 +122,7 @@ def render(abogados, code, textos, prefijo):
             f'<dialog class="abogado-dialog" id="{id_}" aria-labelledby="{id_}-nombre"><div class="abogado-dialog-body">'
             f'<button type="button" class="abogado-cerrar" aria-label="{textos["equipo.cerrar"]}">×</button>'
             f'<header class="abogado-cabecera"><div class="abogado-foto">{_foto(a, prefijo, "")}</div><div>'
-            f'<h3 class="abogado-nombre" id="{id_}-nombre">{nombre}</h3><p class="abogado-cargo">{cargo}</p>{matricula}</div></header>'
+            f'<h3 class="abogado-nombre" id="{id_}-nombre">{nombre}</h3><p class="abogado-cargo"{en_espanol("cargo")}>{cargo}</p>{matricula}</div></header>'
             f'<div class="abogado-bio">{parrafos}</div>{pie}</div></dialog>')
     if not tarjetas:
         return ""

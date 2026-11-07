@@ -10,6 +10,11 @@ export class ErrorGitHub extends Error {
 const rutaUrl = (ruta) => ruta.split('/').map(encodeURIComponent).join('/');
 
 export class RepoGitHub {
+  // Una instancia dura un pedido. Cada llamada a GitHub es un subpedido (50 como máximo en el
+  // plan Free): una versión no se lee dos veces, y un reintento no vuelve a subir lo mismo.
+  leidos = new Map();
+  subidos = new Map();
+
   constructor(env) {
     if (!env.GITHUB_TOKEN) throw new Error('Falta el secreto GITHUB_TOKEN');
     this.token = env.GITHUB_TOKEN;
@@ -43,11 +48,20 @@ export class RepoGitHub {
   }
 
   // Devuelve el texto del archivo en esa versión, o null si no existe.
-  async leer(ruta, ref) {
-    const { respuesta } = await this.pedir('GET', `/contents/${rutaUrl(ruta)}?ref=${ref}`, {
-      aceptar: 'application/vnd.github.raw+json', toleradas: [404],
-    });
-    return respuesta ? respuesta.text() : null;
+  leer(ruta, ref) {
+    const clave = `${ref}:${ruta}`;
+    if (!this.leidos.has(clave)) {
+      this.leidos.set(clave, this.pedir('GET', `/contents/${rutaUrl(ruta)}?ref=${ref}`, {
+        aceptar: 'application/vnd.github.raw+json', toleradas: [404],
+      }).then(({ respuesta }) => (respuesta ? respuesta.text() : null)));
+    }
+    return this.leidos.get(clave);
+  }
+
+  subirBlob(contenido) {
+    const clave = JSON.stringify(contenido);
+    if (!this.subidos.has(clave)) this.subidos.set(clave, this.pedirJson('POST', '/git/blobs', contenido));
+    return this.subidos.get(clave);
   }
 
   async listar(carpeta, ref) {
@@ -78,7 +92,7 @@ export class RepoGitHub {
   // archivos: [{ ruta, texto } | { ruta, base64 }]
   async crearCommit({ padre, archivos, mensaje, autor }) {
     const entradas = await Promise.all(archivos.map(async ({ ruta, texto, base64 }) => {
-      const blob = await this.pedirJson('POST', '/git/blobs',
+      const blob = await this.subirBlob(
         base64 !== undefined ? { content: base64, encoding: 'base64' } : { content: texto, encoding: 'utf-8' });
       return { path: ruta, mode: '100644', type: 'blob', sha: blob.sha };
     }));

@@ -52,7 +52,7 @@ h1 { font-size: 1.6rem; margin: 0 0 1rem; }
 
 .login { max-width: 400px; margin: 1.5rem auto; display: flex; flex-direction: column; }
 label { font-weight: 600; margin: .75rem 0 .25rem; }
-input {
+input, textarea {
   width: 100%;
   min-height: 44px;
   padding: .5rem .75rem;
@@ -62,7 +62,7 @@ input {
   border: 1px solid var(--ink-muted);
   border-radius: 6px;
 }
-input:focus-visible, button:focus-visible, a:focus-visible { outline: 3px solid var(--celeste-ink); outline-offset: 2px; }
+input:focus-visible, textarea:focus-visible, button:focus-visible, a:focus-visible { outline: 3px solid var(--celeste-ink); outline-offset: 2px; }
 
 .boton {
   min-height: 44px;
@@ -86,6 +86,19 @@ input:focus-visible, button:focus-visible, a:focus-visible { outline: 3px solid 
 .publicacion { padding: .6rem 1rem; text-align: center; font-weight: 600; color: var(--ink); background: #E4EEF7; }
 .publicacion[data-estado="publicado"] { color: var(--ok); background: #E5F3EB; }
 .publicacion[data-estado="problema"] { color: var(--brand-strong); background: #FBEDEF; }
+
+.trad { margin-top: 1rem; display: flex; flex-direction: column; }
+.trad h2 { margin: 0; font-size: 1.1rem; overflow-wrap: anywhere; }
+.trad-fecha { margin: .25rem 0 0; font-size: .85rem; color: var(--ink-muted); }
+.trad-texto { margin-top: .75rem; padding: .5rem .75rem; background: var(--bg); border-radius: 6px; }
+.trad-texto strong { display: block; font-size: .85rem; color: var(--ink-muted); }
+.trad-texto p { margin: .25rem 0 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.trad-campo label { display: block; }
+.trad-campo .trad-texto { margin: 0 0 .5rem; }
+.trad-oculto { font-weight: 400; color: var(--ink-muted); }
+.trad textarea { resize: vertical; }
+.trad .trad-usar { margin: 0 0 .5rem; min-height: 44px; }
+.trad .boton { margin-top: 1rem; }
 
 @media (min-width: 760px) {
   .menu { order: 0; flex-basis: auto; }

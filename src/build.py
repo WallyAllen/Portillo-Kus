@@ -26,11 +26,12 @@ from headers import write_files as write_headers
 from images import prepare_images, render_images, version_images
 from edge import write_files as write_edge_files
 import equipo as equipo_mod
+import traducciones
+from traducciones import oculto, PENDING
 
 BASE = pathlib.Path(__file__).resolve().parent
 SITE_ROOT = BASE.parent
 DIST = SITE_ROOT / "dist"
-PENDING = "[PENDIENTE]"
 IMAGE_SUFFIXES = {".jpg", ".jpeg", ".png", ".webp", ".avif", ".svg"}
 
 # Datos del estudio que se repiten en toda la página: se cambian solo acá.
@@ -103,12 +104,6 @@ def resolve_reviews(value):
         return value
     value = value.replace("{reviews}", str(REVIEWS))
     return value if value.startswith(PENDING) else dato("reviews", value)
-
-
-def oculto(value):
-    """Vacío o pendiente: el bloque que depende de ese dato no se genera."""
-    value = str(value).strip()
-    return not value or value.startswith(PENDING)
 
 
 def flatten(d, prefix=""):
@@ -212,8 +207,9 @@ def font_preloads(code, prefix, page="home"):
     return "\n".join(tags)
 
 
-def build(lang, template, base_url, flat, page="home", image_assets=None, pendientes=None, abogados=()):
-    """pendientes: si es una lista, se le suma "idioma: clave" por cada pendiente que llega a la página."""
+def build(lang, template, base_url, flat, page="home", image_assets=None, pendientes=None, abogados=(), respaldo=frozenset()):
+    """pendientes: si es una lista, se le suma "idioma: clave" por cada pendiente que llega a la página.
+    respaldo: claves de este idioma que muestran el texto en español."""
     flat = dict(flat)
 
     flat["wa_number"] = WA_NUMBER
@@ -299,6 +295,13 @@ def build(lang, template, base_url, flat, page="home", image_assets=None, pendie
                 flagged_cards.add(block)
                 flag = '<span class="pending-flag">pendiente</span>'
             return f'<span class="pending-content" data-pending="{key}">{base}</span>{flag}'
+        if key in respaldo:
+            # Español en una página de otro idioma: lang="es" para lectores de pantalla y traductores.
+            # Un atributo, <title>, <script> o <style> no admiten marcado: quedan como texto.
+            before = template[:m.start()]
+            opened = lambda tag: before.rfind(f"<{tag}") > before.rfind(f"</{tag}")
+            if before.rfind("<") < before.rfind(">") and not any(map(opened, ("title", "script", "style"))):
+                return f'<span lang="es">{value}</span>'
         return value
 
     html = re.sub(r"\{\{(url:)?([\w.\-]+)\}\}", repl, template)
@@ -368,8 +371,10 @@ def main():
             contents[lang["code"]] = {k: resolve_reviews(v) for k, v in flatten(json.loads(
                 (BASE / f"content.{lang['code']}.json").read_text(encoding="utf-8")
             )).items()}
-    except (OSError, ValueError) as error:
+        pendientes_traduccion = traducciones.cargar(BASE / "traducciones-pendientes.json")
+    except (OSError, ValueError, KeyError) as error:
         parser.exit(1, f"No se pudo leer el contenido: {error}\n")
+    respaldos = traducciones.aplicar(contents, pendientes_traduccion, DEFAULT_LANG)
     reference = set(contents[DEFAULT_LANG])
     errors = []
     for code, flat in contents.items():
@@ -390,10 +395,11 @@ def main():
     try:
         headers_source = (BASE / "_headers").read_text(encoding="utf-8")
         todos = [l["code"] for l in TODOS_LOS_IDIOMAS]
-        abogados = equipo_mod.visibles(equipo_mod.cargar(BASE / "equipo.json", todos, IDIOMAS_PUBLICADOS, images), args.produccion)
+        abogados = equipo_mod.visibles(equipo_mod.cargar(BASE / "equipo.json", todos, IDIOMAS_PUBLICADOS, images, pendientes_traduccion), args.produccion)
         image_assets, image_files = prepare_images(images, template + equipo_mod.imagenes_usadas(abogados))
         privacy = privacy_template(template)
-        pages = [(lang, page, build(lang, source, base_url, contents[lang["code"]], page, image_assets, pending, abogados))
+        pages = [(lang, page, build(lang, source, base_url, contents[lang["code"]], page, image_assets, pending, abogados,
+                                    respaldos.get(lang["code"], frozenset())))
                  for page, source in (("home", template), ("privacy", privacy)) for lang in LANGS]
         es = lang_by_code(DEFAULT_LANG)
         not_found = build(es, privacy_template(template, "404-template.html"), base_url,

@@ -7,12 +7,12 @@ import { GitHubSimulado } from './github-simulado.mjs';
 const raiz = new URL('../../', import.meta.url);
 const delRepo = (ruta) => readFileSync(new URL(ruta, raiz), 'utf8');
 const RUTAS = ['src/content.es.json', 'src/content.en.json', 'src/content.pt.json', 'src/content.ru.json', 'src/content.zh.json',
-  'src/equipo.json', 'src/template.html', 'src/privacy-template.html', 'src/404-template.html'];
+  'src/equipo.json', 'src/template.html', 'src/privacy-template.html', 'src/404-template.html', 'src/traducciones-pendientes.json'];
 const iniciales = Object.fromEntries(RUTAS.map((r) => [r, delRepo(r)]));
 
 const ES = 'src/content.es.json';
 const EN = 'src/content.en.json';
-const autor = { usuario: 'prueba', nombre: 'Persona de Prueba' };
+const autor = { usuario: 'prueba', nombre: 'Persona de Prueba', rol: 'admin' };
 const JPEG = Buffer.from([0xff, 0xd8, 0xff, 0xe0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]).toString('base64');
 
 function editar(texto, cambio) {

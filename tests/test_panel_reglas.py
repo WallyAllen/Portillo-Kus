@@ -23,6 +23,7 @@ import build  # noqa: E402
 import equipo  # noqa: E402
 import headers  # noqa: E402
 import seo  # noqa: E402
+import traducciones  # noqa: E402
 
 REGLAS = json.loads((ROOT / 'worker/reglas.json').read_text(encoding='utf-8'))
 CASOS = json.loads((ROOT / 'tests/casos_validacion.json').read_text(encoding='utf-8'))
@@ -30,8 +31,8 @@ CASOS = json.loads((ROOT / 'tests/casos_validacion.json').read_text(encoding='ut
 
 def huella():
     """El código Python que worker/validacion.js copia. Si cambia, hay que revisar la copia."""
-    piezas = (build.flatten, build.oculto, build.resolve_reviews, equipo._incompleto, equipo.cargar,
-              seo.metadata, seo.business, analytics.AnalyticsValidator)
+    piezas = (build.flatten, traducciones.oculto, traducciones.cargar, traducciones.aplicar, build.resolve_reviews,
+              equipo._incompleto, equipo.aplicar_respaldo, equipo.cargar, seo.metadata, seo.business, analytics.AnalyticsValidator)
     fuente = ''.join(inspect.getsource(pieza).replace('\r\n', '\n') for pieza in piezas)
     return hashlib.sha256(fuente.encode('utf-8')).hexdigest()
 
@@ -69,6 +70,7 @@ class ReglasTests(unittest.TestCase):
         self.assertEqual(REGLAS['textosAbogado'], list(equipo.TEXTOS))
         self.assertEqual(REGLAS['obligatoriosAbogado'], list(equipo.OBLIGATORIOS))
         self.assertEqual(REGLAS['reviews'], build.REVIEWS)
+        self.assertTrue((ROOT / REGLAS['archivoPendientes']).is_file())
 
     def test_claves_generadas_son_las_de_las_plantillas(self):
         base = build.flatten(json.loads((ROOT / 'src/content.es.json').read_text(encoding='utf-8')))

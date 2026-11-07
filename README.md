@@ -215,7 +215,8 @@ es un borrador no enviado.
 - **Autogestión:** panel propio en `/panel`, dentro del mismo Worker (en construcción,
   ver [panel](docs/panel.md)). El contenido vive en el repo: cada guardado es un commit
   y Cloudflare republica. Fijo: diseño, colores, estructura.
-- Lo que se cargue en español hay que cargarlo también en los otros cuatro idiomas.
+- Lo que se edite en español queda pendiente de traducción: hasta cargarla, los otros
+  idiomas muestran el español. Ver [traducciones pendientes](docs/panel.md#traducciones-pendientes).
 
 ## Pendiente del cliente
 

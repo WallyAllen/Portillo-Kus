@@ -5,8 +5,8 @@ El estudio edita contenido en `/panel`; cada guardado es un commit en
 sirve el sitio, en `worker/`. No hay `package.json` ni dependencias: sólo APIs de la
 plataforma, así Workers Builds sigue corriendo los mismos comandos de siempre.
 
-Estado: base, login y guardado. Las pantallas de contenido, idiomas y usuarios
-vienen después; hoy el panel sólo muestra Inicio.
+Estado: base, login, guardado y traducciones pendientes. Las pantallas de contenido
+y usuarios vienen después; hoy el panel muestra Inicio y, a un admin, Traducciones.
 
 ## Antes de mergear a `main`
 
@@ -81,6 +81,7 @@ borraría lo que cargó el estudio.
 | Usuario desactivado | Pierde el acceso en el pedido siguiente |
 | Encabezados | `_headers` no se aplica a lo que genera el Worker: noindex, CSP y demás están en `worker/http.js`. Además, `Disallow` en `robots.txt` |
 | Qué se puede escribir | Sólo `src/content.<idioma>.json`, `src/equipo.json` e imágenes JPG, PNG o WebP de hasta 5 MB en `portillo-images/`, en `worker/guardado.js`. Aunque el token pueda más, el panel no toca código |
+| Roles | Un `editor` sólo lee y escribe el español. Un rol desconocido o ausente cuenta como `editor`. Se comprueba en la API: ver "Traducciones pendientes" |
 
 ### Por qué 210000 en tramos
 
@@ -130,7 +131,69 @@ npx wrangler@4 d1 execute DB --remote --command="UPDATE users SET activo = 0 WHE
    `Panel (Nombre): descripción`, usuario y archivos.
 5. Se mueve la rama **sin force**. Si alguien guardó en ese instante, se repite una
    vez desde el paso 1; si no alcanza, 409. Con el plan Free no entran más reintentos:
-   el límite es de 50 subpedidos.
+   el límite es de 50 subpedidos. El peor caso hoy (traducir a cuatro idiomas con una
+   base vieja y una carrera) lo cubre una prueba, gracias a que `RepoGitHub` no lee dos
+   veces la misma versión ni sube dos veces el mismo contenido durante un pedido.
+
+## Traducciones pendientes
+
+Editar el español no obliga a traducir en el momento: el sitio muestra el español en los
+otros idiomas hasta que un admin cargue la traducción en la pantalla Traducciones.
+
+`src/traducciones-pendientes.json` lo escribe sólo el servidor:
+
+```json
+{"pendientes": {"hero.sub": {"fecha": "2026-11-07T12:00:00.000Z", "viejo": {"en": "…", "pt": "…"}}}}
+```
+
+La clave es la de `content.*.json` o `equipo:<id>.<campo>`. Un idioma está pendiente
+mientras figura en `viejo`, que guarda el español de su última traducción válida: si el
+texto se edita dos veces, sigue siendo el primero. El texto nuevo no se guarda: sale de
+`content.es.json`. El archivo no se publica en `dist/`.
+
+**Cuándo se ve el español** (`src/traducciones.py`, copiado en `worker/traducciones.js`):
+
+| El texto del idioma | Resultado |
+|---|---|
+| Vacío o con `[PENDIENTE]` | Español |
+| Con la clave y el idioma en la lista | Español, aunque tenga un texto propio |
+| Falta la clave, y está en la lista | Español |
+| Falta la clave, y no está en la lista | Falla el build: es un error de programación |
+| Sobra la clave | Falla el build, esté o no en la lista |
+
+Si **el español** está vacío o con `[PENDIENTE]`, ningún idioma lo tapa: el bloque
+`<!--si:clave-->` sigue oculto en todos y `--produccion` falla donde fallaba. Con la lista
+vacía, el `dist/` sale idéntico byte a byte.
+
+Un fragmento en español lleva `lang="es"` para lectores de pantalla y traductores: un
+`<span lang="es">`, o el atributo en el `<p>` de cargo y biografía. No se marca dentro de
+un atributo, `<title>`, `<script>` o `<style>`, que no admiten marcado.
+
+**Registro.** `guardarCambios` compara el texto en la rama con lo que queda después de
+guardar, y suma la lista al mismo commit. Las pantallas no tienen que hacer nada, y si el
+texto no cambió no se registra nada. Un idioma sale de la lista si recibe un texto real o
+si el español vuelve a lo que ya estaba traducido. La lista no cuenta para los conflictos:
+se recalcula sobre el último `main`.
+
+**La baja es por idioma**, no por clave. Si hiciera falta completar todos los idiomas, ruso
+y chino, que no se publican, trabarían a inglés y portugués. Traducción y baja van en un
+solo commit. Lo que se escribe en la pantalla da de baja el idioma aunque sea el texto que
+ya estaba, para cuando el cambio en español no pide otra traducción: por eso los campos
+arrancan vacíos y hay un botón "Usar la actual".
+
+**Abogados.** Cada uno tiene un `id` en `equipo.json`, porque la posición cambia al sacar a
+alguien. El panel exige que exista, sea único y cumpla `^[a-z0-9-]{1,40}$`: **una pantalla
+que cree abogados tiene que generarlo**, y no cambiarlo después.
+
+**Permisos, comprobados en la API:**
+
+| | `admin` | Otro rol |
+|---|---|---|
+| `GET` y `POST /api/traducciones` | Sí | 403 |
+| `content.es.json` | Lee y escribe | Lee y escribe |
+| `content.<otro idioma>.json` | Lee y escribe | 403 |
+| `equipo.json` | Completo | Recibe sólo `es`; al guardar se reponen los otros idiomas de la rama |
+| `traducciones-pendientes.json` por `/api/archivo` o `/api/guardar` | 422 | 422 |
 
 ### Publicación
 
@@ -165,15 +228,15 @@ casos llevan `"estricto": true` y sólo corren en JS.
 ## Sumar una pantalla
 
 1. Crear `worker/panel/cliente/pantallas/<nombre>.js` (ver `inicio.js`). `render`
-   recibe el contenedor y `{ usuario, api, guardar }`; `guardar` ya muestra el aviso
-   de publicación.
+   recibe el contenedor y `{ usuario, api, guardar, seguirPublicacion }`; `guardar` ya
+   muestra el aviso de publicación, y `seguirPublicacion(commit)` es para otras rutas.
 2. Importarla y agregarla a `PANTALLAS` en `cliente/app.js`.
 3. Importarla y agregarla a `ARCHIVOS` en `worker/panel/rutas.js`, con ruta
    `/panel/pantallas/<nombre>.js`.
 4. Una ruta nueva de API es una entrada en `RUTAS` de `worker/api.js`.
 
-`soloAdmin: true` sólo oculta la pantalla: la ruta de API también tiene que comprobar
-`sesion.usuario.rol`.
+`soloAdmin: true` en la pantalla sólo la oculta. Para cerrar la API, `soloAdmin: true`
+también en su entrada de `RUTAS`.
 
 ## Probar en local
 
@@ -193,7 +256,7 @@ node worker/test/e2e.mjs
 
 La última levanta `wrangler dev`, D1 local en una carpeta temporal y un GitHub
 simulado, y recorre login, bloqueo, CSRF, cierre de sesión, guardado, conflictos,
-publicación y sitio estático. Usa los puertos 8787, 8788 y 8790.
+traducciones, permisos por rol, publicación y sitio estático. Usa los puertos 8787, 8788 y 8790.
 
 Para mirar el panel a mano, con la base en `.wrangler/`:
 

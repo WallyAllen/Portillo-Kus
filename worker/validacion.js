@@ -4,6 +4,7 @@
 // Donde el build fallaría por un dato con forma rara (un número en vez de texto), acá se rechaza
 // siempre: el panel sólo debería escribir textos.
 import reglas from './reglas.json' with { type: 'json' };
+import { aplanar, aplicarRespaldo, aplicarRespaldoAbogado, ARCHIVO_PENDIENTES, oculto, parsearPendientes } from './traducciones.js';
 
 const PENDIENTE = reglas.pendiente;
 const GENERADAS = new Set(reglas.clavesGeneradas);
@@ -17,19 +18,6 @@ const CODIGO_IDIOMA = /^[a-z]{2,3}(-[A-Za-z0-9]{2,8})*$/;
 const FOTO_ABOGADO = /^abogado-[^/\\"]+\.(jpe?g|png|webp|avif)$/i;
 const LINKEDIN = 'https://www.linkedin.com/in/';
 
-export function aplanar(valor, prefijo = '') {
-  const vacio = valor !== null && typeof valor === 'object' && !Object.keys(valor).length;
-  if (valor === null || typeof valor !== 'object' || vacio) return { [prefijo.replace(/\.$/, '')]: valor };
-  const salida = {};
-  const entradas = Array.isArray(valor) ? valor.map((v, i) => [i + 1, v]) : Object.entries(valor);
-  for (const [clave, v] of entradas) Object.assign(salida, aplanar(v, `${prefijo}${clave}.`));
-  return salida;
-}
-
-const oculto = (valor) => {
-  const texto = String(valor).trim();
-  return !texto || texto.startsWith(PENDIENTE);
-};
 const incompleto = (valor) => {
   const texto = String(valor ?? '').trim();
   return !texto || texto.includes('[');
@@ -146,13 +134,21 @@ function leerJson(texto, ruta, errores) {
 // nombres de portillo-images/. Devuelve la lista de errores: vacía si el build va a pasar.
 export async function validarRepo({ leer, listarImagenes }) {
   const errores = [];
-  const [crudos, crudoEquipo, portada, privacidad, noExiste] = await Promise.all([
+  const [crudos, crudoEquipo, portada, privacidad, noExiste, crudoPendientes] = await Promise.all([
     Promise.all(reglas.idiomasTodos.map((c) => leer(`src/content.${c}.json`))),
     leer('src/equipo.json'),
     leer('src/template.html'),
     leer('src/privacy-template.html'),
     leer('src/404-template.html'),
+    leer(ARCHIVO_PENDIENTES),
   ]);
+
+  let pendientes = {};
+  try {
+    pendientes = parsearPendientes(crudoPendientes);
+  } catch {
+    errores.push(`${ARCHIVO_PENDIENTES}: no tiene el formato esperado`);
+  }
 
   const textos = {};
   reglas.idiomasTodos.forEach((codigo, i) => {
@@ -172,10 +168,19 @@ export async function validarRepo({ leer, listarImagenes }) {
   const lista = Array.isArray(abogados) ? abogados : [];
   const hayEquipo = lista.some((a) => a?.publicado === true);
   const imagenes = hayEquipo ? await listarImagenes() : new Set();
-  for (const abogado of lista) validarAbogado(abogado, imagenes, errores);
+  const ids = new Set();
+  for (const abogado of lista) {
+    // El id une al abogado con sus pendientes: la posición en la lista cambia al sacar a alguien.
+    if (typeof abogado?.id !== 'string' || !/^[a-z0-9-]{1,40}$/.test(abogado.id)) errores.push(`${abogado?.nombre ?? '(sin nombre)'}: falta el id`);
+    else if (ids.has(abogado.id)) errores.push(`${abogado.nombre}: el id ${abogado.id} está repetido`);
+    else ids.add(abogado.id);
+    if (abogado !== null && typeof abogado === 'object' && !Array.isArray(abogado)) aplicarRespaldoAbogado(abogado, pendientes);
+    validarAbogado(abogado, imagenes, errores);
+  }
 
   const base = textos[reglas.idiomaBase];
   if (!base) return errores;
+  aplicarRespaldo(textos, pendientes);
   const clavesBase = Object.keys(base);
   const parejos = [];
   for (const codigo of reglas.idiomasPublicados) {

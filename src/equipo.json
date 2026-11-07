@@ -1,6 +1,7 @@
 {
   "abogados": [
     {
+      "id": "abogado-1",
       "publicado": false,
       "nombre": "[Abogado 1]",
       "foto": "",
@@ -29,6 +30,7 @@
       }
     },
     {
+      "id": "abogado-2",
       "publicado": false,
       "nombre": "[Abogado 2]",
       "foto": "",
@@ -57,6 +59,7 @@
       }
     },
     {
+      "id": "abogado-3",
       "publicado": false,
       "nombre": "[Abogado 3]",
       "foto": "",

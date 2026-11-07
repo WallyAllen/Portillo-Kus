@@ -3,6 +3,7 @@
   "idiomasTodos": ["es", "en", "pt", "ru", "zh"],
   "idiomasPublicados": ["es", "en", "pt"],
   "idiomaBase": "es",
+  "archivoPendientes": "src/traducciones-pendientes.json",
   "textosAbogado": ["cargo", "idiomas", "biografia"],
   "obligatoriosAbogado": ["cargo", "biografia"],
   "reviews": 400,
@@ -22,5 +23,5 @@
     "areas.a6_title", "areas.a7_title", "areas.a8_title", "areas.a9_title",
     "equipo.ver_perfil", "equipo.tag_idiomas", "equipo.cerrar"
   ],
-  "huellaPython": "c12526b17e6844fce087307fd10b594b2756498dd5f878a2d39b801f86ab569a"
+  "huellaPython": "fd93326d48484e9cccb4b75f6575fbf7f0828a5d0da55d4a97f6ab35adb2a6f2"
 }

@@ -94,7 +94,7 @@ class Cliente {
 
 const github = new GitHubSimulado(Object.fromEntries(
   ['src/content.es.json', 'src/content.en.json', 'src/content.pt.json', 'src/content.ru.json', 'src/content.zh.json',
-    'src/equipo.json', 'src/template.html', 'src/privacy-template.html', 'src/404-template.html']
+    'src/equipo.json', 'src/template.html', 'src/privacy-template.html', 'src/404-template.html', 'src/traducciones-pendientes.json']
     .map((ruta) => [ruta, readFileSync(join(RAIZ, ruta), 'utf8')]),
 ));
 
@@ -106,6 +106,7 @@ async function principal() {
   crearUsuario('prueba-bloqueo');
   crearUsuario('prueba-carrera');
   crearUsuario('prueba-activa', 'editor');
+  crearUsuario('prueba-editor', 'editor');
   await github.iniciar(8788);
   await levantar(['--env', 'dev', `--persist-to="${persistencia}"`, '--var', 'GITHUB_TOKEN:token-de-prueba'], PUERTO);
   await levantar([`--persist-to="${persistencia}"`, '--inspector-port', '9231'], PUERTO_SIN_D1);
@@ -121,7 +122,8 @@ async function principal() {
     }
   });
   await caso('404 real, redirecciones y archivos del repo afuera', async () => {
-    for (const ruta of ['/no-existe', '/en/no-existe', '/README.md', '/src/build.py', '/worker/index.js', '/wrangler.jsonc']) {
+    for (const ruta of ['/no-existe', '/en/no-existe', '/README.md', '/src/build.py', '/worker/index.js', '/wrangler.jsonc',
+      '/traducciones-pendientes.json', '/src/traducciones-pendientes.json']) {
       assert.equal((await fetch(ORIGEN + ruta)).status, 404, ruta);
     }
     for (const [ruta, destino] of [['/home', '/'], ['/contacto', '/#contacto'], ['/index.html', '/']]) {
@@ -160,7 +162,7 @@ async function principal() {
     }
   });
   await caso('archivos del panel, 404 y API con los mismos encabezados', async () => {
-    for (const [ruta, tipo] of [['/panel/app.js', 'text/javascript'], ['/panel/pantallas/inicio.js', 'text/javascript'], ['/panel/estilos.css', 'text/css']]) {
+    for (const [ruta, tipo] of [['/panel/app.js', 'text/javascript'], ['/panel/pantallas/inicio.js', 'text/javascript'], ['/panel/pantallas/traducciones.js', 'text/javascript'], ['/panel/estilos.css', 'text/css']]) {
       const r = await fetch(ORIGEN + ruta);
       assert.equal(r.status, 200, ruta);
       assert.ok(r.headers.get('content-type').startsWith(tipo), ruta);
@@ -281,6 +283,74 @@ async function principal() {
     assert.equal(r.status, 409);
     assert.deepEqual((await r.json()).conflicto, [es]);
     assert.equal(github.head, antes);
+  });
+
+  console.log('Traducciones');
+  const redactor = new Cliente();
+  const pendientesEnHead = () => JSON.parse(github.leerEnHead('src/traducciones-pendientes.json')).pendientes;
+  await caso('un editor no entra a las traducciones: la API responde 403', async () => {
+    assert.equal((await redactor.entrar('prueba-editor')).status, 200);
+    const head = github.head;
+    assert.equal((await redactor.pedir('/api/traducciones')).status, 403);
+    assert.equal((await redactor.pedir('/api/traducciones', { metodo: 'POST', cuerpo: { base: head, textos: { 'hero.sub': { en: 'x' } } } })).status, 403);
+    assert.equal((await redactor.pedir('/api/archivo?ruta=src/content.en.json')).status, 403);
+    const directo = await redactor.pedir('/api/guardar', { metodo: 'POST', cuerpo: { base: head, archivos: [{ ruta: 'src/content.en.json', texto: String(github.leerEnHead('src/content.en.json')) }] } });
+    assert.equal(directo.status, 403);
+    assert.equal(github.head, head);
+  });
+  await caso('la lista de pendientes no se lee ni se escribe directo, ni como admin', async () => {
+    const ruta = 'src/traducciones-pendientes.json';
+    for (const c of [redactor, cliente]) {
+      assert.equal((await c.pedir(`/api/archivo?ruta=${ruta}`)).status, 422);
+      assert.equal((await c.pedir('/api/guardar', { metodo: 'POST', cuerpo: { base: github.head, archivos: [{ ruta, texto: '{"pendientes": {}}\n' }] } })).status, 422);
+    }
+  });
+  await caso('un pedido no puede dar de baja pendientes por /api/guardar', async () => {
+    const { commit, texto } = await leer(redactor, es);
+    const datos = JSON.parse(texto);
+    datos.stats.s2_label = 'Otra etiqueta';
+    const r = await redactor.pedir('/api/guardar', { metodo: 'POST', cuerpo: {
+      base: commit, archivos: [{ ruta: es, texto: JSON.stringify(datos, null, 2) }], confirmados: [{ clave: 'stats.s2_label', codigo: 'en' }],
+    } });
+    assert.equal(r.status, 200, await r.clone().text());
+    assert.ok('en' in pendientesEnHead()['stats.s2_label'].viejo);
+  });
+  await caso('un editor recibe equipo.json sólo en español', async () => {
+    const { texto } = await leer(redactor, 'src/equipo.json');
+    assert.deepEqual(Object.keys(JSON.parse(texto).abogados[0].cargo), ['es']);
+    const completo = await leer(cliente, 'src/equipo.json');
+    assert.ok('en' in JSON.parse(completo.texto).abogados[0].cargo);
+  });
+  await caso('el editor cambia un texto, el admin lo traduce: pendiente en el mismo commit y baja en otro', async () => {
+    const { commit, texto } = await leer(redactor, es);
+    const datos = JSON.parse(texto);
+    const viejo = datos.stats.s1_label;
+    datos.stats.s1_label = 'Etiqueta nueva';
+    const guardado = await redactor.pedir('/api/guardar', { metodo: 'POST', cuerpo: { base: commit, descripcion: 'Cambió una etiqueta', archivos: [{ ruta: es, texto: JSON.stringify(datos, null, 2) }] } });
+    assert.equal(guardado.status, 200, await guardado.clone().text());
+    assert.match(github.commits.get(github.head).mensaje, /traducciones-pendientes\.json/);
+
+    const lista = await (await cliente.pedir('/api/traducciones')).json();
+    const item = lista.pendientes.find((p) => p.clave === 'stats.s1_label');
+    assert.equal(item.nuevo, 'Etiqueta nueva');
+    assert.equal(item.idiomas.find((i) => i.codigo === 'en').viejo, viejo);
+
+    const r = await cliente.pedir('/api/traducciones', { metodo: 'POST', cuerpo: { base: lista.commit, textos: { 'stats.s1_label': { en: 'New label' } } } });
+    assert.equal(r.status, 200, await r.clone().text());
+    assert.deepEqual(github.commits.get(github.head).padres, [lista.commit], 'un solo commit');
+    assert.equal(JSON.parse(github.leerEnHead('src/content.en.json')).stats.s1_label, 'New label');
+    assert.deepEqual(Object.keys(pendientesEnHead()['stats.s1_label'].viejo), ['pt', 'ru', 'zh']);
+  });
+  await caso('traducción inválida y conflicto: 422 y 409', async () => {
+    const lista = await (await cliente.pedir('/api/traducciones')).json();
+    const invalida = await cliente.pedir('/api/traducciones', { metodo: 'POST', cuerpo: { base: lista.commit, textos: { 'stats.s1_label': { pt: '[PENDIENTE] x' } } } });
+    assert.equal(invalida.status, 422);
+    const { texto } = await leer(cliente, es);
+    const datos = JSON.parse(texto);
+    datos.stats.s1_label = 'Otra vez cambiada';
+    github.avanzar(es, JSON.stringify(datos, null, 2));
+    const conflicto = await cliente.pedir('/api/traducciones', { metodo: 'POST', cuerpo: { base: lista.commit, textos: { 'stats.s1_label': { pt: 'Novo' } } } });
+    assert.equal(conflicto.status, 409);
   });
 
   console.log('Publicación');
