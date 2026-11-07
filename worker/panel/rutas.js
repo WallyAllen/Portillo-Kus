@@ -4,14 +4,26 @@ import { respuesta } from '../http.js';
 import pagina from './pagina.html';
 import estilos from './estilos.css';
 import app from './cliente/app.js';
+import comun from './cliente/pantallas/comun.js';
+import fotos from './cliente/pantallas/fotos.js';
+import imagen from './cliente/pantallas/imagen.js';
 import inicio from './cliente/pantallas/inicio.js';
+import resenas from './cliente/pantallas/resenas.js';
+import revisar from './cliente/pantallas/revisar.js';
+import textos from './cliente/pantallas/textos.js';
 import traducciones from './cliente/pantallas/traducciones.js';
 
 const JS = 'text/javascript; charset=utf-8';
 const ARCHIVOS = {
   '/panel/estilos.css': [estilos, 'text/css; charset=utf-8'],
   '/panel/app.js': [app, JS],
+  '/panel/pantallas/comun.js': [comun, JS],
+  '/panel/pantallas/fotos.js': [fotos, JS],
+  '/panel/pantallas/imagen.js': [imagen, JS],
   '/panel/pantallas/inicio.js': [inicio, JS],
+  '/panel/pantallas/resenas.js': [resenas, JS],
+  '/panel/pantallas/revisar.js': [revisar, JS],
+  '/panel/pantallas/textos.js': [textos, JS],
   '/panel/pantallas/traducciones.js': [traducciones, JS],
 };
 

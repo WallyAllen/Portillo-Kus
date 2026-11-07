@@ -4,7 +4,9 @@ import { cerrarSesion, cookieDeSesion, cookieVencida, csrfValido, iniciarSesion,
 import {
   Conflicto, DatosInvalidos, estadoPublicacion, guardarCambios, guardarTraducciones, leerParaEditar, listarTraducciones, Prohibido,
 } from './guardado.js';
+import { definicion } from './campos.js';
 import { error, json } from './http.js';
+import reglas from './reglas.json' with { type: 'json' };
 
 const SHA = /^[0-9a-f]{40}$/;
 const USUARIO = /^[a-z0-9._-]{1,40}$/;
@@ -39,6 +41,9 @@ async function archivo({ url, env, sesion }) {
   return json(await leerParaEditar(env, url.searchParams.get('ruta') || '', ref, sesion.usuario.rol));
 }
 
+// Lo que necesita una pantalla para armar sus campos.
+const campos = () => json({ ...definicion, idiomas: reglas.idiomasTodos, pendiente: reglas.pendiente });
+
 const traducciones = async ({ env }) => json(await listarTraducciones(env));
 
 async function guardarTraduccion({ request, env, sesion }) {
@@ -70,6 +75,7 @@ const RUTAS = {
   'GET /api/archivo': { fn: archivo },
   'POST /api/guardar': { fn: guardar },
   'GET /api/publicacion': { fn: publicacion },
+  'GET /api/campos': { fn: campos },
   'GET /api/traducciones': { fn: traducciones, soloAdmin: true },
   'POST /api/traducciones': { fn: guardarTraduccion, soloAdmin: true },
 };

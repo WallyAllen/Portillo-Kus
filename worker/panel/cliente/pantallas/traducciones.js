@@ -1,13 +1,8 @@
 // Traducciones pendientes, sólo para admin (la API también lo exige). Un idioma con el campo
 // vacío sigue pendiente y el sitio muestra el español: se puede traducir de a un idioma.
-const NOMBRES = { en: 'Inglés', pt: 'Portugués', ru: 'Ruso', zh: 'Chino' };
+import { crear } from './comun.js';
 
-function crear(etiqueta, clase, texto) {
-  const nodo = document.createElement(etiqueta);
-  if (clase) nodo.className = clase;
-  if (texto !== undefined) nodo.textContent = texto;
-  return nodo;
-}
+const NOMBRES = { en: 'Inglés', pt: 'Portugués', ru: 'Ruso', zh: 'Chino' };
 
 function bloqueDeTexto(rotulo, texto) {
   const bloque = crear('div', 'trad-texto');

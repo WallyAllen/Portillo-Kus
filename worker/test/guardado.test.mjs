@@ -13,7 +13,7 @@ const iniciales = Object.fromEntries(RUTAS.map((r) => [r, delRepo(r)]));
 const ES = 'src/content.es.json';
 const EN = 'src/content.en.json';
 const autor = { usuario: 'prueba', nombre: 'Persona de Prueba', rol: 'admin' };
-const JPEG = Buffer.from([0xff, 0xd8, 0xff, 0xe0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]).toString('base64');
+const JPEG = Buffer.from([0xff, 0xd8, 0xff, 0xe0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0xff, 0xd9]).toString('base64');
 
 function editar(texto, cambio) {
   const datos = JSON.parse(texto);

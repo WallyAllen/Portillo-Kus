@@ -104,9 +104,9 @@ test('la lista se recalcula sobre lo último: no choca con otro guardado ni lo p
   assert.deepEqual(Object.keys(lista()).sort(), ['hero.sub', 'stats.s1_label']);
 });
 
-test('una clave nueva en español queda pendiente y no rompe los otros idiomas', async () => {
-  await guardarCambios(env, { base: github.head, autor: editor, archivos: [{ ruta: ES, texto: editar(ES, (d) => { d.hero.nueva = 'Texto nuevo'; }) }] });
-  assert.deepEqual(lista()['hero.nueva'].viejo, { en: '', pt: '', ru: '', zh: '' });
+test('una clave nueva en español queda pendiente y no rompe los otros idiomas', () => {
+  const r = reconciliar({}, {}, { 'hero.nueva': { es: 'Texto nuevo' } }, 'F');
+  assert.deepEqual(r['hero.nueva'].viejo, { en: '', pt: '', ru: '', zh: '' });
 });
 
 test('nadie escribe ni lee la lista directo, ni un admin', async () => {
@@ -202,15 +202,16 @@ test('una traducción de equipo.json entra por id', async () => {
   datos.abogados[1].cargo.es = 'Socio';
   await guardarCambios(env, { base: commit, autor: editor, archivos: [{ ruta: EQUIPO, texto: JSON.stringify(datos) }] });
   const { pendientes } = await listarTraducciones(env);
-  assert.match(pendientes[0].titulo, /· cargo$/);
+  assert.match(pendientes[0].titulo, /· Cargo$/);
   await traducir({ 'equipo:abogado-2.cargo': { en: 'Partner' } });
   assert.equal(leerHead(EQUIPO).abogados[1].cargo.en, 'Partner');
   assert.equal(leerHead(EQUIPO).abogados[1].cargo.es, 'Socio');
   assert.ok(!('en' in lista()['equipo:abogado-2.cargo'].viejo));
 });
 
-test('una clave nueva se crea en el idioma al traducirla', async () => {
-  await guardarCambios(env, { base: github.head, autor: editor, archivos: [{ ruta: ES, texto: editar(ES, (d) => { d.hero.nueva = 'Texto nuevo'; }) }] });
+test('una clave pendiente que falta en el idioma se crea al traducirla, aunque no esté en la lista cerrada', async () => {
+  github.avanzar(ES, editar(ES, (d) => { d.hero.nueva = 'Texto nuevo'; }));
+  github.avanzar(ARCHIVO_PENDIENTES, JSON.stringify({ pendientes: { 'hero.nueva': { fecha: 'antes', viejo: { en: '', pt: '', ru: '', zh: '' } } } }));
   await traducir({ 'hero.nueva': { en: 'New text' } });
   assert.equal(leerHead(EN).hero.nueva, 'New text');
 });

@@ -1,5 +1,6 @@
 // Guardar es un commit en el repo. Este módulo decide qué se puede guardar, lo valida contra
 // el estado de la rama en ese momento y evita pisar lo que otra persona guardó.
+import { FOTOS_SERVICIO, revisarContenido, rotulo } from './campos.js';
 import { RepoGitHub } from './github.js';
 import reglas from './reglas.json' with { type: 'json' };
 import {
@@ -10,7 +11,13 @@ import { validarRepo } from './validacion.js';
 
 const RUTA_TEXTO = /^src\/(content\.(es|en|pt|ru|zh)\.json|equipo\.json)$/;
 const RUTA_TRADUCCION = /^src\/content\.(en|pt|ru|zh)\.json$/;
-const RUTA_IMAGEN = /^portillo-images\/([a-z0-9][a-z0-9._-]*\.(jpe?g|png|webp))$/;
+const CARPETA_FOTOS = 'portillo-images/';
+const FOTO_ABOGADO = /^abogado-[a-z0-9-]{1,48}\.jpg$/;
+const nombreDeFoto = (ruta) => ruta.slice(CARPETA_FOTOS.length);
+const esRutaFoto = (ruta) => ruta.startsWith(CARPETA_FOTOS)
+  && (FOTO_ABOGADO.test(nombreDeFoto(ruta)) || FOTOS_SERVICIO.has(nombreDeFoto(ruta)));
+// Una foto se guarda con el id del abogado: corregir un nombre no deja archivos huérfanos.
+export const fotoDeAbogado = (id) => `abogado-${String(id).replace(/^abogado-/, '')}.jpg`;
 const IMAGEN_MAXIMA = 5 * 1024 * 1024;
 const MAX_ARCHIVOS = 10;
 // Un reintento sólo por una carrera justo al mover la rama. Con más, una ráfaga de escrituras
@@ -30,7 +37,7 @@ export class Conflicto extends Error {
 
 export class DatosInvalidos extends Error {
   constructor(errores) {
-    super('El cambio no se guardó porque rompería la publicación.');
+    super('El cambio no se guardó.');
     this.errores = errores;
   }
 }
@@ -41,20 +48,17 @@ export class Prohibido extends Error {
   }
 }
 
-function esImagenReal(base64) {
-  let inicio;
+// El navegador recodifica cada foto a JPEG antes de subirla. Acá se mira el principio y el final
+// del archivo: una imagen cortada frenaría el build (Pillow no la abre) y otro tipo no debe llegar.
+function esJpegEntero(base64) {
   try {
-    inicio = atob(base64.slice(0, 16));
+    return atob(base64.slice(0, 16)).startsWith('\xFF\xD8\xFF') && atob(base64.slice(-8)).endsWith('\xFF\xD9');
   } catch {
     return false;
   }
-  return inicio.startsWith('\xFF\xD8\xFF') // JPEG
-    || inicio.startsWith('\x89PNG\r\n\x1A\n')
-    || (inicio.startsWith('RIFF') && inicio.slice(8, 12) === 'WEBP');
 }
 
-// Una imagen corrupta frena el build (Pillow no la abre) y un archivo de otro tipo no debe
-// llegar al repo. Sólo se aceptan estas rutas: el token podría escribir cualquier archivo.
+// Sólo se aceptan estas rutas: el token podría escribir cualquier archivo.
 // La lista de pendientes no está: la escribe únicamente el servidor, también para un admin.
 function comprobarArchivos(archivos) {
   if (!archivos.length || archivos.length > MAX_ARCHIVOS) return [`Se guardan entre 1 y ${MAX_ARCHIVOS} archivos por vez.`];
@@ -66,8 +70,8 @@ function comprobarArchivos(archivos) {
     vistas.add(ruta);
     if (RUTA_TEXTO.test(ruta)) {
       if (typeof archivo.texto !== 'string') errores.push(`${ruta}: falta el texto`);
-    } else if (RUTA_IMAGEN.test(ruta)) {
-      if (typeof archivo.base64 !== 'string' || !esImagenReal(archivo.base64)) errores.push(`${ruta}: no es una imagen JPG, PNG o WebP`);
+    } else if (esRutaFoto(ruta)) {
+      if (typeof archivo.base64 !== 'string' || !esJpegEntero(archivo.base64)) errores.push(`${ruta}: no es una imagen JPG entera`);
       else if (archivo.base64.length * 0.75 > IMAGEN_MAXIMA) errores.push(`${ruta}: la imagen pasa de 5 MB`);
     } else {
       errores.push(`${ruta}: este archivo no se puede editar desde el panel`);
@@ -82,10 +86,51 @@ function validar(repo, leer, archivos, ref) {
   return validarRepo({
     leer,
     listarImagenes: async () => {
-      const nuevas = archivos.map((a) => a.ruta).filter((r) => RUTA_IMAGEN.test(r)).map((r) => r.split('/')[1]);
+      const nuevas = archivos.map((a) => a.ruta).filter(esRutaFoto).map(nombreDeFoto);
       return new Set([...await repo.listar('portillo-images', ref), ...nuevas]);
     },
   });
+}
+
+// Lo que el validador no mira porque el build lo dejaría pasar: lista cerrada, caracteres
+// peligrosos y a qué nombre puede ir cada foto.
+async function revisarCambios(archivos, leerRama, { listaCerrada }) {
+  const errores = [];
+  const enviados = new Map(archivos.filter((a) => a.texto !== undefined).map((a) => [a.ruta, a.texto]));
+  const json = (texto) => {
+    try {
+      return JSON.parse(texto);
+    } catch {
+      return null; // lo rechaza la validación
+    }
+  };
+  for (const [ruta, texto] of enviados) {
+    const idioma = ruta.match(/^src\/content\.(\w+)\.json$/)?.[1];
+    const [despues, antes] = idioma ? [json(texto), json(await leerRama(ruta))] : [];
+    if (despues && antes) errores.push(...revisarContenido(idioma, antes, despues, { listaCerrada }));
+  }
+  const fotos = archivos.map((a) => a.ruta).filter(esRutaFoto).map(nombreDeFoto);
+  const espanol = 'src/content.es.json';
+  const equipoEnviado = enviados.has(RUTA_EQUIPO) ? json(enviados.get(RUTA_EQUIPO)) : null;
+  const equipoRama = json(await leerRama(RUTA_EQUIPO));
+  const abogados = (equipoEnviado ?? equipoRama)?.abogados;
+  const fotosPrevias = new Map((Array.isArray(equipoRama?.abogados) ? equipoRama.abogados : []).map((a) => [a.id, a.foto]));
+  for (const abogado of Array.isArray(equipoEnviado?.abogados) ? equipoEnviado.abogados : []) {
+    if (abogado?.foto && abogado.foto !== fotosPrevias.get(abogado.id) && abogado.foto !== fotoDeAbogado(abogado.id)) {
+      errores.push(`${abogado.nombre}: la foto tiene que llamarse ${fotoDeAbogado(abogado.id)}.`);
+    }
+  }
+  const delEquipo = new Set((Array.isArray(abogados) ? abogados : []).map((a) => fotoDeAbogado(a?.id)));
+  for (const foto of fotos) {
+    const servicio = FOTOS_SERVICIO.get(foto);
+    if (!servicio && !delEquipo.has(foto)) errores.push(`${foto}: no corresponde a ningún abogado.`);
+    if (!servicio) continue;
+    // Si la foto cambia, su descripción anterior deja de ser cierta.
+    const [antes, despues] = [json(await leerRama(espanol)), enviados.has(espanol) ? json(enviados.get(espanol)) : null];
+    const alt = (datos) => servicio.clave.split('.').reduce((nodo, parte) => nodo?.[parte], datos);
+    if (!despues || alt(antes) === alt(despues)) errores.push(`${servicio.etiqueta}: al cambiar la foto hay que escribir su nueva descripción.`);
+  }
+  return errores;
 }
 
 // Lo que escribe un editor en equipo.json pierde las traducciones que haya mandado.
@@ -152,6 +197,8 @@ export async function guardarCambios(env, { base, archivos, descripcion, autor, 
     const leerRama = lector(repo, head);
     if (comprobar) await comprobar(leerRama);
     const propios = esAdmin ? archivos : await comoEditor(archivos, leerRama);
+    const problemas = await revisarCambios(propios, leerRama, { listaCerrada: !confirmados });
+    if (problemas.length) throw new DatosInvalidos(problemas);
     const finales = await conPendientes(propios, leerRama, confirmados);
     // Contra head y no contra base: lo que entró recién también cuenta para las reglas.
     const conMios = lector(repo, head, new Map(finales.filter((a) => a.texto !== undefined).map((a) => [a.ruta, a.texto])));
@@ -178,13 +225,6 @@ export async function leerParaEditar(env, ruta, ref, rol) {
   return { ruta, commit, texto: visible };
 }
 
-function tituloDeClave(clave, equipo) {
-  const deEquipo = clave.match(/^equipo:([^.]+)\.(.+)$/);
-  if (!deEquipo) return clave;
-  const abogado = JSON.parse(equipo).abogados.find((a) => a.id === deEquipo[1]);
-  return `${abogado?.nombre ?? deEquipo[1]} · ${deEquipo[2]}`;
-}
-
 // Para la pantalla Traducciones. Sólo admin: lo comprueba la ruta en api.js.
 export async function listarTraducciones(env) {
   const repo = new RepoGitHub(env);
@@ -192,10 +232,10 @@ export async function listarTraducciones(env) {
   const leer = lector(repo, commit);
   const pendientes = parsearPendientes(await leer(ARCHIVO_PENDIENTES));
   const vista = await vistaDeTextos(leer);
-  const equipo = await leer(RUTA_EQUIPO);
+  const { abogados } = JSON.parse(await leer(RUTA_EQUIPO));
   const lista = Object.entries(pendientes).map(([clave, { fecha, viejo }]) => ({
     clave,
-    titulo: tituloDeClave(clave, equipo),
+    titulo: rotulo(clave, abogados),
     fecha,
     nuevo: vista[clave]?.es ?? '',
     idiomas: OTROS_IDIOMAS.filter((c) => c in viejo).map((codigo) => {
@@ -225,7 +265,6 @@ export async function guardarTraducciones(env, { base, textos, autor }) {
       if (!(codigo in (pendientesBase[clave]?.viejo ?? {}))) errores.push(`${clave}: ${codigo} no está pendiente`);
       else if (oculto(vistaBase[clave]?.es ?? '')) errores.push(`${clave}: el español todavía no tiene texto para traducir`);
       else if (oculto(texto)) errores.push(`${clave}: ${codigo} no puede quedar marcado como pendiente`);
-      else if (texto.includes('<')) errores.push(`${clave}: ${codigo} no puede llevar el carácter <`); // el build no escapa los textos
       else pedido.push({ clave, codigo, texto });
     }
   }

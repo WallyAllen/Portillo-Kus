@@ -1,0 +1,34 @@
+{
+  "_uso": "Lo único de content.*.json que se edita desde el panel: lo hace cumplir worker/campos.js en el servidor. atributo: true si la plantilla lo usa dentro de un atributo, donde no puede llevar comillas. tests/test_panel_reglas.py comprueba esta lista contra la plantilla.",
+  "textos": [
+    {"grupo": "Portada", "clave": "hero.title", "etiqueta": "Título principal", "largo": 70},
+    {"grupo": "Portada", "clave": "hero.sub", "etiqueta": "Texto debajo del título", "largo": 220},
+    {"grupo": "Ciudadanía", "clave": "ciudadania.text", "etiqueta": "Texto de presentación", "largo": 500},
+    {"grupo": "Ciudadanía", "clave": "ciudadania.step1", "etiqueta": "Paso 1", "largo": 120},
+    {"grupo": "Ciudadanía", "clave": "ciudadania.step2", "etiqueta": "Paso 2", "largo": 120},
+    {"grupo": "Ciudadanía", "clave": "ciudadania.step3", "etiqueta": "Paso 3", "largo": 120},
+    {"grupo": "Ciudadanía", "clave": "ciudadania.step4", "etiqueta": "Paso 4", "largo": 120},
+    {"grupo": "Horarios", "clave": "contacto.card1_hours", "etiqueta": "Horario en la sección Contacto", "largo": 70},
+    {"grupo": "Horarios", "clave": "footer.hours", "etiqueta": "Horario al pie de la página", "largo": 70},
+    {"grupo": "Horarios", "clave": "mobile.hours", "etiqueta": "Horario en el menú del celular", "largo": 70}
+  ],
+  "resenas": {"cantidad": 4, "largoTexto": 800, "largoAutor": 60},
+  "fotos": {
+    "aspecto": [4, 3],
+    "largoDescripcion": 180,
+    "lista": [
+      {"grupo": "Tarjetas principales", "archivo": "need-ciudadania.jpg", "clave": "need.c1_alt", "etiqueta": "Ciudadanía Argentina"},
+      {"grupo": "Tarjetas principales", "archivo": "need-residencia.jpg", "clave": "need.c2_alt", "etiqueta": "Residencia y visas"},
+      {"grupo": "Tarjetas principales", "archivo": "need-expulsion.jpg", "clave": "need.c3_alt", "etiqueta": "Defensa ante expulsión"},
+      {"grupo": "Otras áreas", "archivo": "area-laboral.jpg", "clave": "areas.a1_alt", "etiqueta": "Laboral"},
+      {"grupo": "Otras áreas", "archivo": "area-familia.jpg", "clave": "areas.a2_alt", "etiqueta": "Familia"},
+      {"grupo": "Otras áreas", "archivo": "area-penal.jpg", "clave": "areas.a3_alt", "etiqueta": "Penal"},
+      {"grupo": "Otras áreas", "archivo": "area-sucesiones.jpg", "clave": "areas.a4_alt", "etiqueta": "Sucesiones"},
+      {"grupo": "Otras áreas", "archivo": "area-ciudadania-europea.jpg", "clave": "areas.a8_alt", "etiqueta": "Ciudadanía italiana y española"},
+      {"grupo": "Otras áreas", "archivo": "area-danos.jpg", "clave": "areas.a5_alt", "etiqueta": "Accidentes y daños"},
+      {"grupo": "Otras áreas", "archivo": "area-consumidor.jpg", "clave": "areas.a6_alt", "etiqueta": "Defensa del consumidor"},
+      {"grupo": "Otras áreas", "archivo": "area-empresas.jpg", "clave": "areas.a7_alt", "etiqueta": "Empresas y contratos"},
+      {"grupo": "Otras áreas", "archivo": "area-escribania.jpg", "clave": "areas.a9_alt", "etiqueta": "Trámites notariales"}
+    ]
+  }
+}

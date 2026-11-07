@@ -308,12 +308,12 @@ async function principal() {
   await caso('un pedido no puede dar de baja pendientes por /api/guardar', async () => {
     const { commit, texto } = await leer(redactor, es);
     const datos = JSON.parse(texto);
-    datos.stats.s2_label = 'Otra etiqueta';
+    datos.ciudadania.step2 = 'Otra etiqueta';
     const r = await redactor.pedir('/api/guardar', { metodo: 'POST', cuerpo: {
-      base: commit, archivos: [{ ruta: es, texto: JSON.stringify(datos, null, 2) }], confirmados: [{ clave: 'stats.s2_label', codigo: 'en' }],
+      base: commit, archivos: [{ ruta: es, texto: JSON.stringify(datos, null, 2) }], confirmados: [{ clave: 'ciudadania.step2', codigo: 'en' }],
     } });
     assert.equal(r.status, 200, await r.clone().text());
-    assert.ok('en' in pendientesEnHead()['stats.s2_label'].viejo);
+    assert.ok('en' in pendientesEnHead()['ciudadania.step2'].viejo);
   });
   await caso('un editor recibe equipo.json sólo en español', async () => {
     const { texto } = await leer(redactor, 'src/equipo.json');
@@ -324,32 +324,32 @@ async function principal() {
   await caso('el editor cambia un texto, el admin lo traduce: pendiente en el mismo commit y baja en otro', async () => {
     const { commit, texto } = await leer(redactor, es);
     const datos = JSON.parse(texto);
-    const viejo = datos.stats.s1_label;
-    datos.stats.s1_label = 'Etiqueta nueva';
+    const viejo = datos.ciudadania.step1;
+    datos.ciudadania.step1 = 'Etiqueta nueva';
     const guardado = await redactor.pedir('/api/guardar', { metodo: 'POST', cuerpo: { base: commit, descripcion: 'Cambió una etiqueta', archivos: [{ ruta: es, texto: JSON.stringify(datos, null, 2) }] } });
     assert.equal(guardado.status, 200, await guardado.clone().text());
     assert.match(github.commits.get(github.head).mensaje, /traducciones-pendientes\.json/);
 
     const lista = await (await cliente.pedir('/api/traducciones')).json();
-    const item = lista.pendientes.find((p) => p.clave === 'stats.s1_label');
+    const item = lista.pendientes.find((p) => p.clave === 'ciudadania.step1');
     assert.equal(item.nuevo, 'Etiqueta nueva');
     assert.equal(item.idiomas.find((i) => i.codigo === 'en').viejo, viejo);
 
-    const r = await cliente.pedir('/api/traducciones', { metodo: 'POST', cuerpo: { base: lista.commit, textos: { 'stats.s1_label': { en: 'New label' } } } });
+    const r = await cliente.pedir('/api/traducciones', { metodo: 'POST', cuerpo: { base: lista.commit, textos: { 'ciudadania.step1': { en: 'New label' } } } });
     assert.equal(r.status, 200, await r.clone().text());
     assert.deepEqual(github.commits.get(github.head).padres, [lista.commit], 'un solo commit');
-    assert.equal(JSON.parse(github.leerEnHead('src/content.en.json')).stats.s1_label, 'New label');
-    assert.deepEqual(Object.keys(pendientesEnHead()['stats.s1_label'].viejo), ['pt', 'ru', 'zh']);
+    assert.equal(JSON.parse(github.leerEnHead('src/content.en.json')).ciudadania.step1, 'New label');
+    assert.deepEqual(Object.keys(pendientesEnHead()['ciudadania.step1'].viejo), ['pt', 'ru', 'zh']);
   });
   await caso('traducción inválida y conflicto: 422 y 409', async () => {
     const lista = await (await cliente.pedir('/api/traducciones')).json();
-    const invalida = await cliente.pedir('/api/traducciones', { metodo: 'POST', cuerpo: { base: lista.commit, textos: { 'stats.s1_label': { pt: '[PENDIENTE] x' } } } });
+    const invalida = await cliente.pedir('/api/traducciones', { metodo: 'POST', cuerpo: { base: lista.commit, textos: { 'ciudadania.step1': { pt: '[PENDIENTE] x' } } } });
     assert.equal(invalida.status, 422);
     const { texto } = await leer(cliente, es);
     const datos = JSON.parse(texto);
-    datos.stats.s1_label = 'Otra vez cambiada';
+    datos.ciudadania.step1 = 'Otra vez cambiada';
     github.avanzar(es, JSON.stringify(datos, null, 2));
-    const conflicto = await cliente.pedir('/api/traducciones', { metodo: 'POST', cuerpo: { base: lista.commit, textos: { 'stats.s1_label': { pt: 'Novo' } } } });
+    const conflicto = await cliente.pedir('/api/traducciones', { metodo: 'POST', cuerpo: { base: lista.commit, textos: { 'ciudadania.step1': { pt: 'Novo' } } } });
     assert.equal(conflicto.status, 409);
   });
 

@@ -90,6 +90,56 @@ class ReglasTests(unittest.TestCase):
         self.assertIn('/version.json', headers.REVALIDATED)
 
 
+class PanelCamposTests(unittest.TestCase):
+    """src/panel-campos.json contra la plantilla y los textos reales."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.campos = json.loads((ROOT / 'src/panel-campos.json').read_text(encoding='utf-8'))
+        cls.es = build.flatten(json.loads((ROOT / 'src/content.es.json').read_text(encoding='utf-8')))
+        cls.plantilla = (ROOT / 'src/template.html').read_text(encoding='utf-8')
+        cls.en_atributo = set()
+        for marca in re.finditer(r'\{\{([\w.\-]+)\}\}', cls.plantilla):
+            antes = cls.plantilla[:marca.start()]
+            if antes.rfind('<') > antes.rfind('>'):
+                cls.en_atributo.add(marca.group(1))
+
+    def test_cada_texto_existe_y_entra_en_su_largo(self):
+        for campo in self.campos['textos']:
+            with self.subTest(campo['clave']):
+                self.assertIn(campo['clave'], self.es)
+                self.assertLessEqual(len(self.es[campo['clave']]), campo['largo'])
+                self.assertTrue(campo['etiqueta'] and campo['etiqueta'] != campo['clave'])
+
+    def test_un_texto_de_la_lista_no_se_usa_en_un_atributo(self):
+        """Si no, una comilla rompería la etiqueta: tendría que marcarse atributo, como las fotos."""
+        for campo in self.campos['textos']:
+            self.assertNotIn(campo['clave'], self.en_atributo, campo['clave'])
+        for numero in range(1, self.campos['resenas']['cantidad'] + 1):
+            for parte in ('text', 'name'):
+                clave = f'opiniones.r{numero}_{parte}'
+                self.assertIn(clave, self.es)
+                self.assertNotIn(clave, self.en_atributo, clave)
+
+    def test_cada_foto_esta_en_la_plantilla_con_su_descripcion(self):
+        fotos = self.campos['fotos']
+        for foto in fotos['lista']:
+            with self.subTest(foto['archivo']):
+                self.assertIn(f'portillo-images/{foto["archivo"]}" alt="{{{{{foto["clave"]}}}}}"', self.plantilla)
+                self.assertTrue((ROOT / 'portillo-images' / foto['archivo']).is_file())
+                self.assertLessEqual(len(self.es[foto['clave']]), fotos['largoDescripcion'])
+                self.assertIn(foto['clave'], self.en_atributo)
+                self.assertNotIn('"', self.es[foto['clave']])
+
+    def test_ningun_texto_de_hoy_lleva_lo_que_el_panel_rechaza(self):
+        for codigo in REGLAS['idiomasTodos']:
+            datos = build.flatten(json.loads((ROOT / f'src/content.{codigo}.json').read_text(encoding='utf-8')))
+            for clave, valor in datos.items():
+                self.assertNotIn('<', str(valor), f'{codigo}: {clave}')
+                if clave in self.en_atributo:
+                    self.assertNotIn('"', str(valor), f'{codigo}: {clave}')
+
+
 class CasosCompartidosTests(unittest.TestCase):
     def test_build_produccion_da_lo_que_dicen_los_casos(self):
         with tempfile.TemporaryDirectory() as temporal:
