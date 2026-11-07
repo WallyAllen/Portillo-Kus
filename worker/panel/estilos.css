@@ -1,0 +1,92 @@
+/* Panel: los colores son los de :root en src/template.html. Primero el celular. */
+:root {
+  --bg: #F7F5F1;
+  --surface: #FFFFFF;
+  --ink: #14202A;
+  --ink-muted: #4B5A66;
+  --line: #E3DED3;
+  --brand: #9B1C31;
+  --brand-strong: #7E1627;
+  --celeste-ink: #2E6DA4;
+  --ok: #1F6B45;
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 16px/1.5 -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+h1, h2 { font-family: Georgia, 'Times New Roman', serif; font-weight: 600; line-height: 1.2; }
+h1 { font-size: 1.6rem; margin: 0 0 1rem; }
+
+.barra {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .5rem 1rem;
+  padding: .5rem 1rem;
+  background: var(--surface);
+  border-bottom: 3px solid var(--brand);
+}
+.logo { height: 44px; width: auto; display: block; }
+.cuenta { display: flex; align-items: center; gap: .75rem; margin-left: auto; font-size: .9rem; color: var(--ink-muted); }
+
+.menu { order: 3; flex-basis: 100%; display: flex; gap: .25rem; overflow-x: auto; }
+.menu a {
+  padding: .6rem .75rem;
+  min-height: 44px;
+  color: var(--ink);
+  text-decoration: none;
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+}
+.menu a[aria-current="page"] { color: var(--brand); border-bottom-color: var(--brand); font-weight: 600; }
+
+.contenido { max-width: 760px; margin: 0 auto; padding: 1.25rem 1rem 3rem; }
+.tarjeta { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 1.25rem; }
+
+.login { max-width: 400px; margin: 1.5rem auto; display: flex; flex-direction: column; }
+label { font-weight: 600; margin: .75rem 0 .25rem; }
+input {
+  width: 100%;
+  min-height: 44px;
+  padding: .5rem .75rem;
+  font: inherit; /* 16px: iPhone no hace zoom al enfocar */
+  color: inherit;
+  background: var(--surface);
+  border: 1px solid var(--ink-muted);
+  border-radius: 6px;
+}
+input:focus-visible, button:focus-visible, a:focus-visible { outline: 3px solid var(--celeste-ink); outline-offset: 2px; }
+
+.boton {
+  min-height: 44px;
+  padding: .5rem 1.25rem;
+  font: inherit;
+  font-weight: 600;
+  color: #fff;
+  background: var(--brand);
+  border: 1px solid var(--brand);
+  border-radius: 6px;
+  cursor: pointer;
+}
+.boton:hover { background: var(--brand-strong); }
+.boton:disabled { opacity: .6; cursor: wait; }
+.boton-borde { color: var(--brand); background: transparent; padding: .25rem .75rem; }
+.boton-borde:hover { color: #fff; }
+.login .boton { margin-top: 1.25rem; }
+
+.aviso-error { margin: .75rem 0 0; padding: .5rem .75rem; color: var(--brand-strong); background: #FBEDEF; border-radius: 6px; }
+
+.publicacion { padding: .6rem 1rem; text-align: center; font-weight: 600; color: var(--ink); background: #E4EEF7; }
+.publicacion[data-estado="publicado"] { color: var(--ok); background: #E5F3EB; }
+.publicacion[data-estado="problema"] { color: var(--brand-strong); background: #FBEDEF; }
+
+@media (min-width: 760px) {
+  .menu { order: 0; flex-basis: auto; }
+}

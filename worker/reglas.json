@@ -1,0 +1,26 @@
+{
+  "pendiente": "[PENDIENTE]",
+  "idiomasTodos": ["es", "en", "pt", "ru", "zh"],
+  "idiomasPublicados": ["es", "en", "pt"],
+  "idiomaBase": "es",
+  "textosAbogado": ["cargo", "idiomas", "biografia"],
+  "obligatoriosAbogado": ["cargo", "biografia"],
+  "reviews": 400,
+  "largoMaximoTitulo": 60,
+  "largoMaximoDescripcion": 155,
+  "clavesGeneradas": [
+    "analytics_lang", "analytics_listener", "analytics_script", "email", "equipo_html", "estudio.matricula",
+    "font_preloads", "google_maps_link_attrs", "home_link", "hreflang_tags", "html_lang", "img_prefix", "lang_label",
+    "lang_links", "lang_links_named", "maps_directions_url", "num.clients", "num.clients_raw", "num.rating",
+    "num.rating_raw", "privacy_link", "redes.instagram", "redes.instagram_2", "redes.tiktok", "redes.youtube",
+    "seo_tags", "site_footer", "site_header", "site_resources", "site_styles", "tel", "tel_visible", "wa_number"
+  ],
+  "clavesQueLeeElCodigo": [
+    "meta.title", "meta.description", "meta.og_image_alt", "privacy.meta_title", "privacy.description",
+    "estudio.name", "estudio.role", "estudio.tag_matricula", "areas.eyebrow",
+    "areas.a1_title", "areas.a2_title", "areas.a3_title", "areas.a4_title", "areas.a5_title",
+    "areas.a6_title", "areas.a7_title", "areas.a8_title", "areas.a9_title",
+    "equipo.ver_perfil", "equipo.tag_idiomas", "equipo.cerrar"
+  ],
+  "huellaPython": "c12526b17e6844fce087307fd10b594b2756498dd5f878a2d39b801f86ab569a"
+}

@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Panel · Portillo Kus &amp; Asociados</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/panel/estilos.css">
+  <script type="module" src="/panel/app.js"></script>
+</head>
+<body>
+  <header class="barra">
+    <img class="logo" src="/portillo-images/logo.png" alt="Portillo Kus &amp; Asociados" width="150" height="80">
+    <nav id="menu" class="menu" aria-label="Secciones del panel" hidden></nav>
+    <div id="cuenta" class="cuenta" hidden>
+      <span id="cuenta-nombre"></span>
+      <button id="salir" type="button" class="boton boton-borde">Salir</button>
+    </div>
+  </header>
+
+  <div id="publicacion" class="publicacion" role="status" aria-live="polite" hidden></div>
+
+  <main id="contenido" class="contenido">
+    <noscript><p>El panel necesita JavaScript.</p></noscript>
+  </main>
+
+  <template id="plantilla-login">
+    <form id="login" class="tarjeta login" novalidate>
+      <h1>Entrar al panel</h1>
+      <label for="usuario">Usuario</label>
+      <input id="usuario" name="usuario" autocomplete="username" autocapitalize="none" spellcheck="false" required>
+      <label for="contrasena">Contraseña</label>
+      <input id="contrasena" name="contrasena" type="password" autocomplete="current-password" required>
+      <p id="login-error" class="aviso-error" role="alert" hidden></p>
+      <button type="submit" class="boton">Entrar</button>
+    </form>
+  </template>
+</body>
+</html>

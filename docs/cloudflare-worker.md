@@ -7,9 +7,13 @@ un proyecto de Cloudflare Pages. La cuenta debe seguir a nombre del estudio
 
 ## Qué se publica
 
-`wrangler.jsonc` (raíz del repo) publica **solo `dist/`**:
+`wrangler.jsonc` (raíz del repo) publica **`dist/`** y el código del panel:
 
-- `assets.directory: ./dist`. Sin `main`: no hay código de Worker, solo archivos.
+- `assets.directory: ./dist`. El sitio son solo archivos: la capa de assets los
+  responde sin ejecutar código.
+- `main: worker/index.js` y `assets.run_worker_first`: el Worker sólo corre en
+  `/panel`, `/panel/*` y `/api/*`. Ver [panel](panel.md), que además lista lo que hay
+  que crear en Cloudflare antes de usarlo.
 - `assets.not_found_handling: 404-page`: cualquier ruta inexistente devuelve
   `dist/404.html` con estado 404 real (la 404 lleva `noindex` propio).
 - `assets.html_handling: auto-trailing-slash`: `/en` redirige a `/en/`; las
@@ -50,7 +54,9 @@ cualquier otro archivo de esa carpeta).
   `/servicios` → `/#areas` (con y sin barra final). Lista en `src/edge.py`.
 - `404.html`, `sitemap.xml` (una `<url>` por página, con `lastmod` de la fecha
   del build y `xhtml:link` de cada idioma más `x-default`), `robots.txt`
-  (`Allow: /` + `Sitemap`; Cloudflare le antepone sus content signals).
+  (`Allow: /`, `Disallow` del panel + `Sitemap`; Cloudflare le antepone sus content signals).
+- `version.json`: el commit publicado (`WORKERS_CI_COMMIT_SHA`, o `local` fuera de
+  Workers Builds). Lo usa el panel para saber cuándo un guardado ya salió.
 - Íconos y manifest: `favicon.ico` (32px), `favicon.svg`, `apple-touch-icon.png`
   (180px), `icon-192.png`, `icon-512.png`, `site.webmanifest`. Salen de
   `src/icons/`; se regeneran con `python scripts/generar-iconos.py` (iniciales PK

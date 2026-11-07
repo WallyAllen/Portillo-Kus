@@ -98,6 +98,7 @@ src/
   icons/             favicon, apple-touch-icon e íconos del manifest
   _headers           reglas base de seguridad y caché
   images.py          variantes responsivas AVIF/WebP de las fotos originales
+worker/              panel de administración, ver docs/panel.md
 ```
 
 ```bash
@@ -211,9 +212,9 @@ es un borrador no enviado.
   deploy command: `npx wrangler deploy`.
 - **DNS:** para servir el dominio sin `www`, los nameservers tienen que estar
   en Cloudflare.
-- **Autogestión, sólo si se contrata:** Pages CMS (pagescms.org). El contenido vive en el repo y
-  Cloudflare republica en cada cambio. Editable: fotos, reseñas, áreas, equipo,
-  contacto. Fijo: diseño, colores, estructura.
+- **Autogestión:** panel propio en `/panel`, dentro del mismo Worker (en construcción,
+  ver [panel](docs/panel.md)). El contenido vive en el repo: cada guardado es un commit
+  y Cloudflare republica. Fijo: diseño, colores, estructura.
 - Lo que se cargue en español hay que cargarlo también en los otros cuatro idiomas.
 
 ## Pendiente del cliente

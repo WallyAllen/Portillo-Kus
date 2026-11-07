@@ -1,0 +1,84 @@
+{
+  "_uso": "Los corren tests/test_panel_reglas.py contra build.py --produccion y worker/test/validacion.test.mjs contra worker/validacion.js: los dos tienen que dar lo que dice 'espera'. Si cambia una regla de build.py, sumar acá el caso. 'estricto': sólo JS, donde el panel rechaza a propósito algo que el build deja pasar.",
+  "imagenes": ["abogado-prueba.jpg"],
+  "abogadoCompleto": {
+    "publicado": true,
+    "nombre": "Dra. Prueba",
+    "foto": "abogado-prueba.jpg",
+    "matricula": "T° 1 F° 2",
+    "linkedin": "https://www.linkedin.com/in/prueba/",
+    "cargo": {"es": "Socia", "en": "Partner", "pt": "Sócia", "ru": "Партнёр", "zh": "合伙人"},
+    "idiomas": {"es": "Español", "en": "Spanish", "pt": "Espanhol", "ru": "Испанский", "zh": "西班牙语"},
+    "biografia": {"es": "Uno\n\nDos", "en": "One\n\nTwo", "pt": "Um\n\nDois", "ru": "Раз", "zh": "一"}
+  },
+  "casos": [
+    {"nombre": "el repo tal como está", "espera": "ok", "cambios": []},
+
+    {"nombre": "falta una clave en un idioma", "espera": "error", "cambios": [{"archivo": "src/content.en.json", "ruta": "stats.s1_label", "borrar": true}]},
+    {"nombre": "sobra una clave en un idioma", "espera": "error", "cambios": [{"archivo": "src/content.pt.json", "ruta": "stats.nueva", "valor": "x"}]},
+    {"nombre": "falta una clave de la plantilla en todos los idiomas", "espera": "error", "cambios": [
+      {"archivo": "src/content.es.json", "ruta": "hero.sub", "borrar": true},
+      {"archivo": "src/content.en.json", "ruta": "hero.sub", "borrar": true},
+      {"archivo": "src/content.pt.json", "ruta": "hero.sub", "borrar": true}]},
+    {"nombre": "falta en todos una clave que lee seo.py", "espera": "error", "cambios": [
+      {"archivo": "src/content.es.json", "ruta": "meta.og_image_alt", "borrar": true},
+      {"archivo": "src/content.en.json", "ruta": "meta.og_image_alt", "borrar": true},
+      {"archivo": "src/content.pt.json", "ruta": "meta.og_image_alt", "borrar": true}]},
+    {"nombre": "ruso y chino no se publican: el build no los mira", "espera": "ok", "cambios": [
+      {"archivo": "src/content.ru.json", "ruta": "hero.sub", "borrar": true},
+      {"archivo": "src/content.zh.json", "ruta": "hero.sub", "valor": "[PENDIENTE] x"}]},
+    {"nombre": "JSON roto en un idioma publicado", "espera": "error", "cambios": [{"archivo": "src/content.en.json", "crudo": "{ roto"}]},
+    {"nombre": "JSON roto en un idioma sin publicar", "espera": "error", "estricto": true, "cambios": [{"archivo": "src/content.ru.json", "crudo": "{ roto"}]},
+    {"nombre": "un valor que no es texto", "espera": "error", "estricto": true, "cambios": [
+      {"archivo": "src/content.es.json", "ruta": "hero.sub", "valor": 5},
+      {"archivo": "src/content.en.json", "ruta": "hero.sub", "valor": 5},
+      {"archivo": "src/content.pt.json", "ruta": "hero.sub", "valor": 5}]},
+
+    {"nombre": "pendiente que llega a la página", "espera": "error", "cambios": [{"archivo": "src/content.en.json", "ruta": "hero.sub", "valor": "[PENDIENTE] x"}]},
+    {"nombre": "pendiente en un bloque que no se genera", "espera": "ok", "cambios": [{"archivo": "src/content.es.json", "ruta": "estudio.team_note", "valor": "[PENDIENTE] otro texto"}]},
+    {"nombre": "reseña cargada con el autor pendiente", "espera": "error", "cambios": [{"archivo": "src/content.es.json", "ruta": "opiniones.r1_text", "valor": "Muy buena atención"}]},
+    {"nombre": "reseña cargada completa", "espera": "ok", "cambios": [
+      {"archivo": "src/content.es.json", "ruta": "opiniones.r1_text", "valor": "Muy buena atención"},
+      {"archivo": "src/content.es.json", "ruta": "opiniones.r1_name", "valor": "Ana"}]},
+    {"nombre": "título del equipo pendiente, sin nadie publicado", "espera": "ok", "cambios": [{"archivo": "src/content.es.json", "ruta": "equipo.title", "valor": "[PENDIENTE] x"}]},
+    {"nombre": "título del equipo pendiente, con alguien publicado", "espera": "error", "cambios": [
+      {"archivo": "src/content.es.json", "ruta": "equipo.title", "valor": "[PENDIENTE] x"},
+      {"abogados": [{}]}]},
+    {"nombre": "pendiente en privacidad", "espera": "error", "cambios": [{"archivo": "src/content.pt.json", "ruta": "privacy.title", "valor": "[PENDIENTE] x"}]},
+
+    {"nombre": "marcador suelto en un texto", "espera": "error", "cambios": [{"archivo": "src/content.es.json", "ruta": "hero.sub", "valor": "hola {{nada}}"}]},
+    {"nombre": "marcador suelto en un bloque que no se genera", "espera": "ok", "cambios": [{"archivo": "src/content.es.json", "ruta": "opiniones.r1_text", "valor": "[PENDIENTE] {{nada}}"}]},
+    {"nombre": "teléfono sin medición en un texto", "espera": "error", "cambios": [{"archivo": "src/content.es.json", "ruta": "hero.sub", "valor": "Llamá <a href=\"tel:+541100000000\">acá</a>"}]},
+    {"nombre": "WhatsApp sin medición en un texto", "espera": "error", "cambios": [{"archivo": "src/content.en.json", "ruta": "hero.sub", "valor": "<a href=\"https://wa.me/5491100000000\">WhatsApp</a>"}]},
+    {"nombre": "enlace común en un texto", "espera": "ok", "cambios": [{"archivo": "src/content.es.json", "ruta": "hero.sub", "valor": "Mirá <a href=\"https://ejemplo.com\">esto</a>"}]},
+
+    {"nombre": "título de 60 caracteres", "espera": "ok", "cambios": [{"archivo": "src/content.es.json", "ruta": "meta.title", "valor": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"}]},
+    {"nombre": "título de 61 caracteres", "espera": "error", "cambios": [{"archivo": "src/content.es.json", "ruta": "meta.title", "valor": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"}]},
+    {"nombre": "el largo cuenta {reviews} ya reemplazado", "espera": "error", "cambios": [{"archivo": "src/content.es.json", "ruta": "meta.title", "valor": "{reviews}xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"}]},
+    {"nombre": "el largo no cuenta las etiquetas", "espera": "ok", "cambios": [{"archivo": "src/content.es.json", "ruta": "meta.title", "valor": "<b>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</b>"}]},
+    {"nombre": "descripción de privacidad demasiado larga", "espera": "error", "cambios": [{"archivo": "src/content.en.json", "ruta": "privacy.description", "valor": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"}]},
+    {"nombre": "título pendiente en metadatos", "espera": "error", "cambios": [{"archivo": "src/content.es.json", "ruta": "meta.description", "valor": "[PENDIENTE] x"}]},
+    {"nombre": "idiomas de atención válidos", "espera": "ok", "cambios": [{"archivo": "src/content.es.json", "ruta": "seo.contact_languages", "valor": "es, en, pt-BR"}]},
+    {"nombre": "idiomas de atención inválidos", "espera": "error", "cambios": [{"archivo": "src/content.es.json", "ruta": "seo.contact_languages", "valor": "Español"}]},
+
+    {"nombre": "abogado publicado completo", "espera": "ok", "cambios": [{"abogados": [{}]}]},
+    {"nombre": "abogado publicado sin linkedin, matrícula ni idiomas", "espera": "ok", "cambios": [{"abogados": [{"linkedin": "", "matricula": "", "idiomas": {"es": "", "en": "", "pt": "", "ru": "", "zh": ""}}]}]},
+    {"nombre": "abogado sin publicar con datos de muestra", "espera": "ok", "cambios": [{"abogados": [{"publicado": false, "nombre": "[Abogado]", "foto": ""}]}]},
+    {"nombre": "lista de abogados vacía", "espera": "ok", "cambios": [{"abogados": []}]},
+    {"nombre": "publicado con 'publicado' que no es true cuenta como borrador", "espera": "ok", "cambios": [{"abogados": [{"publicado": "si", "nombre": "[Abogado]"}]}]},
+    {"nombre": "borrador sin un idioma", "espera": "error", "cambios": [{"abogados": [{"publicado": false, "cargo": {"es": "Socia", "en": "Partner", "pt": "Sócia", "ru": "Партнёр"}}]}]},
+    {"nombre": "publicado con nombre de muestra", "espera": "error", "cambios": [{"abogados": [{"nombre": "[Abogado 1]"}]}]},
+    {"nombre": "publicado sin nombre", "espera": "error", "cambios": [{"abogados": [{"nombre": null}]}]},
+    {"nombre": "publicado sin foto", "espera": "error", "cambios": [{"abogados": [{"foto": ""}]}]},
+    {"nombre": "publicado con una foto que no está", "espera": "error", "cambios": [{"abogados": [{"foto": "abogado-no-existe.jpg"}]}]},
+    {"nombre": "publicado con foto sin el prefijo", "espera": "error", "cambios": [{"abogados": [{"foto": "fixture.jpg"}]}]},
+    {"nombre": "publicado sin cargo en un idioma publicado", "espera": "error", "cambios": [{"abogados": [{"cargo": {"es": "Socia", "en": " ", "pt": "Sócia", "ru": "Партнёр", "zh": "合伙人"}}]}]},
+    {"nombre": "publicado sin biografía real", "espera": "error", "cambios": [{"abogados": [{"biografia": {"es": "[Formación]", "en": "One", "pt": "Um", "ru": "Раз", "zh": "一"}}]}]},
+    {"nombre": "idioma sin publicar puede quedar con muestra", "espera": "ok", "cambios": [{"abogados": [{"biografia": {"es": "Uno", "en": "One", "pt": "Um", "ru": "[Опыт]", "zh": "[经验]"}}]}]},
+    {"nombre": "publicado con idiomas de muestra", "espera": "error", "cambios": [{"abogados": [{"idiomas": {"es": "[Idiomas]", "en": "x", "pt": "x", "ru": "x", "zh": "x"}}]}]},
+    {"nombre": "publicado con matrícula de muestra", "espera": "error", "cambios": [{"abogados": [{"matricula": "[T° y F°]"}]}]},
+    {"nombre": "publicado con linkedin ajeno", "espera": "error", "cambios": [{"abogados": [{"linkedin": "https://ejemplo.com/"}]}]},
+    {"nombre": "equipo.json roto", "espera": "error", "cambios": [{"archivo": "src/equipo.json", "crudo": "{ roto"}]},
+    {"nombre": "equipo.json sin la lista", "espera": "error", "cambios": [{"archivo": "src/equipo.json", "crudo": "{}"}]}
+  ]
+}

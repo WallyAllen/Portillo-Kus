@@ -1,11 +1,52 @@
 {
-  // Sólo assets estáticos: el Worker publica dist/, que genera `python src/build.py`.
+  // El Worker sirve dist/ (lo genera `python src/build.py`) y, sólo en /panel y /api/*,
+  // el panel de administración. Ver docs/panel.md.
   // "name" es provisorio: debe coincidir con el nombre del Worker en Cloudflare.
   "name": "portillo-kus",
+  "main": "worker/index.js",
   "compatibility_date": "2026-10-01",
   "assets": {
     "directory": "./dist",
+    "binding": "ASSETS",
     "html_handling": "auto-trailing-slash",
-    "not_found_handling": "404-page"
+    "not_found_handling": "404-page",
+    // Todo lo demás lo responde la capa de assets, sin ejecutar el Worker.
+    "run_worker_first": ["/panel", "/panel/*", "/api/*"]
+  },
+  // El cliente del panel se sirve como texto: no se ejecuta en el Worker.
+  "rules": [
+    { "type": "Text", "globs": ["**/*.css", "**/cliente/*.js", "**/pantallas/*.js"], "fallthrough": true }
+  ],
+  "vars": {
+    "GITHUB_REPO": "WallyAllen/Portillo-Kus",
+    "GITHUB_BRANCH": "main"
+  },
+  // Antes de usar el panel en producción: crear la base, descomentar y pegar su id
+  // (pasos en docs/panel.md). Sin este bloque el sitio funciona y /api/* responde 503.
+  // "d1_databases": [
+  //   {
+  //     "binding": "DB",
+  //     "database_name": "portillo-panel",
+  //     "database_id": "PEGAR_ACA_EL_ID",
+  //     "migrations_dir": "worker/migrations"
+  //   }
+  // ],
+  "env": {
+    // Sólo para probar en local: npx wrangler@4 dev --env dev
+    "dev": {
+      "vars": {
+        "GITHUB_REPO": "WallyAllen/Portillo-Kus",
+        "GITHUB_BRANCH": "main",
+        "GITHUB_API_URL": "http://127.0.0.1:8788"
+      },
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "portillo-panel-local",
+          "database_id": "solo-local",
+          "migrations_dir": "worker/migrations"
+        }
+      ]
+    }
   }
 }

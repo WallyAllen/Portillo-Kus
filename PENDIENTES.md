@@ -10,6 +10,12 @@ vuelve solo cuando la clave tiene un valor sin `[PENDIENTE]`. Un `[PENDIENTE]`
 fuera de esos bloques se ve en la vista previa con la etiqueta "pendiente" y
 hace fallar `--produccion`. No quitar el marcador para publicar un dato sin evidencia.
 
+## Panel de administración
+
+En construcción. Antes de usarlo hay que crear en Cloudflare y GitHub lo que lista
+[docs/panel.md](docs/panel.md#antes-de-mergear-a-main). Falta comprobar en producción
+que el login entra en el límite de CPU del plan Free.
+
 ## Oculto hasta que el estudio pase el dato
 
 | Qué | Dónde se carga | Qué aparece al cargarlo |
