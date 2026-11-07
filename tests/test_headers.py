@@ -41,7 +41,7 @@ class HeadersTests(unittest.TestCase):
         immutable = ['Cache-Control: public, max-age=31536000, immutable']
         self.assertEqual(self.rules['/fonts/*'], immutable)
         self.assertEqual(self.rules['/portillo-images/*'], immutable)
-        for route in ('/', '/en/', '/pt/', '/privacidad/', '/*.html', '/sitemap.xml', '/robots.txt', '/site.webmanifest'):
+        for route in ('/', '/en/', '/pt/', '/privacidad/', '/*.html', '/sitemap.xml', '/robots.txt', '/site.webmanifest', '/version.json'):
             self.assertEqual(self.rules[route], ['Cache-Control: public, max-age=0, must-revalidate'], route)
 
     def test_no_pages_dev_rules(self):

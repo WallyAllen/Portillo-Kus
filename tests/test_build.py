@@ -225,7 +225,8 @@ class BuildTests(unittest.TestCase):
         self.assertEqual(len(titles), len(pages))
         robots = (dist / 'robots.txt').read_text(encoding='utf-8')
         self.assertIn('Allow: /', robots)
-        self.assertNotIn('Disallow', robots)
+        # Producción sólo cierra el panel: el sitio sigue indexable.
+        self.assertEqual(re.findall(r'^Disallow: (.*)$', robots, re.M), ['/panel', '/api/'])
         self.assertIn(f'Sitemap: {site}sitemap.xml', robots)
 
     def test_edge_files_404_icons_and_redirects(self):
@@ -254,7 +255,8 @@ class BuildTests(unittest.TestCase):
         sitemap = (dist / 'sitemap.xml').read_text(encoding='utf-8')
         self.assertEqual(sitemap.count('<lastmod>'), 6)
         self.assertEqual((dist / 'robots.txt').read_text(encoding='utf-8'),
-                         'User-agent: *\nAllow: /\nSitemap: https://portillokusestudio.com/sitemap.xml\n')
+                         'User-agent: *\nAllow: /\nDisallow: /panel\nDisallow: /api/\n'
+                         'Sitemap: https://portillokusestudio.com/sitemap.xml\n')
         config = (ROOT / 'wrangler.jsonc').read_text(encoding='utf-8')
         self.assertIn('"not_found_handling": "404-page"', config)
         self.assertIn('"directory": "./dist"', config)

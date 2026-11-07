@@ -140,5 +140,5 @@ def write_files(dist, base_url, langs, path_for):
             default = next(l for l in langs if l['code']=='es')
             ET.SubElement(entry, xhtml+'link',rel='alternate',hreflang='x-default',href=base_url+path_for(default,page))
     ET.ElementTree(root).write(dist/'sitemap.xml',encoding='utf-8',xml_declaration=True)
-    rules = 'Allow: /' if can_index(base_url) else 'Disallow: /'
+    rules = 'Allow: /\nDisallow: /panel\nDisallow: /api/' if can_index(base_url) else 'Disallow: /'
     (dist/'robots.txt').write_text(f'User-agent: *\n{rules}\nSitemap: {base_url}sitemap.xml\n',encoding='utf-8')

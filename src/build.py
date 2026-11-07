@@ -435,6 +435,9 @@ def main():
     write_seo_files(DIST, base_url, LANGS, page_path)
     write_edge_files(DIST, BASE / "icons")
     write_headers(DIST, headers_source, LANGS, page_path, [html for _, _, html in pages] + [not_found])
+    # El panel compara este sha con el commit que guardó. Workers Builds expone la variable; un
+    # build local dice "local", que nunca coincide: un deploy manual no se muestra como publicado.
+    (DIST / "version.json").write_text(json.dumps({"sha": os.environ.get("WORKERS_CI_COMMIT_SHA") or "local"}), encoding="utf-8")
     if args.servir:
         handler = partial(SimpleHTTPRequestHandler, directory=str(DIST))
         with ThreadingHTTPServer(("127.0.0.1", 8532), handler) as server:

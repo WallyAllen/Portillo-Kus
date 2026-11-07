@@ -16,7 +16,7 @@ UMAMI_SCRIPT = 'https://cloud.umami.is'
 UMAMI_CONNECT = ('https://cloud.umami.is', 'https://api-gateway.umami.dev')
 
 # Ruta que no es HTML ni lleva hash: se revalida siempre.
-REVALIDATED = ('/sitemap.xml', '/robots.txt', '/site.webmanifest')
+REVALIDATED = ('/sitemap.xml', '/robots.txt', '/site.webmanifest', '/version.json')
 REVALIDATE = 'Cache-Control: public, max-age=0, must-revalidate'
 
 
