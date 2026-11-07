@@ -62,6 +62,12 @@ formulario, revisar esto de nuevo.
   vectorizó ni se redibujó para no inventar una marca. Al llegar, reemplazar
   `portillo-images/logo.png` y ajustar el tamaño en `.logo img` de `src/template.html`.
 
+- Foto de la clienta con la Carta (tarjeta "Ciudadanía Argentina"): confirmar que
+  autoriza publicar su imagen y los datos de la Carta (nombre, filiación, firma), que se
+  publican sin difuminar por decisión de Felipe del 07/11/2026.
+- Foto del pasaporte y DNI (tarjeta "Residencia y visas"): la pasó Felipe; el `alt` la
+  declara ilustrativa.
+
 El uso de la segunda línea ya no bloquea: el rediseño v2.2 sacó de la página
 su tarjeta. Sigue como pregunta para el estudio.
 
