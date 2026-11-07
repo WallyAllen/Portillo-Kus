@@ -32,6 +32,10 @@ Si el `rN_text` se carga y el `rN_name` no, el nombre sale marcado y
 - Reseñas y calificación: la ficha de Google mostraba 5,0 con 448 reseñas el
   30/10/2026. La página dice "más de 400" (`REVIEWS = 400` en `src/build.py`, un
   solo lugar); `og-es/en/pt.jpg` también. `og-ru/zh.jpg` siguen con el 417.
+- Imágenes og: no llevan el título de la portada, así que el cambio a «Tu
+  Ciudadanía Argentina» (31/10/2026) no las tocó. Su bajada dice "Ciudadanía y
+  migraciones" y equivalentes. `og-ru/zh.jpg` además tienen otro encuadre y otra
+  tipografía: rehacerlas al estilo de las otras tres antes de publicar esos idiomas.
 
 ## Cookies (revisado 30/10/2026)
 
@@ -49,6 +53,8 @@ formulario, revisar esto de nuevo.
 - Instagram: el pie y el `sameAs` del JSON-LD llevan dos cuentas
   (abogadoenargentina y soyabogadoenargentina). Confirmar cuál es la oficial o
   si van las dos; se cambia en `ESTUDIO` de `src/build.py`.
+- Ficha de Google: el 07/11/2026 su sitio web figura como instagram.com, no
+  como portillokusestudio.com. Lo cambia el estudio desde su perfil de Google.
 
 El uso de la segunda línea ya no bloquea: el rediseño v2.2 sacó de la página
 su tarjeta. Sigue como pregunta para el estudio.

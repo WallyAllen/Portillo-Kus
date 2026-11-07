@@ -1,9 +1,9 @@
 {
   "meta": {
-    "title": "阿根廷公民身份与移民事务 | Portillo Kus",
-    "description": "位于布宜诺斯艾利斯的私人律师事务所，提供阿根廷公民身份、居留、签证及其他法律领域的咨询服务。",
-    "og_title": "阿根廷公民身份与移民事务 | Portillo Kus",
-    "og_description": "位于布宜诺斯艾利斯的私人律师事务所，提供阿根廷公民身份、居留、签证及其他法律领域的咨询服务。",
+    "title": "阿根廷国籍与移民事务 | Portillo Kus",
+    "description": "位于布宜诺斯艾利斯的私人律师事务所，提供阿根廷国籍、居留、签证及其他法律领域的咨询服务。",
+    "og_title": "阿根廷国籍与移民事务 | Portillo Kus",
+    "og_description": "位于布宜诺斯艾利斯的私人律师事务所，提供阿根廷国籍、居留、签证及其他法律领域的咨询服务。",
     "og_image_alt": "Portillo Kus & Asociados，位于布宜诺斯艾利斯的律师事务所"
   },
   "a11y": {
@@ -21,7 +21,7 @@
     "social_youtube": "Portillo Kus & Asociados 的 YouTube"
   },
   "nav": {
-    "ciudadania": "国籍",
+    "ciudadania": "阿根廷国籍",
     "opiniones": "客户评价",
     "areas": "业务领域",
     "estudio": "关于我们",
@@ -36,7 +36,7 @@
   "hero": {
     "img_alt": "北斜街（Av. Roque Sáenz Peña）街景，距事务所仅几步之遥，远处可见方尖碑",
     "eyebrow": "律师事务所 · 布宜诺斯艾利斯市中心",
-    "title": "您的阿根廷国籍，交由最专业的团队办理",
+    "title": "您的阿根廷国籍",
     "sub": "[PENDIENTE] 代理国籍、居留和签证申请。自 2020 年以来，已成功办结 1,200 多件国籍案件。",
     "cta_primary": "WhatsApp 咨询",
     "cta_primary_msg": "您好，我想咨询阿根廷国籍事宜。",

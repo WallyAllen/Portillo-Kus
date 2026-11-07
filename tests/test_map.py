@@ -44,7 +44,9 @@ class MapTests(unittest.TestCase):
             directions = next(attrs for tag, attrs in elements if attrs.get('data-event') == 'como_llegar_click')
             query = parse_qs(urlsplit(directions['href']).query)
             self.assertEqual(query['api'], ['1'])
-            self.assertEqual(query['destination'], ['Av. Pte. Roque Sáenz Peña 616, C1035 CABA'])
+            # Con el nombre de la ficha, Google resuelve el destino a la ficha y no a la dirección.
+            self.assertEqual(query['destination'],
+                             ['Portillo Kus & Asociados. Estudio Jurídico, Av. Pte. Roque Sáenz Peña 616, C1035 CABA'])
             # Navigation hrefs do not request resources on page load.
             for tag, attrs in elements:
                 resource = attrs.get('src', '')

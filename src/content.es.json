@@ -1,9 +1,9 @@
 {
   "meta": {
-    "title": "Ciudadanía argentina y migraciones | Portillo Kus",
-    "description": "Estudio jurídico privado en Buenos Aires. Asesoramiento en ciudadanía argentina, residencias, visas y otras áreas del derecho.",
-    "og_title": "Ciudadanía argentina y migraciones | Portillo Kus",
-    "og_description": "Estudio jurídico privado en Buenos Aires. Asesoramiento en ciudadanía argentina, residencias, visas y otras áreas del derecho.",
+    "title": "Ciudadanía Argentina y migraciones | Portillo Kus",
+    "description": "Estudio jurídico privado en Buenos Aires. Asesoramiento en Ciudadanía Argentina, residencias, visas y otras áreas del derecho.",
+    "og_title": "Ciudadanía Argentina y migraciones | Portillo Kus",
+    "og_description": "Estudio jurídico privado en Buenos Aires. Asesoramiento en Ciudadanía Argentina, residencias, visas y otras áreas del derecho.",
     "og_image_alt": "Portillo Kus & Asociados, estudio jurídico en Buenos Aires"
   },
   "a11y": {
@@ -21,7 +21,7 @@
     "social_youtube": "YouTube de Portillo Kus & Asociados"
   },
   "nav": {
-    "ciudadania": "Ciudadanía",
+    "ciudadania": "Ciudadanía Argentina",
     "opiniones": "Opiniones",
     "areas": "Áreas",
     "estudio": "El estudio",
@@ -36,7 +36,7 @@
   "hero": {
     "img_alt": "Vista de Diagonal Norte (Av. Roque Sáenz Peña), a pasos del estudio, con el Obelisco al fondo",
     "eyebrow": "ESTUDIO JURÍDICO · MICROCENTRO, BUENOS AIRES",
-    "title": "Tu ciudadanía argentina, en las mejores manos",
+    "title": "Tu Ciudadanía Argentina",
     "sub": "Patrocinio en ciudadanía, residencias y visas. Más de 1.200 expedientes de ciudadanía resueltos favorablemente desde 2020.",
     "cta_primary": "Consultar por WhatsApp",
     "cta_primary_msg": "Hola, quiero consultar por mi ciudadanía argentina.",
@@ -54,7 +54,7 @@
     "eyebrow": "¿QUÉ NECESITAS?",
     "title": "Elige por dónde empezar",
     "c1_alt": "Cliente con su trámite de ciudadanía argentina resuelto, junto al Dr. Portillo",
-    "c1_title": "Ciudadanía argentina",
+    "c1_title": "Ciudadanía Argentina",
     "c1_desc": "Asesoramiento y patrocinio en tu solicitud de ciudadanía.",
     "c1_cta": "Consultar por WhatsApp",
     "c1_msg": "Hola, quiero consultar por la ciudadanía argentina.",

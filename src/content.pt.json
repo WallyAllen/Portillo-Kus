@@ -1,9 +1,9 @@
 {
   "meta": {
-    "title": "Cidadania argentina e migração | Portillo Kus",
-    "description": "Escritório de advocacia privado em Buenos Aires. Assessoria em cidadania argentina, residência, vistos e outras áreas do direito.",
-    "og_title": "Cidadania argentina e migração | Portillo Kus",
-    "og_description": "Escritório de advocacia privado em Buenos Aires. Assessoria em cidadania argentina, residência, vistos e outras áreas do direito.",
+    "title": "Cidadania Argentina e migração | Portillo Kus",
+    "description": "Escritório de advocacia privado em Buenos Aires. Assessoria em Cidadania Argentina, residência, vistos e outras áreas do direito.",
+    "og_title": "Cidadania Argentina e migração | Portillo Kus",
+    "og_description": "Escritório de advocacia privado em Buenos Aires. Assessoria em Cidadania Argentina, residência, vistos e outras áreas do direito.",
     "og_image_alt": "Portillo Kus & Asociados, escritório de advocacia em Buenos Aires"
   },
   "a11y": {
@@ -21,7 +21,7 @@
     "social_youtube": "YouTube da Portillo Kus & Asociados"
   },
   "nav": {
-    "ciudadania": "Cidadania",
+    "ciudadania": "Cidadania Argentina",
     "opiniones": "Avaliações",
     "areas": "Áreas",
     "estudio": "O escritório",
@@ -36,7 +36,7 @@
   "hero": {
     "img_alt": "Vista da Diagonal Norte (Av. Roque Sáenz Peña), a poucos passos do escritório, com o Obelisco ao fundo",
     "eyebrow": "ESCRITÓRIO DE ADVOCACIA · MICROCENTRO, BUENOS AIRES",
-    "title": "Sua cidadania argentina, nas melhores mãos",
+    "title": "Sua Cidadania Argentina",
     "sub": "Assessoria jurídica em cidadania, residência e vistos. Mais de 1.200 processos de cidadania resolvidos favoravelmente desde 2020.",
     "cta_primary": "Consultar pelo WhatsApp",
     "cta_primary_msg": "Olá, gostaria de consultar sobre minha cidadania argentina.",
@@ -54,7 +54,7 @@
     "eyebrow": "O QUE VOCÊ PRECISA?",
     "title": "Escolha por onde começar",
     "c1_alt": "Cliente com seu processo de cidadania argentina resolvido, junto ao Dr. Portillo",
-    "c1_title": "Cidadania argentina",
+    "c1_title": "Cidadania Argentina",
     "c1_desc": "Orientação e representação jurídica no seu pedido de cidadania.",
     "c1_cta": "Consultar pelo WhatsApp",
     "c1_msg": "Olá, gostaria de consultar sobre a cidadania argentina.",
