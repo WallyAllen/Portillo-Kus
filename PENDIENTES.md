@@ -50,6 +50,12 @@ formulario, revisar esto de nuevo.
   (abogadoenargentina y soyabogadoenargentina). Confirmar cuál es la oficial o
   si van las dos; se cambia en `ESTUDIO` de `src/build.py`.
 
+- Logo en vector (SVG o AI) o, si no existe, PNG de al menos 600 px de ancho con
+  fondo transparente: el encabezado ya muestra el logo (07/11/2026), pero el único
+  archivo mide 150×80 y en un celular de alta densidad se ve algo blando. No se
+  vectorizó ni se redibujó para no inventar una marca. Al llegar, reemplazar
+  `portillo-images/logo.png` y ajustar el tamaño en `.logo img` de `src/template.html`.
+
 El uso de la segunda línea ya no bloquea: el rediseño v2.2 sacó de la página
 su tarjeta. Sigue como pregunta para el estudio.
 

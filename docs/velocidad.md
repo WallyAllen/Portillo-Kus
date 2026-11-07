@@ -68,6 +68,10 @@ La revisión funcional final abarcó **12 vistas: seis rutas en 390 y 1.440 px**
 
 La inspección de los reportes de portada comprobó que no hay saltos de nivel en los encabezados ni imágenes sin atributo alt. El recorrido real de Tab registró indicador de foco en todos los controles alcanzados (38 pasos móviles y 45 de escritorio en la extracción inicial). Las imágenes diferidas del carrusel pueden aparecer incompletas en el snapshot previo a su desplazamiento; sus fondos se capturaron por separado al recorrer las nueve tarjetas. Estos resultados describen los criterios probados y no equivalen por sí solos a una certificación integral WCAG.
 
+## Logo en el encabezado — 07/11/2026
+
+El encabezado muestra `logo.png` (150×80, 14 KB) en vez del nombre en texto. Va con `fetchpriority="low"` para no competir con las fuentes del título y su animación es sólo CSS: no espera al JS. Lighthouse móvil, mediana de 3 por idioma contra `main`: LCP 2.160 → 2.160 ms en ES, EN y PT, CLS 0 y Performance 99. Como esa simulación no espera a las imágenes de prioridad baja, se midió también el tiempo real en Chromium con 150 ms de latencia, 1,6 Mbps y CPU ÷4 (mediana de 5, ES): móvil 648 → 640 ms (el `h1`), escritorio 2.072 → 2.128 ms (la foto, dentro de la variación entre corridas). El logo termina de bajar a los ~890 ms.
+
 ## Herramientas reproducibles
 
 Las herramientas de auditoría son dependencias separadas del sitio: [Lighthouse](https://github.com/GoogleChrome/lighthouse), [axe-core](https://github.com/dequelabs/axe-core) y Playwright. El runner recibe sus rutas, por lo que no exige incorporarlas al build del Worker. Lighthouse requiere Node.js 22 o posterior.
