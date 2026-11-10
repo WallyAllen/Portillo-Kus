@@ -292,7 +292,7 @@ async function principal() {
     cambio(datos);
     return { commit, archivo: { ruta: es, texto: JSON.stringify(datos, null, 2) } };
   };
-  const JPEG = Buffer.from([0xff, 0xd8, 0xff, 0xe0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0xff, 0xd9]).toString('base64');
+  const JPEG = readFileSync(join(RAIZ, 'portillo-images', 'area-laboral.jpg')).toString('base64');
   await caso('la lista cerrada vale también para un admin', async () => {
     const campos = await (await cliente.pedir('/api/campos')).json();
     assert.ok(campos.textos.some((c) => c.clave === 'hero.title'));

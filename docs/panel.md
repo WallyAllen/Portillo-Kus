@@ -215,8 +215,11 @@ pantalla.
   fallidos: también sirve para desbloquear a alguien.
 - **El último admin activo no se puede desactivar.** La condición va en la misma
   sentencia SQL: dos admins que se desactivan a la vez no dejan el panel sin ninguno.
-- **No hay cambio de contraseña propio:** la provisoria queda como definitiva. Para
-  cambiarla, otro admin genera una nueva.
+- **Primer acceso con clave provisoria:** el usuario debe elegir una contraseña de
+  al menos 15 caracteres antes de editar. El cambio cierra todas sus sesiones.
+  Las cuentas existentes mantienen su clave hasta que se restablezca desde Usuarios.
+  Antes de desplegar esta versión, aplicar la migración D1 `0002_clave_provisoria.sql`
+  en la base de cada entorno.
 - Sin pantalla, desde la terminal:
 
   ```bash
@@ -442,9 +445,10 @@ español; una traducción puede ser más larga.
 **Fotos.** El navegador siempre recodifica a JPEG con recorte y 1200 px como máximo
 en el lado mayor (calidad 0.85), en `pantallas/imagen.js`. Esto descarta los datos
 EXIF y evita subir un archivo cortado. Una foto sin decodificar, como HEIC en un
-navegador que no la abre, da un aviso. El servidor sólo acepta un JPEG entero en estos
-nombres: los de `panel-campos.json` y `abogado-<slug>.jpg`, con el slug del `id` de un
-abogado de la lista. Por eso corregir un nombre no cambia el archivo.
+navegador que no la abre, da un aviso. El servidor verifica la estructura básica del
+JPEG y sus dimensiones. Pillow decodifica los píxeles al preparar las variantes durante
+el build. Los nombres permitidos son los de `panel-campos.json` y `abogado-<slug>.jpg`,
+con el slug del `id` de un abogado de la lista. Por eso corregir un nombre no cambia el archivo.
 
 **Fotos de servicios.** Los nombres siguen escritos en `template.html` y no se
 pasaron a un dato: la foto nueva reemplaza el mismo archivo y `version_images` cambia

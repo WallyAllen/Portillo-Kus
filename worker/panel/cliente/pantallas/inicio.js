@@ -6,7 +6,7 @@ export default {
     const titulo = document.createElement('h1');
     titulo.textContent = `Hola, ${usuario.nombre}`;
     const texto = document.createElement('p');
-    texto.textContent = 'Elegí en el menú qué querés cambiar. Cada cambio se publica solo, en unos minutos.';
+    texto.textContent = 'Elegí una sección para editar. Cuando publiques, el panel te avisa en cuanto el cambio se vea en el sitio.';
     const tarjeta = document.createElement('section');
     tarjeta.className = 'tarjeta';
     tarjeta.append(titulo, texto);

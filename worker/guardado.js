@@ -19,6 +19,7 @@ const esRutaFoto = (ruta) => ruta.startsWith(CARPETA_FOTOS)
 // Una foto se guarda con el id del abogado: corregir un nombre no deja archivos huérfanos.
 export const fotoDeAbogado = (id) => `abogado-${String(id).replace(/^abogado-/, '')}.jpg`;
 const IMAGEN_MAXIMA = 5 * 1024 * 1024;
+const LADO_MAXIMO = 1200; // El mismo límite que aplica el recorte del panel.
 const MAX_ARCHIVOS = 10;
 // Un reintento sólo por una carrera justo al mover la rama. Con más, una ráfaga de escrituras
 // podría pasar de 50 subpedidos, el límite del plan Free de Workers.
@@ -48,36 +49,83 @@ export class Prohibido extends Error {
   }
 }
 
-// El navegador recodifica cada foto a JPEG antes de subirla. Acá se mira el principio y el final
-// del archivo: una imagen cortada frenaría el build (Pillow no la abre) y otro tipo no debe llegar.
-function esJpegEntero(base64) {
+// El navegador recodifica la foto a JPEG. Comprobamos su estructura hasta el primer escaneo
+// y su marcador final. Pillow sigue siendo quien decodifica los datos de los píxeles.
+function esJpegValido(base64) {
+  let datos;
   try {
-    return atob(base64.slice(0, 16)).startsWith('\xFF\xD8\xFF') && atob(base64.slice(-8)).endsWith('\xFF\xD9');
+    datos = atob(base64);
   } catch {
     return false;
   }
+  if (!datos.startsWith('\xFF\xD8') || !datos.endsWith('\xFF\xD9')) return false;
+
+  const byte = (i) => datos.charCodeAt(i);
+  const entero = (i) => (byte(i) << 8) | byte(i + 1);
+  const fin = datos.length - 2;
+  let componentes = 0;
+  let cuantizacion = false;
+  let huffman = false;
+  for (let i = 2; i < fin;) {
+    if (byte(i++) !== 0xff) return false;
+    while (byte(i) === 0xff) i++;
+    const marcador = byte(i++);
+    if (i + 2 > fin || marcador < 0xc0 || marcador === 0xd8 || marcador === 0xd9 || (marcador >= 0xd0 && marcador <= 0xd7)) return false;
+    const largo = entero(i);
+    if (largo < 2 || i + largo > fin) return false;
+
+    if (marcador === 0xc0 || marcador === 0xc1 || marcador === 0xc2) {
+      if (componentes || largo < 11 || byte(i + 2) !== 8) return false;
+      const alto = entero(i + 3);
+      const ancho = entero(i + 5);
+      componentes = byte(i + 7);
+      if (!ancho || !alto || ancho > LADO_MAXIMO || alto > LADO_MAXIMO) return false;
+      if (![1, 3].includes(componentes) || largo !== 8 + 3 * componentes) return false;
+    } else if (marcador === 0xdb) {
+      cuantizacion ||= largo >= 67;
+    } else if (marcador === 0xc4) {
+      huffman ||= largo >= 20;
+    } else if (marcador === 0xda) {
+      const escaneo = byte(i + 2);
+      return cuantizacion && huffman && escaneo > 0 && escaneo <= componentes
+        && largo === 6 + 2 * escaneo && i + largo < fin;
+    }
+    i += largo;
+  }
+  return false;
 }
 
 // Sólo se aceptan estas rutas: el token podría escribir cualquier archivo.
 // La lista de pendientes no está: la escribe únicamente el servidor, también para un admin.
 function comprobarArchivos(archivos) {
-  if (!archivos.length || archivos.length > MAX_ARCHIVOS) return [`Se guardan entre 1 y ${MAX_ARCHIVOS} archivos por vez.`];
+  if (!archivos.length || archivos.length > MAX_ARCHIVOS) {
+    throw new DatosInvalidos([`Se guardan entre 1 y ${MAX_ARCHIVOS} archivos por vez.`]);
+  }
   const errores = [];
   const vistas = new Set();
   for (const archivo of archivos) {
-    const ruta = String(archivo?.ruta);
+    const ruta = archivo?.ruta;
+    if (typeof ruta !== 'string') {
+      errores.push('Falta una ruta de archivo válida.');
+      continue;
+    }
     if (vistas.has(ruta)) errores.push(`${ruta}: repetido`);
     vistas.add(ruta);
     if (RUTA_TEXTO.test(ruta)) {
       if (typeof archivo.texto !== 'string') errores.push(`${ruta}: falta el texto`);
+      if ('base64' in archivo) errores.push(`${ruta}: un archivo de texto no admite base64`);
     } else if (esRutaFoto(ruta)) {
-      if (typeof archivo.base64 !== 'string' || !esJpegEntero(archivo.base64)) errores.push(`${ruta}: no es una imagen JPG entera`);
-      else if (archivo.base64.length * 0.75 > IMAGEN_MAXIMA) errores.push(`${ruta}: la imagen pasa de 5 MB`);
+      if ('texto' in archivo) errores.push(`${ruta}: una imagen no admite texto`);
+      if (typeof archivo.base64 === 'string' && archivo.base64.length * 0.75 > IMAGEN_MAXIMA) {
+        errores.push(`${ruta}: la imagen pasa de 5 MB`);
+      } else if (typeof archivo.base64 !== 'string' || !esJpegValido(archivo.base64)) {
+        errores.push(`${ruta}: subí una imagen JPG entera de hasta ${LADO_MAXIMO} píxeles por lado`);
+      }
     } else {
       errores.push(`${ruta}: este archivo no se puede editar desde el panel`);
     }
   }
-  return errores;
+  if (errores.length) throw new DatosInvalidos(errores);
 }
 
 const lector = (repo, ref, propios = new Map()) => (ruta) => (propios.has(ruta) ? propios.get(ruta) : repo.leer(ruta, ref));
@@ -181,8 +229,7 @@ function armarMensaje(descripcion, autor, archivos) {
 // La lista de pendientes no cuenta para el conflicto: se recalcula sobre lo último de la rama.
 // comprobar(leerRama) es opcional y corre en cada intento: puede lanzar Conflicto.
 export async function guardarCambios(env, { base, archivos, descripcion, autor, comprobar, confirmados, repo = new RepoGitHub(env) }) {
-  const invalidos = comprobarArchivos(archivos);
-  if (invalidos.length) throw new DatosInvalidos(invalidos);
+  comprobarArchivos(archivos);
   const esAdmin = autor.rol === 'admin';
   if (!esAdmin && archivos.some((a) => RUTA_TRADUCCION.test(a.ruta))) throw new Prohibido();
   const rutas = archivos.map((a) => a.ruta);

@@ -1,6 +1,6 @@
 // Usuarios del panel. Sólo para admin: lo comprueba api.js (soloAdmin) antes de llegar acá.
 // La contraseña provisoria se genera acá, viaja una sola vez en la respuesta y no se registra.
-import { hashContrasena } from './auth.js';
+import { hashContrasena, verificarContrasena } from './auth.js';
 
 export const USUARIO_NUEVO = /^[a-z0-9._-]{3,40}$/;
 const ROLES = ['admin', 'editor'];
@@ -40,7 +40,7 @@ export async function crearUsuario(db, datos) {
   if (!ROLES.includes(rol)) throw new ErrorUsuario('Elegí si puede editar todo o sólo los textos en español.');
   const contrasena = contrasenaProvisoria();
   const resultado = await db.prepare(
-    'INSERT INTO users (usuario, nombre, hash, rol, activo, creado) VALUES (?, ?, ?, ?, 1, ?) ON CONFLICT (usuario) DO NOTHING',
+    'INSERT INTO users (usuario, nombre, hash, rol, activo, creado, cambiar_clave) VALUES (?, ?, ?, ?, 1, ?, 1) ON CONFLICT (usuario) DO NOTHING',
   ).bind(usuario, nombre, await hashContrasena(contrasena), rol, Date.now()).run();
   if (resultado.meta.changes === 0) throw new ErrorUsuario('Ya existe un usuario con ese nombre de usuario.', 409);
   return { usuario, contrasena };
@@ -77,10 +77,31 @@ export async function resetearContrasena(db, datos) {
   const usuario = String(datos?.usuario ?? '');
   const contrasena = contrasenaProvisoria();
   const [r] = await db.batch([
-    db.prepare('UPDATE users SET hash = ? WHERE usuario = ?').bind(await hashContrasena(contrasena), usuario),
+    db.prepare('UPDATE users SET hash = ?, cambiar_clave = 1 WHERE usuario = ?').bind(await hashContrasena(contrasena), usuario),
     db.prepare('DELETE FROM sessions WHERE user_id IN (SELECT id FROM users WHERE usuario = ?)').bind(usuario),
     db.prepare('DELETE FROM login_attempts WHERE usuario = ?').bind(usuario),
   ]);
   if (r.meta.changes === 0) throw new ErrorUsuario('Ese usuario no existe.', 404);
   return { usuario, contrasena };
+}
+
+export async function elegirContrasena(db, sesion, datos) {
+  const nueva = datos?.contrasena;
+  if (typeof nueva !== 'string' || nueva.trim().length < 15 || nueva.length > 200) {
+    throw new ErrorUsuario('Elegí una contraseña de entre 15 y 200 caracteres.');
+  }
+  const fila = await db.prepare('SELECT id, hash FROM users WHERE usuario = ? AND activo = 1 AND cambiar_clave = 1')
+    .bind(sesion.usuario.usuario).first();
+  if (!fila) throw new ErrorUsuario('No hay un cambio de contraseña pendiente.', 409);
+  if (await verificarContrasena(nueva, fila.hash)) throw new ErrorUsuario('Elegí una contraseña distinta de la provisoria.');
+  const hash = await hashContrasena(nueva);
+  const [resultado] = await db.batch([
+    db.prepare(`UPDATE users SET hash = ?, cambiar_clave = 0
+      WHERE id = ? AND hash = ? AND activo = 1 AND cambiar_clave = 1
+        AND EXISTS (SELECT 1 FROM sessions WHERE user_id = ? AND csrf = ? AND expira > ?)`)
+      .bind(hash, fila.id, fila.hash, fila.id, sesion.csrf, Date.now()),
+    db.prepare('DELETE FROM sessions WHERE user_id = ? AND EXISTS (SELECT 1 FROM users WHERE id = ? AND hash = ?)')
+      .bind(fila.id, fila.id, hash),
+  ]);
+  if (resultado.meta.changes === 0) throw new ErrorUsuario('La solicitud venció. Volvé a ingresar.', 409);
 }

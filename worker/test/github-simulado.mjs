@@ -140,6 +140,8 @@ export class GitHubSimulado {
           [estado, salida] = this.responder(pedido.method, url.pathname, url.searchParams, cuerpo, pedido.headers.accept || '');
         }
         respuesta.statusCode = estado;
+        // Las pruebas pueden pausar el proceso mientras corre el build de Python.
+        respuesta.setHeader('Connection', 'close');
         respuesta.end(Buffer.isBuffer(salida) ? salida : JSON.stringify(salida));
       });
     });

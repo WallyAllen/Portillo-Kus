@@ -18,7 +18,7 @@ const ES = 'src/content.es.json';
 const EN = 'src/content.en.json';
 const admin = { usuario: 'admin', nombre: 'Admin', rol: 'admin' };
 const editor = { usuario: 'editor', nombre: 'Editor', rol: 'editor' };
-const jpeg = Buffer.from([0xff, 0xd8, 0xff, 0xe0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0xff, 0xd9]).toString('base64');
+const jpeg = readFileSync(new URL('portillo-images/area-laboral.jpg', raiz)).toString('base64');
 
 let github;
 let env;
@@ -139,7 +139,9 @@ test('una imagen cortada o de otro tipo no llega', async () => {
   const ruta = 'portillo-images/abogado-1.jpg';
   const cortada = Buffer.from([0xff, 0xd8, 0xff, 0xe0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]).toString('base64');
   const png = Buffer.from('\x89PNG\r\n\x1a\n00000000', 'latin1').toString('base64');
-  for (const base64 of [cortada, png, 'no es base64!', Buffer.from('<svg onload=alert(1)>').toString('base64')]) {
+  const sinImagen = Buffer.from([0xff, 0xd8, 0xff, 0xe0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0xff, 0xd9]).toString('base64');
+  const sobredimensionada = readFileSync(new URL('portillo-images/hero.jpg', raiz)).toString('base64');
+  for (const base64 of [cortada, png, sinImagen, sobredimensionada, 'no es base64!', Buffer.from('<svg onload=alert(1)>').toString('base64')]) {
     await rechaza(guardarCambios(env, { base: github.head, autor: editor, archivos: [{ ruta, base64 }] }), /JPG entera/);
   }
 });

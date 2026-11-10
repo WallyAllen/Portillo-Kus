@@ -7,14 +7,44 @@ import {
 import { definicion } from './campos.js';
 import { error, json } from './http.js';
 import reglas from './reglas.json' with { type: 'json' };
-import { cambiarActivo, crearUsuario, ErrorUsuario, listarUsuarios, resetearContrasena } from './usuarios.js';
+import { cambiarActivo, crearUsuario, elegirContrasena, ErrorUsuario, listarUsuarios, resetearContrasena } from './usuarios.js';
 
 const SHA = /^[0-9a-f]{40}$/;
 const USUARIO = /^[a-z0-9._-]{1,40}$/;
 const CUERPO_MAXIMO = 12 * 1024 * 1024;
+const CUERPO_CHICO = 16 * 1024;
+
+async function leerJson(request, maximo) {
+  if (Number(request.headers.get('Content-Length')) > maximo) {
+    throw new ErrorUsuario('El pedido es demasiado grande.', 413);
+  }
+  if (!request.body) return null;
+  const lector = request.body.getReader();
+  const decoder = new TextDecoder();
+  let bytes = 0;
+  let texto = '';
+  try {
+    for (;;) {
+      const { done, value } = await lector.read();
+      if (done) break;
+      bytes += value.byteLength;
+      if (bytes > maximo) {
+        await lector.cancel().catch(() => {});
+        throw new ErrorUsuario('El pedido es demasiado grande.', 413);
+      }
+      texto += decoder.decode(value, { stream: true });
+    }
+    return JSON.parse(texto + decoder.decode());
+  } catch (e) {
+    if (e instanceof ErrorUsuario) throw e;
+    return null;
+  } finally {
+    lector.releaseLock();
+  }
+}
 
 async function login({ request, env }) {
-  const datos = await request.json().catch(() => null);
+  const datos = await leerJson(request, CUERPO_CHICO);
   const usuario = String(datos?.usuario ?? '').trim().toLowerCase();
   const contrasena = datos?.contrasena;
   if (!USUARIO.test(usuario) || typeof contrasena !== 'string' || !contrasena || contrasena.length > 200) {
@@ -48,15 +78,13 @@ const campos = () => json({ ...definicion, idiomas: reglas.idiomasTodos, pendien
 const traducciones = async ({ env }) => json(await listarTraducciones(env));
 
 async function guardarTraduccion({ request, env, sesion }) {
-  const datos = await request.json().catch(() => null);
+  const datos = await leerJson(request, CUERPO_MAXIMO);
   if (!datos || !SHA.test(datos.base || '')) return error('Pedido inválido.', 400);
   return json(await guardarTraducciones(env, { base: datos.base, textos: datos.textos, autor: sesion.usuario }));
 }
 
 async function guardar({ request, env, sesion }) {
-  const largo = Number(request.headers.get('Content-Length') || 0);
-  if (largo > CUERPO_MAXIMO) return error('Los archivos son demasiado grandes.', 413);
-  const datos = await request.json().catch(() => null);
+  const datos = await leerJson(request, CUERPO_MAXIMO);
   if (!datos || !SHA.test(datos.base || '') || !Array.isArray(datos.archivos)) return error('Pedido inválido.', 400);
   // Campo por campo: comprobar y confirmados no pueden venir del pedido.
   const { base, archivos, descripcion } = datos;
@@ -70,12 +98,18 @@ async function publicacion({ url, env }) {
 }
 
 const usuarios = async ({ env }) => json({ usuarios: await listarUsuarios(env.DB) });
-const conDatos = (fn) => async ({ request, env }) => json(await fn(env.DB, await request.json().catch(() => null)));
+const conDatos = (fn) => async ({ request, env }) => json(await fn(env.DB, await leerJson(request, CUERPO_CHICO)));
+
+async function cambiarClave({ request, env, sesion }) {
+  await elegirContrasena(env.DB, sesion, await leerJson(request, CUERPO_CHICO));
+  return json({ ok: true }, 200, { 'Set-Cookie': cookieVencida() });
+}
 
 const RUTAS = {
   'POST /api/login': { fn: login, publica: true },
-  'POST /api/logout': { fn: logout },
-  'GET /api/sesion': { fn: sesionActual },
+  'POST /api/logout': { fn: logout, clavePendiente: true },
+  'GET /api/sesion': { fn: sesionActual, clavePendiente: true },
+  'POST /api/mi-contrasena': { fn: cambiarClave, clavePendiente: true },
   'GET /api/archivo': { fn: archivo },
   'POST /api/guardar': { fn: guardar },
   'GET /api/publicacion': { fn: publicacion },
@@ -105,6 +139,7 @@ export async function manejarApi(request, env) {
       sesion = await leerSesion(env.DB, request);
       if (!sesion) return error('Tenés que iniciar sesión.', 401);
       if (escribe && !csrfValido(request, sesion)) return error('Pedido rechazado.', 403);
+      if (sesion.usuario.cambiarClave && !ruta.clavePendiente) return error('Cambiá la contraseña provisoria para continuar.', 403);
       if (ruta.soloAdmin && sesion.usuario.rol !== 'admin') return error(new Prohibido().message, 403);
     }
     return await ruta.fn({ request, env, url, sesion });

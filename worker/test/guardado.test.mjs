@@ -13,7 +13,7 @@ const iniciales = Object.fromEntries(RUTAS.map((r) => [r, delRepo(r)]));
 const ES = 'src/content.es.json';
 const EN = 'src/content.en.json';
 const autor = { usuario: 'prueba', nombre: 'Persona de Prueba', rol: 'admin' };
-const JPEG = Buffer.from([0xff, 0xd8, 0xff, 0xe0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0xff, 0xd9]).toString('base64');
+const JPEG = readFileSync(new URL('portillo-images/area-laboral.jpg', raiz)).toString('base64');
 
 function editar(texto, cambio) {
   const datos = JSON.parse(texto);
@@ -75,6 +75,22 @@ test('lo inválido no llega al repo', async () => {
   );
   assert.equal(github.head, base);
   assert.equal(github.pedidos.filter((p) => p.startsWith('POST')).length, 0);
+});
+
+test('el contenido validado no puede reemplazarse con una segunda representación', async () => {
+  const base = github.head;
+  const texto = conSub(ES, 'Nueva bajada válida');
+  const base64 = Buffer.from('JSON inválido').toString('base64');
+  for (const rol of ['admin', 'editor']) {
+    await assert.rejects(guardarCambios(env, {
+      base, autor: { ...autor, rol }, archivos: [{ ruta: ES, texto, base64 }],
+    }), (e) => e instanceof DatosInvalidos && e.errores.some((error) => error.includes('no admite base64')));
+  }
+  await assert.rejects(guardarCambios(env, {
+    base, autor, archivos: [{ ruta: 'portillo-images/area-laboral.jpg', texto: 'otro contenido', base64: JPEG }],
+  }), (e) => e instanceof DatosInvalidos && e.errores.some((error) => error.includes('no admite texto')));
+  assert.equal(github.head, base);
+  assert.equal(github.pedidos.length, 0);
 });
 
 test('sólo se pueden escribir las rutas previstas', async () => {

@@ -91,6 +91,7 @@ function editor({ abogado, esNuevo, commit, textosSitio, volver, guardarEquipo, 
   const vista = vistaPrevia(textosSitio);
   const refrescar = () => {
     const datos = leer();
+    boton.textContent = datos.publicado || abogado.publicado === true ? 'Publicar cambios' : 'Guardar perfil oculto';
     vista.dibujar(datos, selector.hayFoto() ? selector.url() : `/portillo-images/${datos.foto}?v=${commit}`);
   };
   const selector = selectorDeFoto({ aspecto: [1, 1], etiqueta: abogado.foto ? 'Cambiar foto' : 'Elegir foto', alCambiar: () => refrescar() });
@@ -133,7 +134,14 @@ function editor({ abogado, esNuevo, commit, textosSitio, volver, guardarEquipo, 
       return;
     }
     boton.disabled = true;
-    const extra = selector.hayFoto() ? [{ ruta: `portillo-images/${datos.foto}`, base64: await selector.base64() }] : [];
+    let extra;
+    try {
+      extra = selector.hayFoto() ? [{ ruta: `portillo-images/${datos.foto}`, base64: await selector.base64() }] : [];
+    } catch {
+      error.mostrar('No se pudo preparar la foto. Probá de nuevo.');
+      boton.disabled = false;
+      return;
+    }
     const salio = await guardarEquipo({
       descripcion: `${esNuevo ? 'Abogado nuevo' : 'Abogado'}: ${nombreVisible(datos)}`,
       cambio: (lista) => {
@@ -149,12 +157,12 @@ function editor({ abogado, esNuevo, commit, textosSitio, volver, guardarEquipo, 
 
   const titulo = crear('h1', '', esNuevo ? 'Agregar abogado' : `Editar: ${nombreVisible(abogado)}`);
   nodo.append(titulo, formulario, crear('h2', '', 'Así se ve en el sitio'), vista.nodo);
-  refrescar();
   if (mostrarFaltantes) {
     publicar.checked = true;
     revisar(leer());
     error.mostrar('Para mostrarlo en el sitio falta completar lo marcado.');
   }
+  refrescar();
   return nodo;
 }
 
@@ -280,7 +288,7 @@ export default {
       const barra = crear('div', 'acciones');
       barra.append(agregar);
       if (ordenCambiado) {
-        const guardarOrden = crear('button', 'boton', 'Guardar orden');
+        const guardarOrden = crear('button', 'boton', 'Publicar orden');
         guardarOrden.type = 'button';
         guardarOrden.addEventListener('click', () => {
           guardarOrden.disabled = true;

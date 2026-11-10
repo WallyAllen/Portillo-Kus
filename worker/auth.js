@@ -53,6 +53,10 @@ export async function verificarContrasena(contrasena, hash) {
 const HASH_SENUELO = `pbkdf2-sha256$${ITERACIONES}$AAAAAAAAAAAAAAAAAAAAAA==$AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=`;
 
 const hashToken = async (token) => aHex(new Uint8Array(await crypto.subtle.digest('SHA-256', bytes(token))));
+const usuarioPublico = (fila) => ({
+  usuario: fila.usuario, nombre: fila.nombre, rol: fila.rol,
+  ...(fila.cambiar_clave ? { cambiarClave: true } : {}),
+});
 
 export const cookieDeSesion = (token) =>
   `${COOKIE}=${token}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=${SESION_MS / 1000}`;
@@ -84,19 +88,24 @@ export async function iniciarSesion(db, usuario, contrasena, ip) {
   if (intento.meta.changes === 0) return { estado: 'bloqueado' };
 
   const fila = await db.prepare(
-    'SELECT id, usuario, nombre, hash, rol, activo FROM users WHERE usuario = ?',
+    'SELECT id, usuario, nombre, hash, rol, activo, cambiar_clave FROM users WHERE usuario = ?',
   ).bind(usuario).first();
   const coincide = await verificarContrasena(contrasena, fila ? fila.hash : HASH_SENUELO);
   if (!fila || !coincide || fila.activo !== 1) return { estado: 'incorrecto' };
 
   const token = aBase64(azar(32)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
   const csrf = aHex(azar(32));
-  await db.batch([
-    db.prepare('DELETE FROM login_attempts WHERE usuario = ?').bind(usuario),
-    db.prepare('INSERT INTO sessions (token_hash, user_id, csrf, expira, creado) VALUES (?, ?, ?, ?, ?)')
-      .bind(await hashToken(token), fila.id, csrf, ahora + SESION_MS, ahora),
+  const tokenHash = await hashToken(token);
+  const [sesion] = await db.batch([
+    // La clave o el estado pueden haber cambiado mientras se verificaba la contraseña.
+    db.prepare(`INSERT INTO sessions (token_hash, user_id, csrf, expira, creado)
+      SELECT ?, id, ?, ?, ? FROM users WHERE id = ? AND hash = ? AND activo = 1`)
+      .bind(tokenHash, csrf, ahora + SESION_MS, ahora, fila.id, fila.hash),
+    db.prepare(`DELETE FROM login_attempts WHERE usuario = ?
+      AND EXISTS (SELECT 1 FROM sessions WHERE token_hash = ?)`).bind(usuario, tokenHash),
   ]);
-  return { estado: 'ok', token, csrf, usuario: { usuario: fila.usuario, nombre: fila.nombre, rol: fila.rol } };
+  if (sesion.meta.changes === 0) return { estado: 'incorrecto' };
+  return { estado: 'ok', token, csrf, usuario: usuarioPublico(fila) };
 }
 
 // Un usuario desactivado pierde el acceso en el pedido siguiente, aunque tenga sesión abierta.
@@ -104,10 +113,10 @@ export async function leerSesion(db, request) {
   const token = tokenDeCookie(request);
   if (!token) return null;
   const fila = await db.prepare(
-    `SELECT s.csrf, u.usuario, u.nombre, u.rol FROM sessions s JOIN users u ON u.id = s.user_id
+    `SELECT s.csrf, u.usuario, u.nombre, u.rol, u.cambiar_clave FROM sessions s JOIN users u ON u.id = s.user_id
      WHERE s.token_hash = ? AND s.expira > ? AND u.activo = 1`,
   ).bind(await hashToken(token), Date.now()).first();
-  return fila && { csrf: fila.csrf, usuario: { usuario: fila.usuario, nombre: fila.nombre, rol: fila.rol } };
+  return fila && { csrf: fila.csrf, usuario: usuarioPublico(fila) };
 }
 
 export async function cerrarSesion(db, request) {

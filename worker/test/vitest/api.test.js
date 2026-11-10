@@ -1,6 +1,7 @@
 // Login, sesión, CSRF, permisos y validación, contra el Worker en workerd.
 import { env } from 'cloudflare:workers';
 import { beforeAll, describe, expect, it } from 'vitest';
+import { iniciarSesion } from '../../auth.js';
 import { como, CONTRASENA, crearUsuario, entrar, pedir } from './ayuda.js';
 
 beforeAll(async () => {
@@ -46,6 +47,29 @@ describe('login', () => {
 
   it('pedido incompleto: 400', async () => {
     expect((await pedir('/api/login', { metodo: 'POST', cuerpo: { usuario: 'admin1' } })).status).toBe(400);
+  });
+
+  it('rechaza un cuerpo excesivo aunque no declare Content-Length', async () => {
+    const respuesta = await pedir('/api/login', { metodo: 'POST', cuerpo: {
+      usuario: 'admin1', contrasena: CONTRASENA, exceso: 'x'.repeat(17 * 1024),
+    } });
+    expect(respuesta.status).toBe(413);
+  });
+
+  it('no abre una sesión si la contraseña cambió mientras se verificaba', async () => {
+    await crearUsuario('carrera-clave', 'editor');
+    const db = {
+      batch: (pedidos) => env.DB.batch(pedidos),
+      prepare(sql) {
+        if (!sql.startsWith('SELECT id, usuario')) return env.DB.prepare(sql);
+        return { bind: (usuario) => ({ async first() {
+          const fila = await env.DB.prepare(sql).bind(usuario).first();
+          await env.DB.prepare('UPDATE users SET hash = ? WHERE id = ?').bind('reemplazado', fila.id).run();
+          return fila;
+        } }) };
+      },
+    };
+    expect(await iniciarSesion(db, 'carrera-clave', CONTRASENA, '10.9.9.1')).toEqual({ estado: 'incorrecto' });
   });
 
   it('tras 5 fallos queda bloqueado aunque después acierte', async () => {

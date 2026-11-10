@@ -21,6 +21,23 @@ describe('contraseña provisoria', () => {
     expect(vistas.size).toBe(50);
     for (const c of vistas) expect(c).toMatch(/^[a-hjkmnp-z2-9]{4}(-[a-hjkmnp-z2-9]{4}){3}$/);
   });
+
+  it('sólo habilita edición después del cambio y revoca las sesiones provisorias', async () => {
+    const { usuario, contrasena } = await (await crear({
+      usuario: 'clave.temporal', nombre: 'Clave temporal', rol: 'editor',
+    })).json();
+    const primera = como(await entrar(usuario, contrasena));
+    const segunda = como(await entrar(usuario, contrasena));
+    expect((await (await primera('/api/sesion')).json()).usuario.cambiarClave).toBe(true);
+    expect((await primera('/api/campos')).status).toBe(403);
+    const cambiar = (contrasena) => primera('/api/mi-contrasena', { metodo: 'POST', cuerpo: { contrasena } });
+    expect((await cambiar(contrasena)).status).toBe(422);
+    const nueva = 'otra-clave-larga-para-prueba';
+    expect((await cambiar(nueva)).status).toBe(200);
+    expect((await segunda('/api/sesion')).status).toBe(401);
+    await expect(entrar(usuario, contrasena)).rejects.toThrow(/401/);
+    expect((await como(await entrar(usuario, nueva))('/api/campos')).status).toBe(200);
+  });
 });
 
 describe('crear', () => {
