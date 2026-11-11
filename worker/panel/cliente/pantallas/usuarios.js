@@ -142,14 +142,17 @@ export default {
           error.nodo.scrollIntoView({ block: 'center' });
         }
       };
-      const lista = crear('ul', 'abogados-lista');
+      const lista = crear('ul', 'abogados-lista usuarios-lista');
       lista.append(...usuarios.map((u) => fila(u, { yo: yo.usuario, accion })));
+      const distribucion = crear('div', 'usuarios-distribucion');
+      const cuentas = crear('section', 'usuarios-cuentas');
+      cuentas.append(crear('h2', '', 'Cuentas del panel'), lista);
+      distribucion.append(cuentas, formularioNuevo(api, (r) => dibujar([tarjetaContrasena(r, () => dibujar())])));
       contenedor.replaceChildren(
         crear('h1', '', 'Usuarios'),
         ...arriba,
         error.nodo,
-        lista,
-        formularioNuevo(api, (r) => dibujar([tarjetaContrasena(r, () => dibujar())])),
+        distribucion,
       );
       arriba[0]?.scrollIntoView?.({ block: 'start' });
     };

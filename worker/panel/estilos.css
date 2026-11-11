@@ -170,9 +170,20 @@ input:focus-visible, textarea:focus-visible, button:focus-visible, a:focus-visib
     border-inline-end: 1px solid var(--line);
   }
   .menu-movil { display: none; }
-  .sesion-activa .contenido { padding: 2rem 1.5rem 3rem; }
+  .sesion-activa .contenido { margin-inline: 0; padding: 2rem 1.5rem 3rem; }
 }
+
+.usuarios-distribucion { display: grid; gap: 1.25rem; align-items: start; }
+.usuarios-cuentas { min-width: 0; }
+.usuarios-cuentas h2 { margin-top: 0; }
+.usuarios-lista { margin-top: 0; }
+.usuarios-distribucion fieldset { min-width: 0; accent-color: var(--brand); }
 
 @media (min-width: 900px) {
   .fotos-rejilla { grid-template-columns: 1fr 1fr; }
+}
+
+@media (min-width: 1100px) {
+  .contenido:has(.usuarios-distribucion) { max-width: 1180px; }
+  .usuarios-distribucion { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
 }
