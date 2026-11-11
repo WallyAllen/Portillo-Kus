@@ -1,6 +1,6 @@
 // Traducciones pendientes, sólo para admin (la API también lo exige). Un idioma con el campo
 // vacío sigue pendiente y el sitio muestra el español: se puede traducir de a un idioma.
-import { crear } from './comun.js';
+import { cargando, crear, fallaDeCarga, listo } from './comun.js';
 
 const NOMBRES = { en: 'Inglés', pt: 'Portugués', ru: 'Ruso', zh: 'Chino' };
 
@@ -26,7 +26,7 @@ function campoDeIdioma(clave, idioma, conViejo) {
   if (conViejo) campo.append(bloqueDeTexto('Español anterior', idioma.viejo));
   if (idioma.actual) {
     campo.append(bloqueDeTexto('Traducción actual', idioma.actual));
-    const usar = crear('button', 'boton boton-borde trad-usar', 'Usar la actual');
+    const usar = crear('button', 'boton boton-suave trad-usar', 'Usar la actual');
     usar.type = 'button';
     usar.addEventListener('click', () => { entrada.value = idioma.actual; entrada.focus(); });
     campo.append(usar);
@@ -81,14 +81,13 @@ function tarjeta(item, alGuardar) {
 export default {
   id: 'traducciones',
   titulo: 'Traducciones',
+  volanta: 'ADMINISTRACIÓN',
+  bajada: 'Mientras un idioma siga pendiente, el sitio muestra el texto en español. Un campo vacío sigue pendiente.',
   soloAdmin: true,
   async render(contenedor, { api, seguirPublicacion }) {
     const dibujar = async () => {
       const { commit, pendientes } = await api('/api/traducciones');
-      const titulo = crear('h1', '', 'Traducciones');
-      const ayuda = crear('p', '', pendientes.length
-        ? 'Mientras un idioma siga pendiente, el sitio muestra el texto en español. Un campo vacío sigue pendiente.'
-        : 'No hay traducciones pendientes.');
+      const ayuda = pendientes.length ? [] : [crear('p', 'aviso-discreto', 'No hay traducciones pendientes.')];
       const guardar = async (clave, textos) => {
         try {
           const { commit: nuevo } = await api('/api/traducciones', { metodo: 'POST', cuerpo: { base: commit, textos: { [clave]: textos } } });
@@ -104,7 +103,8 @@ export default {
       // Volver a dibujar no borra lo que se estaba escribiendo en las otras tarjetas.
       const escrito = new Map([...contenedor.querySelectorAll('textarea')].map((t) => [t.id, t.value]));
       const tarjetas = pendientes.map((item) => tarjeta(item, guardar));
-      contenedor.replaceChildren(titulo, ayuda, ...tarjetas);
+      listo(contenedor);
+      contenedor.replaceChildren(...ayuda, ...tarjetas);
       for (const entrada of contenedor.querySelectorAll('textarea')) entrada.value = escrito.get(entrada.id) ?? '';
     };
     const seguirMensaje = (mensaje) => {
@@ -112,11 +112,11 @@ export default {
       aviso.setAttribute('role', 'alert');
       contenedor.prepend(aviso);
     };
-    contenedor.append(crear('p', '', 'Cargando…'));
+    cargando(contenedor);
     try {
       await dibujar();
     } catch (e) {
-      contenedor.replaceChildren(crear('p', 'aviso-error', e.message));
+      fallaDeCarga(contenedor, e);
     }
   },
 };

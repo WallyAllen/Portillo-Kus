@@ -11,7 +11,7 @@ const ANCHO_CHICO = 480; // el build no genera variantes por debajo de esto
 // aspecto: [ancho, alto]. alCambiar(): la imagen cambió. Devuelve { nodo, hayFoto(), url(), base64() }.
 export function selectorDeFoto({ aspecto, etiqueta = 'Elegir foto', alCambiar = () => {} }) {
   const nodo = crear('div', 'foto-selector');
-  const rotulo = crear('label', 'boton boton-borde foto-elegir', etiqueta);
+  const rotulo = crear('label', 'boton boton-suave foto-elegir', etiqueta);
   const archivo = crear('input');
   archivo.type = 'file';
   archivo.accept = 'image/jpeg,image/png,image/webp';
@@ -43,7 +43,7 @@ export function selectorDeFoto({ aspecto, etiqueta = 'Elegir foto', alCambiar = 
     ['←', 'a la izquierda', -1, 0], ['→', 'a la derecha', 1, 0],
     ['↑', 'hacia arriba', 0, -1], ['↓', 'hacia abajo', 0, 1],
   ]) {
-    const boton = crear('button', 'boton boton-borde', flecha);
+    const boton = crear('button', 'boton boton-suave', flecha);
     boton.type = 'button';
     boton.setAttribute('aria-label', `Mover la foto ${direccion}`);
     boton.addEventListener('click', () => {

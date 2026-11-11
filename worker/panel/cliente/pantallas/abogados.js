@@ -1,5 +1,7 @@
 // Abogados: src/equipo.json. Se edita en español; los otros idiomas muestran el español hasta traducirse.
-import { aviso, campo, crear, ESPANOL, guardarYRecargar, leerClave, serializar } from './comun.js';
+import {
+  aviso, campo, cargando, crear, ESPANOL, fallaDeCarga, guardarYRecargar, leerClave, listo, marcarEditado, serializar,
+} from './comun.js';
 import { selectorDeFoto } from './imagen.js';
 import { fotoDeAbogado, idNuevo, revisarAbogado } from './revisar.js';
 import { renderEquipo } from './vista-abogado.js';
@@ -66,7 +68,7 @@ function vistaPrevia(textos) {
 
 // ---- Editor
 
-function editor({ abogado, esNuevo, commit, textosSitio, volver, guardarEquipo, mostrarFaltantes }) {
+function editor({ abogado, esNuevo, commit, textosSitio, volver, guardarEquipo, mostrarFaltantes, barra }) {
   const nodo = crear('div');
   const f = {
     nombre: campo({ etiqueta: 'Nombre y apellido', valor: abogado.nombre, largo: 120 }),
@@ -89,10 +91,28 @@ function editor({ abogado, esNuevo, commit, textosSitio, volver, guardarEquipo, 
     biografia: { ...abogado.biografia, es: f.biografia.entrada.value.trim() },
   });
   const vista = vistaPrevia(textosSitio);
+  let control = { actualizar() {} };
+  // Lo que cambió respecto de lo publicado, campo por campo. También marca cada campo.
+  const cambios = () => {
+    const datos = leer();
+    const distintos = {
+      nombre: datos.nombre !== abogado.nombre.trim(),
+      cargo: datos.cargo.es !== abogado.cargo.es.trim(),
+      matricula: datos.matricula !== (abogado.matricula ?? '').trim(),
+      linkedin: datos.linkedin !== (abogado.linkedin ?? '').trim(),
+      idiomas: datos.idiomas.es !== abogado.idiomas.es.trim(),
+      biografia: datos.biografia.es !== abogado.biografia.es.trim(),
+    };
+    for (const [clave, distinto] of Object.entries(distintos)) marcarEditado(f[clave].entrada, distinto);
+    const visible = publicar.checked !== (abogado.publicado === true);
+    marcarEditado(selector.nodo, selector.hayFoto());
+    marcarEditado(publicar, visible);
+    return Object.values(distintos).filter(Boolean).length + Number(selector.hayFoto()) + Number(visible);
+  };
   const refrescar = () => {
     const datos = leer();
-    boton.textContent = datos.publicado || abogado.publicado === true ? 'Publicar cambios' : 'Guardar perfil oculto';
     vista.dibujar(datos, selector.hayFoto() ? selector.url() : `/portillo-images/${datos.foto}?v=${commit}`);
+    control.actualizar();
   };
   const selector = selectorDeFoto({ aspecto: [1, 1], etiqueta: abogado.foto ? 'Cambiar foto' : 'Elegir foto', alCambiar: () => refrescar() });
   const avisoFoto = crear('p', 'campo-error');
@@ -105,13 +125,11 @@ function editor({ abogado, esNuevo, commit, textosSitio, volver, guardarEquipo, 
   const rotuloPublicar = crear('label', 'campo-check');
   rotuloPublicar.append(publicar, ' Mostrar en el sitio');
   const error = aviso();
-  const boton = crear('button', 'boton', 'Guardar');
-  boton.type = 'submit';
-  const cancelar = crear('button', 'boton boton-borde', 'Volver sin guardar');
+  const cancelar = crear('button', 'boton boton-suave', 'Volver a la lista');
   cancelar.type = 'button';
   cancelar.addEventListener('click', () => volver());
   const acciones = crear('div', 'acciones');
-  acciones.append(boton, cancelar);
+  acciones.append(cancelar);
 
   const revisar = (datos) => {
     const problemas = revisarAbogado(datos);
@@ -124,24 +142,25 @@ function editor({ abogado, esNuevo, commit, textosSitio, volver, guardarEquipo, 
   const formulario = crear('form', 'formulario tarjeta');
   formulario.append(f.nombre.nodo, bloqueFoto, f.cargo.nodo, f.matricula.nodo, f.linkedin.nodo, f.idiomas.nodo, f.biografia.nodo, rotuloPublicar, error.nodo, acciones);
   formulario.addEventListener('input', refrescar);
-  formulario.addEventListener('submit', async (evento) => {
-    evento.preventDefault();
+  formulario.addEventListener('change', refrescar);
+  formulario.addEventListener('submit', (evento) => evento.preventDefault());
+  const publicarPerfil = async () => {
     error.mostrar();
     const datos = leer();
     const problemas = revisar(datos);
     if (Object.keys(problemas).length) {
       error.mostrar('Revisá lo que está marcado.');
-      return;
+      formulario.querySelector('[aria-invalid]')?.focus();
+      return false;
     }
-    boton.disabled = true;
     let extra;
     try {
       extra = selector.hayFoto() ? [{ ruta: `portillo-images/${datos.foto}`, base64: await selector.base64() }] : [];
     } catch {
       error.mostrar('No se pudo preparar la foto. Probá de nuevo.');
-      boton.disabled = false;
-      return;
+      return false;
     }
+    formulario.inert = true;
     const salio = await guardarEquipo({
       descripcion: `${esNuevo ? 'Abogado nuevo' : 'Abogado'}: ${nombreVisible(datos)}`,
       cambio: (lista) => {
@@ -152,16 +171,28 @@ function editor({ abogado, esNuevo, commit, textosSitio, volver, guardarEquipo, 
       extra,
       alFallar: (texto) => error.mostrar(texto),
     });
-    if (!salio) boton.disabled = false;
-  });
+    if (!salio) formulario.inert = false;
+    return salio;
+  };
 
-  const titulo = crear('h1', '', esNuevo ? 'Agregar abogado' : `Editar: ${nombreVisible(abogado)}`);
-  nodo.append(titulo, formulario, crear('h2', '', 'Así se ve en el sitio'), vista.nodo);
+  const tituloVista = crear('h2', '', 'Así se ve en el sitio');
+  tituloVista.tabIndex = -1;
+  nodo.append(formulario, tituloVista, vista.nodo);
   if (mostrarFaltantes) {
     publicar.checked = true;
     revisar(leer());
     error.mostrar('Para mostrarlo en el sitio falta completar lo marcado.');
   }
+  control = barra.usar({
+    contar: cambios,
+    publicar: publicarPerfil,
+    etiqueta: () => (publicar.checked || abogado.publicado === true ? 'Publicar' : 'Guardar oculto'),
+    previa: () => {
+      const quieto = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      tituloVista.scrollIntoView({ block: 'start', behavior: quieto ? 'auto' : 'smooth' });
+      tituloVista.focus({ preventScroll: true });
+    },
+  });
   refrescar();
   return nodo;
 }
@@ -173,7 +204,7 @@ function fila({ abogado, indice, total, mover, editar, cambiarPublicado, elimina
   const datos = crear('div', 'abogado-fila-datos');
   datos.append(crear('strong', '', nombreVisible(abogado)), crear('span', abogado.publicado === true ? 'estado-publicado' : 'estado-oculto', abogado.publicado === true ? 'Se ve en el sitio' : 'Oculto'));
   const boton = (texto, accion, deshabilitado = false) => {
-    const b = crear('button', 'boton boton-borde', texto);
+    const b = crear('button', 'boton boton-suave', texto);
     b.type = 'button';
     b.disabled = deshabilitado;
     b.addEventListener('click', accion);
@@ -205,7 +236,9 @@ function fila({ abogado, indice, total, mover, editar, cambiarPublicado, elimina
 export default {
   id: 'abogados',
   titulo: 'Abogados',
-  async render(contenedor, { api, guardar }) {
+  volanta: 'CONTENIDO DEL SITIO',
+  bajada: 'El equipo que se ve en el sitio. Se edita en español.',
+  async render(contenedor, { api, guardar, barra: barraPantalla, encabezado }) {
     let lista;
     let commit;
     let idiomas;
@@ -238,8 +271,14 @@ export default {
     };
 
     const abrirEditor = (abogado, { esNuevo = false, mostrarFaltantes = false } = {}) => {
-      contenedor.replaceChildren(editor({ abogado, esNuevo, commit, textosSitio, volver: () => dibujarLista(), guardarEquipo, mostrarFaltantes }));
+      encabezado(esNuevo ? 'Agregar abogado' : `Editar: ${nombreVisible(abogado)}`,
+        'Completá los datos y mirá abajo cómo queda la tarjeta. Sin marcar «Mostrar en el sitio», el perfil queda oculto.');
+      contenedor.replaceChildren(editor({
+        abogado, esNuevo, commit, textosSitio, guardarEquipo, mostrarFaltantes, barra: barraPantalla,
+        volver: () => dibujarLista(),
+      }));
       window.scrollTo(0, 0);
+      document.getElementById('encabezado-titulo').focus();
     };
 
     const nuevo = () => {
@@ -248,6 +287,7 @@ export default {
     };
 
     function dibujarLista(mensaje) {
+      encabezado();
       const error = aviso();
       const avisarFallo = (texto) => {
         // guardarYRecargar pudo haber redibujado con un 409: el aviso va en la lista nueva.
@@ -287,30 +327,27 @@ export default {
       agregar.addEventListener('click', () => abrirEditor(nuevo(), { esNuevo: true }));
       const barra = crear('div', 'acciones');
       barra.append(agregar);
-      if (ordenCambiado) {
-        const guardarOrden = crear('button', 'boton', 'Publicar orden');
-        guardarOrden.type = 'button';
-        guardarOrden.addEventListener('click', () => {
-          guardarOrden.disabled = true;
-          guardarEquipo({ descripcion: 'Orden de los abogados', cambio: () => {}, alFallar: avisarFallo });
-        });
-        barra.prepend(guardarOrden);
-      }
+      if (ordenCambiado) barra.append(crear('p', 'campo-ayuda', 'Cambiaste el orden. Publicalo desde la barra de abajo.'));
+      listo(contenedor);
       contenedor.replaceChildren(
-        crear('h1', '', 'Abogados'),
         ...(mensaje ? [crear('p', 'aviso-ok', mensaje)] : []),
         barra,
         error.nodo,
         ul,
       );
+      barraPantalla.usar({
+        contar: () => (ordenCambiado ? 1 : 0),
+        etiqueta: () => 'Publicar orden',
+        publicar: () => guardarEquipo({ descripcion: 'Orden de los abogados', cambio: () => {}, alFallar: avisarFallo }),
+      });
     }
 
-    contenedor.append(crear('p', '', 'Cargando…'));
+    cargando(contenedor);
     try {
       await leerTodo();
       dibujarLista();
     } catch (e) {
-      contenedor.replaceChildren(crear('p', 'aviso-error', e.message));
+      fallaDeCarga(contenedor, e);
     }
   },
 };

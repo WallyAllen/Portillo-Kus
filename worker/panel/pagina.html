@@ -11,48 +11,162 @@
 </head>
 <body>
   <a id="saltar-contenido" class="salto" href="#contenido">Ir al contenido</a>
-  <header class="barra">
-    <div class="barra-marca">
-      <img class="logo" src="/portillo-images/logo.png" alt="Portillo Kus &amp; Asociados" width="150" height="80">
-      <button id="menu-movil" class="boton boton-borde menu-movil" type="button" aria-expanded="false" aria-controls="menu" hidden>Secciones</button>
-    </div>
-    <nav id="menu" class="menu" aria-label="Secciones del panel" hidden></nav>
-    <div id="cuenta" class="cuenta" hidden>
-      <span id="cuenta-nombre"></span>
-      <button id="salir" type="button" class="boton boton-borde">Salir</button>
-    </div>
-  </header>
+  <div class="shell">
+    <aside class="lateral" aria-label="Portillo Kus &amp; Asociados">
+      <div class="lateral-cabecera">
+        <img class="logo" src="/portillo-images/logo.png" alt="Portillo Kus &amp; Asociados" width="150" height="80">
+        <button id="menu-movil" class="boton boton-suave menu-movil" type="button" aria-expanded="false" aria-controls="lateral-menu" hidden>Secciones</button>
+      </div>
+      <div id="lateral-menu" class="lateral-menu" hidden>
+        <p class="volanta">TU SITIO</p>
+        <nav id="menu" class="menu" aria-label="Secciones del panel"></nav>
+        <div class="lateral-pie">
+          <a class="enlace-sitio" href="/" target="_blank" rel="noopener">Ver la página <span aria-hidden="true">↗</span><span class="solo-lector"> (se abre en otra pestaña)</span></a>
+          <div class="cuenta">
+            <span class="avatar" id="cuenta-inicial" aria-hidden="true"></span>
+            <div><strong id="cuenta-nombre"></strong><span id="cuenta-rol"></span></div>
+          </div>
+          <button id="salir" type="button" class="boton boton-suave">Cerrar sesión</button>
+        </div>
+      </div>
+    </aside>
 
-  <div class="espacio-trabajo">
-    <div id="publicacion" class="publicacion" role="status" aria-live="polite" hidden></div>
-    <main id="contenido" class="contenido" tabindex="-1">
-      <noscript><p>El panel necesita JavaScript.</p></noscript>
+    <main id="contenido" class="principal" tabindex="-1" aria-labelledby="encabezado-titulo">
+      <header class="encabezado">
+        <div class="encabezado-textos">
+          <p class="volanta" id="encabezado-volanta">PANEL DEL ESTUDIO</p>
+          <h1 id="encabezado-titulo" tabindex="-1">Entrar al panel</h1>
+          <p id="encabezado-bajada">Ingresá con tu cuenta para editar el sitio de Portillo Kus &amp; Asociados.</p>
+        </div>
+        <div id="encabezado-acciones" class="encabezado-acciones" hidden>
+          <div class="historial">
+            <button id="historial" type="button" class="boton boton-texto" aria-expanded="false" aria-controls="historial-menu">Historial <span aria-hidden="true">▾</span></button>
+            <div id="historial-menu" class="historial-menu" hidden>
+              <button id="restaurar-version" type="button" class="boton boton-texto">Volver a la versión anterior</button>
+              <small id="restaurar-nota">Disponible cuando no hay cambios sin publicar.</small>
+            </div>
+          </div>
+          <button id="abrir-guia" type="button" class="boton-ayuda" aria-haspopup="dialog" aria-controls="guia" aria-expanded="false" aria-label="Cómo usar el panel">?</button>
+        </div>
+      </header>
+      <p id="aviso-panel" class="aviso-panel" role="status"></p>
+      <div id="pantalla" class="pantalla"><noscript><p>El panel necesita JavaScript.</p></noscript></div>
+
+      <div id="pie" class="pie" data-modo="tranquilo" hidden>
+        <div class="pie-estado">
+          <p id="pie-estado" role="status"><span class="punto-estado" aria-hidden="true"></span><strong id="pie-texto">Todo publicado</strong></p>
+          <progress id="pie-progreso" aria-label="Publicando en el sitio" hidden></progress>
+          <a id="pie-ver" href="/" target="_blank" rel="noopener" hidden>Ver el cambio <span aria-hidden="true">↗</span><span class="solo-lector"> (se abre en otra pestaña)</span></a>
+        </div>
+        <div class="acciones pie-acciones">
+          <button id="pie-previa" type="button" class="boton boton-suave" hidden>Ver cómo queda</button>
+          <button id="pie-publicar" type="button" class="boton"><span id="pie-publicar-texto">Publicar</span></button>
+        </div>
+      </div>
     </main>
   </div>
 
   <template id="plantilla-login">
     <form id="login" class="tarjeta login" novalidate>
-      <h1>Entrar al panel</h1>
       <label for="usuario">Usuario</label>
       <input id="usuario" name="usuario" autocomplete="username" autocapitalize="none" spellcheck="false" required>
       <label for="contrasena">Contraseña</label>
-      <input id="contrasena" name="contrasena" type="password" autocomplete="current-password" required>
+      <div class="campo-clave">
+        <input id="contrasena" name="contrasena" type="password" autocomplete="current-password" required>
+        <button id="mostrar-clave" type="button" class="boton boton-suave" aria-controls="contrasena" aria-pressed="false">Mostrar</button>
+      </div>
       <p id="login-error" class="aviso-error" role="alert" hidden></p>
-      <button type="submit" class="boton">Entrar</button>
+      <button type="submit" class="boton boton-ancho">Entrar <span aria-hidden="true">→</span></button>
+      <p class="ayuda-acceso">¿Te olvidaste la clave? <a href="https://wa.me/5492213141648?text=Hola%20Felipe%2C%20necesito%20ayuda%20para%20entrar%20al%20panel%20de%20Portillo%20Kus." target="_blank" rel="noopener noreferrer">Escribile a Felipe por WhatsApp</a>.</p>
     </form>
   </template>
   <template id="plantilla-cambiar-clave">
     <form class="tarjeta login">
-      <h1>Elegí tu contraseña</h1>
       <p>Antes de editar, reemplazá la contraseña provisoria. Usá al menos 15 caracteres.</p>
       <label for="clave-nueva">Contraseña nueva</label>
       <input id="clave-nueva" type="password" autocomplete="new-password" minlength="15" maxlength="200" required>
       <label for="clave-confirmada">Repetí la contraseña</label>
       <input id="clave-confirmada" type="password" autocomplete="new-password" required>
       <p class="aviso-error" role="alert" hidden></p>
-      <button type="submit" class="boton">Cambiar contraseña</button>
-      <button type="button" class="boton boton-borde" data-salir>Salir</button>
+      <button type="submit" class="boton boton-ancho">Cambiar contraseña</button>
+      <button type="button" class="boton boton-suave" data-salir>Salir</button>
     </form>
   </template>
+
+  <dialog id="reingreso" aria-labelledby="reingreso-titulo" aria-describedby="reingreso-texto">
+    <form id="reingreso-form" novalidate>
+      <h2 id="reingreso-titulo">Volvé a entrar</h2>
+      <p id="reingreso-texto">Tu sesión venció. Entrá con la misma cuenta y seguís donde estabas: lo que escribiste sigue en el formulario.</p>
+      <label for="reingreso-usuario">Usuario</label>
+      <input id="reingreso-usuario" autocomplete="username" readonly>
+      <label for="reingreso-contrasena">Contraseña</label>
+      <input id="reingreso-contrasena" type="password" autocomplete="current-password" required>
+      <p id="reingreso-error" class="aviso-error" role="alert" hidden></p>
+      <div class="acciones dialogo-acciones">
+        <button id="reingreso-salir" type="button" class="boton boton-suave">Salir del panel</button>
+        <button type="submit" class="boton">Entrar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="restaurar" aria-labelledby="restaurar-titulo" aria-describedby="restaurar-fecha">
+    <form method="dialog">
+      <h2 id="restaurar-titulo">¿Volver a la versión anterior?</h2>
+      <p id="restaurar-fecha"></p>
+      <p>Vuelve a como estaba:</p>
+      <ul id="restaurar-lista"></ul>
+      <p>El cambio se publica en el sitio en unos minutos.</p>
+      <div class="acciones dialogo-acciones">
+        <button value="cancelar" class="boton boton-suave" autofocus>Cancelar</button>
+        <button value="restaurar" class="boton">Restaurar y publicar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="previa" aria-labelledby="previa-titulo">
+    <div class="previa-cabecera">
+      <div><h2 id="previa-titulo">Así queda</h2><p id="previa-nota" role="status">Es la portada en español con tus cambios. Todavía no está publicada.</p></div>
+      <form method="dialog"><button class="boton boton-suave">Cerrar</button></form>
+    </div>
+    <iframe id="previa-pagina" title="Vista previa de la portada" sandbox="allow-same-origin"></iframe>
+  </dialog>
+
+  <dialog id="guia" class="panel-lateral" aria-labelledby="guia-titulo">
+    <div class="panel-lateral-cabecera">
+      <h2 id="guia-titulo">Cómo usar el panel</h2>
+      <form method="dialog"><button class="boton boton-suave">Cerrar</button></form>
+    </div>
+    <ol class="guia-pasos">
+      <li><strong>Elegí qué querés cambiar.</strong> En el menú están los textos, las fotos, las reseñas y los abogados.</li>
+      <li><strong>Cambiá lo que necesites.</strong> Un punto junto al nombre del campo te muestra qué tocaste.</li>
+      <li><strong>Mirá cómo queda.</strong> Abajo aparece «Ver cómo queda» para revisar la portada antes de publicar.</li>
+      <li><strong>Publicá.</strong> Tocá «Publicar» y en unos minutos el cambio se ve en el sitio. El panel te avisa cuando está listo.</li>
+    </ol>
+    <h3>Bueno saber</h3>
+    <ul class="guia-notas">
+      <li>Lo que escribís queda guardado en este navegador aunque cierres la página. No se publica hasta que tocás «Publicar».</li>
+      <li>Los textos se escriben en español. Los otros idiomas muestran el español hasta que se cargan sus traducciones.</li>
+      <li>Al cambiar una foto, escribí qué muestra: esa descripción la leen los buscadores y las personas que no ven la imagen.</li>
+      <li>Una reseña sin marcar «Mostrar» queda guardada, pero no aparece en el sitio.</li>
+      <li>Si te equivocaste al publicar, en «Historial» podés volver a la versión anterior.</li>
+    </ul>
+    <div class="guia-pie">
+      <button id="repetir-recorrido" type="button" class="boton boton-suave">Ver el recorrido de nuevo</button>
+      <p>¿Algo no funciona? <a href="https://wa.me/5492213141648?text=Hola%20Felipe%2C%20tengo%20una%20consulta%20sobre%20el%20panel%20de%20Portillo%20Kus." target="_blank" rel="noopener noreferrer">Escribile a Felipe por WhatsApp</a>.</p>
+    </div>
+  </dialog>
+
+  <dialog id="recorrido" class="recorrido" aria-labelledby="recorrido-titulo" aria-describedby="recorrido-texto">
+    <div class="recorrido-foco"></div>
+    <div class="recorrido-tarjeta">
+      <p class="volanta" id="recorrido-paso"></p>
+      <h2 id="recorrido-titulo"></h2>
+      <p id="recorrido-texto"></p>
+      <div class="acciones dialogo-acciones">
+        <button id="recorrido-saltar" type="button" class="boton boton-suave">Saltar</button>
+        <button id="recorrido-seguir" type="button" class="boton">Siguiente</button>
+      </div>
+    </div>
+  </dialog>
 </body>
 </html>

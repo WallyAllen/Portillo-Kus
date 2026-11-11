@@ -4,6 +4,10 @@ import { respuesta } from '../http.js';
 import pagina from './pagina.html';
 import estilos from './estilos.css';
 import app from './cliente/app.js';
+import ayuda from './cliente/ayuda.js';
+import barra from './cliente/barra.js';
+import historial from './cliente/historial.js';
+import previa from './cliente/previa.js';
 import abogados from './cliente/pantallas/abogados.js';
 import comun from './cliente/pantallas/comun.js';
 import fotos from './cliente/pantallas/fotos.js';
@@ -20,6 +24,10 @@ const JS = 'text/javascript; charset=utf-8';
 const ARCHIVOS = {
   '/panel/estilos.css': [estilos, 'text/css; charset=utf-8'],
   '/panel/app.js': [app, JS],
+  '/panel/ayuda.js': [ayuda, JS],
+  '/panel/barra.js': [barra, JS],
+  '/panel/historial.js': [historial, JS],
+  '/panel/previa.js': [previa, JS],
   '/panel/pantallas/abogados.js': [abogados, JS],
   '/panel/pantallas/comun.js': [comun, JS],
   '/panel/pantallas/usuarios.js': [usuarios, JS],

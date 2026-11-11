@@ -1,19 +1,23 @@
 // La lista cerrada de src/panel-campos.json, sólo en español. El servidor rechaza cualquier otra clave.
-import { agrupar, aviso, borradorDeFormulario, campo, crear, ESPANOL, fijarClave, guardarYRecargar, leerClave, serializar } from './comun.js';
+import {
+  agrupar, aviso, borradorDeFormulario, campo, cargando, crear, ESPANOL, fallaDeCarga, fijarClave, guardarYRecargar, leerClave, listo, serializar,
+} from './comun.js';
 import { revisarTexto } from './revisar.js';
 
 export default {
   id: 'textos',
   titulo: 'Textos',
-  async render(contenedor, { api, guardar, usuario }) {
+  volanta: 'CONTENIDO DEL SITIO',
+  bajada: 'Se escriben en español. Los otros idiomas muestran el español hasta que se carguen sus traducciones.',
+  async render(contenedor, { api, guardar, usuario, barra, previa }) {
     const dibujar = async (mensaje, borradorAnterior) => {
       const [{ textos }, { commit, texto }] = await Promise.all([api('/api/campos'), api(`/api/archivo?ruta=${ESPANOL}`)]);
       const datos = JSON.parse(texto);
       const error = aviso();
       const formulario = crear('form', 'formulario');
-      const grupos = agrupar(textos);
+      formulario.addEventListener('submit', (evento) => evento.preventDefault());
       const filas = [];
-      for (const [grupo, campos] of grupos) {
+      for (const [grupo, campos] of agrupar(textos)) {
         const tarjeta = crear('fieldset', 'tarjeta grupo');
         tarjeta.append(crear('legend', '', grupo));
         for (const definicion of campos) {
@@ -24,21 +28,20 @@ export default {
         }
         formulario.append(tarjeta);
       }
-      const boton = crear('button', 'boton', 'Publicar cambios');
-      boton.type = 'submit';
-      formulario.append(error.nodo, boton);
+      formulario.append(error.nodo);
+      let control = { actualizar() {} };
       const borrador = borradorDeFormulario({
         formulario, usuario: usuario.usuario, seccion: 'textos', commit, borradorAnterior,
         campos: filas.map(({ definicion, fila }) => [definicion.clave, fila.entrada]),
         recargar: (anterior) => dibujar(null, anterior),
+        alCambiar: () => control.actualizar(),
       });
-      formulario.addEventListener('submit', async (evento) => {
-        evento.preventDefault();
-        if (boton.disabled) return;
+
+      const publicar = async () => {
         error.mostrar();
         if (borrador.pendiente()) {
-          error.mostrar('Recuperá o descartá el borrador antes de publicar.');
-          return;
+          error.mostrar('Elegí qué hacer con el borrador antes de publicar.');
+          return false;
         }
         const copia = structuredClone(datos);
         let hayProblemas = false;
@@ -54,12 +57,7 @@ export default {
             cambiados.push(definicion.etiqueta);
           }
         }
-        if (hayProblemas) return;
-        if (!cambiados.length) {
-          error.mostrar('No cambiaste nada.');
-          return;
-        }
-        boton.disabled = true;
+        if (hayProblemas || !cambiados.length) return false;
         borrador.editar(false);
         const salio = await guardarYRecargar({
           guardar,
@@ -73,19 +71,22 @@ export default {
             error.mostrar(texto);
           },
         });
-        if (!salio) {
-          boton.disabled = false;
-          borrador.editar(true);
-        }
+        if (!salio) borrador.editar(true);
+        return salio;
+      };
+      const cambiosParaPrevia = () => ({
+        textos: filas.filter(({ fila, valor }) => fila.entrada.value !== valor)
+          .map(({ definicion, fila, valor }) => ({ clave: definicion.clave, antes: valor, ahora: fila.entrada.value })),
       });
-      const ayuda = crear('p', '', 'Se escriben en español. Los otros idiomas muestran el español hasta que se carguen sus traducciones.');
-      contenedor.replaceChildren(crear('h1', '', 'Textos'), ayuda, ...(mensaje ? [crear('p', 'aviso-ok', mensaje)] : []), formulario);
+      listo(contenedor);
+      contenedor.replaceChildren(...(mensaje ? [crear('p', 'aviso-ok', mensaje)] : []), formulario);
+      control = barra.usar({ contar: borrador.cuenta, enPausa: borrador.pendiente, publicar, previa: () => previa(cambiosParaPrevia()) });
     };
-    contenedor.append(crear('p', '', 'Cargando…'));
+    cargando(contenedor);
     try {
       await dibujar();
     } catch (e) {
-      contenedor.replaceChildren(crear('p', 'aviso-error', e.message));
+      fallaDeCarga(contenedor, e);
     }
   },
 };

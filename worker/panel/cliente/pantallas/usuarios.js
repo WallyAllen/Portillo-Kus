@@ -1,6 +1,6 @@
 // Usuarios del panel (sólo admin; la API lo vuelve a comprobar). Una contraseña provisoria se
 // muestra una sola vez: después no hay forma de verla, sólo de generar otra.
-import { aviso, campo, crear, mensajeDeError } from './comun.js';
+import { aviso, campo, cargando, crear, fallaDeCarga, listo, mensajeDeError } from './comun.js';
 
 const ROLES = {
   admin: 'Administración: todo, también traducciones y usuarios',
@@ -11,7 +11,7 @@ function tarjetaContrasena({ usuario, contrasena }, alCerrar) {
   const nodo = crear('section', 'tarjeta contrasena-nueva');
   nodo.setAttribute('role', 'status');
   const codigo = crear('p', 'contrasena-valor', contrasena);
-  const copiar = crear('button', 'boton boton-borde', 'Copiar');
+  const copiar = crear('button', 'boton boton-suave', 'Copiar');
   copiar.type = 'button';
   copiar.addEventListener('click', async () => {
     try {
@@ -48,7 +48,7 @@ function fila(u, { yo, accion }) {
   confirmar.hidden = true;
   const preguntar = (texto, si, hacer) => {
     const boton = (t, f) => {
-      const b = crear('button', 'boton boton-borde', t);
+      const b = crear('button', 'boton boton-suave', t);
       b.type = 'button';
       b.addEventListener('click', f);
       return b;
@@ -58,7 +58,7 @@ function fila(u, { yo, accion }) {
   };
   const acciones = crear('div', 'acciones');
   const boton = (texto, f) => {
-    const b = crear('button', 'boton boton-borde', texto);
+    const b = crear('button', 'boton boton-suave', texto);
     b.type = 'button';
     b.addEventListener('click', f);
     acciones.append(b);
@@ -127,6 +127,8 @@ function formularioNuevo(api, alCrear) {
 export default {
   id: 'usuarios',
   titulo: 'Usuarios',
+  volanta: 'ADMINISTRACIÓN',
+  bajada: 'Las cuentas nuevas reciben una contraseña provisoria y eligen la suya al entrar por primera vez.',
   soloAdmin: true,
   async render(contenedor, { api, usuario: yo }) {
     const dibujar = async (arriba = []) => {
@@ -148,19 +150,19 @@ export default {
       const cuentas = crear('section', 'usuarios-cuentas');
       cuentas.append(crear('h2', '', 'Cuentas del panel'), lista);
       distribucion.append(cuentas, formularioNuevo(api, (r) => dibujar([tarjetaContrasena(r, () => dibujar())])));
+      listo(contenedor);
       contenedor.replaceChildren(
-        crear('h1', '', 'Usuarios'),
         ...arriba,
         error.nodo,
         distribucion,
       );
       arriba[0]?.scrollIntoView?.({ block: 'start' });
     };
-    contenedor.append(crear('p', '', 'Cargando…'));
+    cargando(contenedor);
     try {
       await dibujar();
     } catch (e) {
-      contenedor.replaceChildren(crear('p', 'aviso-error', e.message));
+      fallaDeCarga(contenedor, e);
     }
   },
 };

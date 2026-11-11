@@ -9,6 +9,7 @@ const CSP = [
   "connect-src 'self'",
   "base-uri 'none'",
   "form-action 'self'",
+  "frame-src 'self'", // la vista previa de la portada ("Ver cómo queda")
   "frame-ancestors 'none'",
 ].join('; ');
 

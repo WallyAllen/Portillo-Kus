@@ -11,7 +11,7 @@ Para el estudio, sin términos técnicos: [guía del panel](guia-del-estudio.md)
 ## Arquitectura
 
 ```
-navegador ── /panel/* ──▶ worker/panel/rutas.js   página, estilos y pantallas (texto)
+navegador ── /panel/* ──▶ worker/panel/rutas.js   página, estilos, armazón y pantallas (texto)
           ── /api/*   ──▶ worker/api.js           sesión, CSRF y rol en cada pedido
                               ├─ worker/auth.js       contraseñas, sesiones, bloqueo   ─▶ D1
                               ├─ worker/usuarios.js   alta, baja, contraseña nueva      ─▶ D1
@@ -194,7 +194,7 @@ límites de producción. Hacerlas antes del paso 9, en
 |---|---|---|---|
 | 1 | **CPU del login en el plan Free.** Entrar y salir 6 veces seguidas, y mirar Observability del Worker → CPU time de `POST /api/login` | Entra siempre. Cada login usa unos 100 ms de CPU | Error 1102 (*Worker exceeded CPU*): decide Felipe entre Workers Paid y bajar `ITERACIONES` (ver "Costo del login") |
 | 2 | **Tope de PBKDF2.** El mismo login | Entra. Ningún log dice *iteration counts above 100000* | Ese mensaje significa que el hash no se está calculando en tramos: no mergear y revisar `TRAMO_MAXIMO` en `worker/auth.js` |
-| 3 | **Guardado real con la API de GitHub.** Textos → cambiar "Paso 1" → Guardar | Aparece un commit `Panel (Felipe): Textos: Paso 1` en la rama `pruebas`, nunca en `main`; el panel pasa de "Publicando…" a "Publicado" | 500 y en logs 401 o 403 de GitHub: el token venció o le faltan permisos. 404: `GITHUB_REPO` o el dueño del token. Si apareciera en `main`: borrar el token en GitHub y revisar `GITHUB_BRANCH` |
+| 3 | **Guardado real con la API de GitHub.** Textos → cambiar "Paso 1" → Guardar | Aparece un commit `Panel (Felipe): Textos: Paso 1` en la rama `pruebas`, nunca en `main`; la barra de abajo pasa de "Publicando en el sitio…" a "Listo, ya se ve en el sitio" | 500 y en logs 401 o 403 de GitHub: el token venció o le faltan permisos. 404: `GITHUB_REPO` o el dueño del token. Si apareciera en `main`: borrar el token en GitHub y revisar `GITHUB_BRANCH` |
 | 4 | **`WORKERS_CI_COMMIT_SHA` en un build real.** Abrir `/version.json` tras el build de la comprobación 3 | `{"sha": "<el commit de la comprobación 3>"}` | Dice `local`: Workers Builds no pasó la variable. El sitio funciona, pero el panel dice "Hubo un problema" a los 5 minutos. Revisar el log del build y `src/build.py` |
 | 5 | **Permisos de D1 del token de Workers Builds.** Mirar el log del primer build con la base descomentada | El deploy termina y lista `env.DB (portillo-panel-pruebas)` | Error de autenticación al hacer el deploy: en Settings → Build → API token, sumarle **Account → D1 → Edit** y reintentar |
 | 6 | **noindex.** Ver el código fuente de la portada y abrir `/robots.txt` | `<meta name="robots" content="noindex, nofollow">` y `Disallow: /` | Falta la variable `NOINDEX=1` del build (paso 5) |
@@ -246,8 +246,25 @@ cambiarlo, antes o después de que venza:
 
 ## Deshacer un cambio
 
-Cada guardado es un commit `Panel (Nombre): descripción`, así que se deshace con
-`git revert`, que crea otro commit y no borra historia:
+**Desde el panel.** *Historial → Volver a la versión anterior* deshace la última
+publicación del panel (el commit `Panel (` más reciente de los últimos 30) con un commit
+nuevo que deja sus archivos como estaban en su padre, traducciones pendientes
+incluidas. Lo hacen `versionAnterior` y `restaurarVersion` en `worker/guardado.js`
+(`GET /api/anterior`, `POST /api/restaurar`). Se niega, con el motivo en el diálogo,
+si:
+
+- después de ese commit otro tocó alguno de sus archivos (nunca pisa nada);
+- tocó algo fuera de lo que escribe el panel, o es un merge;
+- tocó traducciones y quien pide es una cuenta de edición;
+- el resultado no pasa `validarRepo`.
+
+Las fotos vuelven con el mismo blob, sin bajarlas ni subirlas. Una foto que ese commit
+agregó (un abogado nuevo) queda en el repo. Volver atrás también es un commit
+`Panel (`: hacerlo dos veces rehace lo deshecho. El panel sólo lo ofrece sin cambios
+sin publicar en la pantalla. Pruebas: `worker/test/historial.test.mjs`.
+
+**A mano.** Cada guardado es un commit `Panel (Nombre): descripción`, así que también
+se deshace con `git revert`, que crea otro commit y no borra historia:
 
 ```bash
 git pull origin main
@@ -477,14 +494,50 @@ sobre los mismos casos.
 `build.py`, que alimenta los datos estructurados para buscadores, no. Si cambia el
 horario real, hay que actualizarlo en el repo.
 
+## Interfaz
+
+Sigue el modelo del panel de Llegando al Sol con la identidad de Portillo (bordó
+`#9B1C31`, Georgia, los colores de `src/template.html`). Piezas en `worker/panel/cliente/`:
+
+- `app.js`: sesión, barra lateral (menú, *Ver la página*, cuenta), encabezado por
+  pantalla (`volanta`, `titulo`, `bajada` de cada pantalla) y seguimiento de la
+  publicación. Una sesión vencida abre el diálogo `#reingreso` encima: la pantalla y
+  lo escrito siguen ahí. Otra cuenta u otro rol al reingresar recarga la página.
+- `barra.js`: la barra fija de abajo. La pantalla la usa con
+  `barra.usar({ contar, publicar, previa?, etiqueta?, enPausa? })`; muestra
+  *Todo publicado*, *N cambios sin publicar*, *Publicando en el sitio…* con progreso,
+  *Listo* con *Ver el cambio*, o el problema. Ninguna pantalla tiene su propio botón de
+  publicar.
+- `pantallas/comun.js`: `campo()` con contador de caracteres, `marcarEditado()` (el
+  punto por campo, con texto oculto para lectores de pantalla), `cargando()` (esqueleto
+  en lugar de "Cargando…") y `borradorDeFormulario()`: con un borrador guardado, el
+  formulario queda en pausa (fieldsets deshabilitados) hasta elegir *Seguir* o
+  *Empezar de cero*; si es de otro commit, *Recuperar y revisar* o *Descartar*.
+- `previa.js`: *Ver cómo queda*. Abre `/` en un iframe `sandbox="allow-same-origin"`
+  (sin scripts) y le aplica encima los textos, reseñas y fotos sin publicar, con
+  `textContent` y atributos de imagen. Por eso la CSP del panel suma `frame-src 'self'`;
+  el sitio ya admite marcos del mismo origen. Un texto se busca por su valor publicado
+  (los de `footer.` y `mobile.` en su zona); si no aparece, el diálogo lo avisa.
+  Abogados usa su vista previa propia.
+- `historial.js`, `ayuda.js`: el menú Historial, la guía lateral (`?`) y el recorrido
+  de tres pasos la primera vez que se abre una pantalla de contenido
+  (`localStorage` `portillo-panel:recorrido-visto`).
+
+Fotos se publican juntas desde la barra, hasta 9 por vez (el servidor acepta 10
+archivos, uno es el JSON). Las fotos elegidas y el editor de abogados no guardan
+borrador: al cerrar la pestaña con cambios ahí, el navegador pregunta.
+
 ## Sumar una pantalla
 
 1. Crear `worker/panel/cliente/pantallas/<nombre>.js` (ver `inicio.js`). `render`
-   recibe el contenedor y `{ usuario, api, guardar, seguirPublicacion }`; `guardar` ya
-   muestra el aviso de publicación, y `seguirPublicacion(commit)` es para otras rutas.
+   recibe el contenedor y `{ usuario, api, guardar, seguirPublicacion, barra, previa,
+   encabezado, pantallas }`; `guardar` ya sigue la publicación en la barra, y
+   `seguirPublicacion(commit)` es para otras rutas. Para publicar desde la barra,
+   `barra.usar(...)` (ver "Interfaz").
 2. Importarla y agregarla a `PANTALLAS` en `cliente/app.js`.
 3. Importarla y agregarla a `ARCHIVOS` en `worker/panel/rutas.js`, con ruta
-   `/panel/pantallas/<nombre>.js`.
+   `/panel/pantallas/<nombre>.js`. Lo mismo para un módulo nuevo de `cliente/`, con
+   ruta `/panel/<nombre>.js`.
 4. Una ruta nueva de API es una entrada en `RUTAS` de `worker/api.js`.
 
 `soloAdmin: true` en la pantalla sólo la oculta. Para cerrar la API, `soloAdmin: true`
