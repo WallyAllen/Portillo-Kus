@@ -3,6 +3,7 @@
 import { cerrarSesion, cookieDeSesion, cookieVencida, csrfValido, iniciarSesion, leerSesion, origenValido } from './auth.js';
 import {
   Conflicto, DatosInvalidos, estadoPublicacion, guardarCambios, guardarTraducciones, leerParaEditar, listarTraducciones, Prohibido,
+  restaurarVersion, versionAnterior,
 } from './guardado.js';
 import { definicion } from './campos.js';
 import { error, json } from './http.js';
@@ -91,6 +92,14 @@ async function guardar({ request, env, sesion }) {
   return json(await guardarCambios(env, { base, archivos, descripcion, autor: sesion.usuario }));
 }
 
+const anterior = async ({ env, sesion }) => json(await versionAnterior(env, sesion.usuario));
+
+async function restaurar({ request, env, sesion }) {
+  const datos = await leerJson(request, CUERPO_CHICO);
+  if (!datos || !SHA.test(datos.head || '') || !SHA.test(datos.commit || '')) return error('Pedido inválido.', 400);
+  return json(await restaurarVersion(env, { head: datos.head, commit: datos.commit, autor: sesion.usuario }));
+}
+
 async function publicacion({ url, env }) {
   const commit = url.searchParams.get('commit') || '';
   if (!SHA.test(commit)) return error('Versión inválida.', 400);
@@ -113,6 +122,8 @@ const RUTAS = {
   'GET /api/archivo': { fn: archivo },
   'POST /api/guardar': { fn: guardar },
   'GET /api/publicacion': { fn: publicacion },
+  'GET /api/anterior': { fn: anterior },
+  'POST /api/restaurar': { fn: restaurar },
   'GET /api/campos': { fn: campos },
   'GET /api/traducciones': { fn: traducciones, soloAdmin: true },
   'POST /api/traducciones': { fn: guardarTraduccion, soloAdmin: true },

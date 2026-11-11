@@ -88,11 +88,22 @@ export class RepoGitHub {
     return comparacion?.status === 'ahead' || comparacion?.status === 'identical';
   }
 
+  // Los últimos commits de la rama, del más nuevo al más viejo: [{ sha, parents, commit: { message, committer } }].
+  historial(ref, cantidad = 30) {
+    return this.pedirJson('GET', `/commits?sha=${ref}&per_page=${cantidad}`);
+  }
+
+  // El blob de un archivo en esa versión, o null si no existe. Sirve para volver a usar una foto sin bajarla.
+  async blob(ruta, ref) {
+    const { respuesta } = await this.pedir('GET', `/contents/${rutaUrl(ruta)}?ref=${ref}`, { toleradas: [404] });
+    return respuesta ? (await respuesta.json()).sha ?? null : null;
+  }
+
   // Un único commit con todos los archivos juntos. Todavía no mueve la rama.
-  // archivos: [{ ruta, texto } | { ruta, base64 }]
+  // archivos: [{ ruta, texto } | { ruta, base64 } | { ruta, sha }]; sha es un blob que ya está en el repo.
   async crearCommit({ padre, archivos, mensaje, autor }) {
-    const entradas = await Promise.all(archivos.map(async ({ ruta, texto, base64 }) => {
-      const blob = await this.subirBlob(
+    const entradas = await Promise.all(archivos.map(async ({ ruta, texto, base64, sha }) => {
+      const blob = sha ? { sha } : await this.subirBlob(
         base64 !== undefined ? { content: base64, encoding: 'base64' } : { content: texto, encoding: 'utf-8' });
       return { path: ruta, mode: '100644', type: 'blob', sha: blob.sha };
     }));

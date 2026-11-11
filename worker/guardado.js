@@ -349,3 +349,81 @@ export async function estadoPublicacion(env, commit, origen) {
   const contiene = await new RepoGitHub(env).contiene(publicado, commit);
   return { estado: contiene ? 'publicado' : 'publicando', publicado };
 }
+
+// ---- Historial: "Volver a la versión anterior" deshace la última publicación del panel con un
+// commit nuevo que deja sus archivos como estaban antes. Sólo si nadie los tocó después: así nunca
+// pisa otro cambio. La lista de pendientes vuelve con ellos, porque también era parte de ese estado.
+const PREFIJO_PANEL = 'Panel (';
+const NO_SE_PUEDE = 'Esa publicación no se puede deshacer desde el panel. Avisale a Felipe.';
+const NOMBRES_IDIOMA = { en: 'inglés', pt: 'portugués', ru: 'ruso', zh: 'chino' };
+
+function rotuloDeArchivo(ruta) {
+  if (ruta === 'src/content.es.json') return 'Textos, reseñas y descripciones de fotos';
+  if (ruta === RUTA_EQUIPO) return 'Abogados';
+  if (ruta === ARCHIVO_PENDIENTES) return null; // acompaña a los textos: no se nombra aparte
+  const idioma = ruta.match(RUTA_TRADUCCION)?.[1];
+  if (idioma) return `Traducción al ${NOMBRES_IDIOMA[idioma] ?? idioma}`;
+  const foto = FOTOS_SERVICIO.get(nombreDeFoto(ruta));
+  return foto ? `Foto: ${foto.etiqueta}` : 'Foto de un abogado';
+}
+
+async function ultimaDelPanel(repo, autor) {
+  const head = await repo.head();
+  const lista = await repo.historial(head, 30);
+  const ultimo = lista.find((c) => c.commit.message.startsWith(PREFIJO_PANEL));
+  if (!ultimo) return { head, anterior: null };
+  const [titulo] = ultimo.commit.message.split('\n');
+  const [, nombre = '', descripcion = titulo] = titulo.match(/^Panel \((.*?)\): (.*)$/) ?? [];
+  const anterior = { commit: ultimo.sha, fecha: ultimo.commit.committer?.date ?? null, autor: nombre, descripcion, cambia: [] };
+  const padre = ultimo.parents.length === 1 ? ultimo.parents[0].sha : null;
+  const rutas = padre ? await repo.archivosCambiados(padre, ultimo.sha) : null;
+  const permitida = (ruta) => RUTA_TEXTO.test(ruta) || esRutaFoto(ruta) || ruta === ARCHIVO_PENDIENTES;
+  if (!rutas?.length || !rutas.every(permitida)) return { head, anterior: { ...anterior, motivo: NO_SE_PUEDE } };
+  anterior.cambia = [...new Set(rutas.map(rotuloDeArchivo).filter(Boolean))];
+  if (autor.rol !== 'admin' && rutas.some((r) => RUTA_TRADUCCION.test(r))) {
+    return { head, anterior: { ...anterior, motivo: 'La última publicación cambió traducciones: sólo la puede deshacer una cuenta de administración.' } };
+  }
+  if (ultimo.sha !== head) {
+    const despues = await repo.archivosCambiados(ultimo.sha, head);
+    if (!despues || rutas.some((r) => despues.includes(r))) {
+      return { head, anterior: { ...anterior, motivo: 'Después de esa publicación hubo otros cambios en lo mismo. Avisale a Felipe.' } };
+    }
+  }
+  return { head, anterior, padre, rutas };
+}
+
+// Para el diálogo: qué se deshace, o por qué no se puede. Sin commit para deshacer, anterior es null.
+export async function versionAnterior(env, autor) {
+  const { head, anterior } = await ultimaDelPanel(new RepoGitHub(env), autor);
+  return { head, anterior };
+}
+
+// head y commit: lo que mostró el diálogo. Si algo cambió desde entonces, Conflicto.
+export async function restaurarVersion(env, { head: visto, commit, autor, repo = new RepoGitHub(env) }) {
+  const { head, anterior, padre, rutas } = await ultimaDelPanel(repo, autor);
+  if (head !== visto || anterior?.commit !== commit) throw new Conflicto([]);
+  if (anterior.motivo) throw new DatosInvalidos([anterior.motivo]);
+  const archivos = [];
+  for (const ruta of rutas) {
+    if (esRutaFoto(ruta)) {
+      const sha = await repo.blob(ruta, padre);
+      // Una foto que esa publicación agregó queda: sin su abogado, nadie la muestra.
+      if (sha) archivos.push({ ruta, sha });
+      continue;
+    }
+    const texto = await repo.leer(ruta, padre);
+    if (texto === null) throw new DatosInvalidos([NO_SE_PUEDE]);
+    archivos.push({ ruta, texto });
+  }
+  if (!archivos.length) throw new DatosInvalidos([NO_SE_PUEDE]);
+  const propios = new Map(archivos.filter((a) => a.texto !== undefined).map((a) => [a.ruta, a.texto]));
+  const errores = await validar(repo, lector(repo, head, propios), archivos, head);
+  if (errores.length) throw new DatosInvalidos(['Esa versión anterior ya no es compatible con el sitio. Avisale a Felipe.']);
+  const firma = { name: autor.nombre, email: `${autor.usuario}@panel.invalid` };
+  const nuevo = await repo.crearCommit({
+    padre: head, archivos, autor: firma,
+    mensaje: armarMensaje(`Volver a la versión anterior a «${anterior.descripcion}»`, autor, archivos),
+  });
+  if (!await repo.moverRama(nuevo)) throw new Conflicto([]);
+  return { commit: nuevo };
+}

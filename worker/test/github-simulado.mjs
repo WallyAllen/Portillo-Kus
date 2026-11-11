@@ -87,10 +87,25 @@ export class GitHubSimulado {
       if (!arbol) return [404, {}];
       if (arbol.has(camino)) {
         const contenido = this.blobs.get(arbol.get(camino));
-        return [200, aceptar.includes('raw') ? contenido : { content: contenido.toString('base64') }];
+        return [200, aceptar.includes('raw') ? contenido : { sha: arbol.get(camino), content: contenido.toString('base64') }];
       }
       const nombres = [...arbol.keys()].filter((r) => r.startsWith(`${camino}/`)).map((r) => ({ name: r.slice(camino.length + 1) }));
       return nombres.length ? [200, nombres] : [404, {}];
+    }
+    if (metodo === 'GET' && repo === '/commits') {
+      // Primer padre, del más nuevo al más viejo, como la lista de GitHub para una rama lineal.
+      const lista = [];
+      for (let id = consulta.get('sha'); id && lista.length < Number(consulta.get('per_page') || 30);) {
+        const commit = this.commits.get(id);
+        if (!commit) return [404, {}];
+        lista.push({
+          sha: id,
+          parents: commit.padres.map((p) => ({ sha: p })),
+          commit: { message: commit.mensaje, committer: { date: commit.fecha ?? '2026-11-01T12:00:00Z' } },
+        });
+        [id] = commit.padres;
+      }
+      return [200, lista];
     }
     if (metodo === 'POST' && repo === '/git/blobs') {
       return [201, { sha: this.crearBlob(Buffer.from(cuerpo.content, cuerpo.encoding === 'base64' ? 'base64' : 'utf8')) }];
