@@ -9,6 +9,26 @@ export function crear(etiqueta, clase, texto) {
   return nodo;
 }
 
+// Cada sección del menú: una línea que dice qué hay adentro y un ícono de trazo (24×24).
+export const SECCIONES = {
+  inicio: { resumen: 'Resumen y accesos', icono: '<path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M10 21v-6h4v6"/>' },
+  textos: { resumen: 'Títulos, pasos y horarios', icono: '<path d="M4 6h16M4 12h16M4 18h10"/>' },
+  fotos: { resumen: 'Imágenes del sitio', icono: '<rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="m21 16-5-5-9 8"/>' },
+  resenas: { resumen: 'Opiniones de clientes', icono: '<path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/>' },
+  abogados: { resumen: 'Equipo, fotos y orden', icono: '<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.6-3.6 3.3-5.5 6.5-5.5s5.9 1.9 6.5 5.5"/><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14.8c2 .7 3.2 2.5 3.5 5.2"/>' },
+  traducciones: { resumen: 'Inglés, portugués y más', icono: '<path d="M4 5h9M8.5 3v2M6 5c.5 3.5 2.6 6.3 6 8M11 5c-.6 3.6-3 6.6-6.5 8.5"/><path d="m13 21 4-9 4 9M14.5 18h5"/>' },
+  usuarios: { resumen: 'Cuentas y contraseñas', icono: '<rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/>' },
+};
+
+export function icono(id) {
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.setAttribute('viewBox', '0 0 24 24');
+  svg.setAttribute('aria-hidden', 'true');
+  svg.setAttribute('class', 'icono');
+  svg.innerHTML = SECCIONES[id]?.icono ?? '<circle cx="12" cy="12" r="8"/>';
+  return svg;
+}
+
 export const leerClave = (datos, clave) => clave.split('.').reduce((nodo, parte) => nodo?.[parte], datos);
 
 export function fijarClave(datos, clave, valor) {

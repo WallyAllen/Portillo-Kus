@@ -13,6 +13,7 @@ import resenas from './pantallas/resenas.js';
 import textos from './pantallas/textos.js';
 import traducciones from './pantallas/traducciones.js';
 import usuarios from './pantallas/usuarios.js';
+import { SECCIONES, icono } from './pantallas/comun.js';
 
 const PANTALLAS = [inicio, textos, fotos, resenas, abogados, traducciones, usuarios];
 const ROLES = { admin: 'Administración', editor: 'Edición de textos' };
@@ -338,7 +339,16 @@ function entrar() {
     const enlace = document.createElement('a');
     enlace.href = `#/${p.id}`;
     enlace.dataset.id = p.id;
-    enlace.textContent = p.titulo;
+    const textos = document.createElement('span');
+    const titulo = document.createElement('strong');
+    titulo.textContent = p.titulo;
+    textos.append(titulo);
+    if (SECCIONES[p.id]?.resumen) {
+      const resumen = document.createElement('small');
+      resumen.textContent = SECCIONES[p.id].resumen;
+      textos.append(resumen);
+    }
+    enlace.append(icono(p.id), textos);
     return enlace;
   }));
   mostrarPantalla();

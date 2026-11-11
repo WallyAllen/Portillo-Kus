@@ -1,6 +1,6 @@
 // Inicio: qué quedó sin publicar en este navegador, la última publicación y accesos a cada sección.
 // Es también el ejemplo mínimo de una pantalla (ver cliente/app.js).
-import { crear } from './comun.js';
+import { crear, icono } from './comun.js';
 
 const fecha = new Intl.DateTimeFormat('es-AR', { dateStyle: 'long', timeStyle: 'short', hourCycle: 'h23', timeZone: 'America/Argentina/Buenos_Aires' });
 
@@ -74,7 +74,10 @@ export default {
       const item = crear('li', '');
       const a = enlace(pantalla, '');
       a.className = 'acceso';
-      a.append(crear('strong', '', pantalla.titulo), crear('span', '', ACCESOS[pantalla.id]));
+      const textos = crear('span', 'acceso-textos');
+      textos.append(crear('strong', '', pantalla.titulo), crear('span', '', ACCESOS[pantalla.id]));
+      a.append(icono(pantalla.id), textos, crear('span', 'acceso-flecha', '→'));
+      a.lastChild.setAttribute('aria-hidden', 'true');
       item.append(a);
       lista.append(item);
     }
